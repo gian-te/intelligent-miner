@@ -14,7 +14,9 @@ namespace IntelligentMiner.ConsoleApp
             try
             {
                 var size = 0;
-                Console.WriteLine("Enter map size: ");
+                var goldX = 0;
+                var goldY = 0;
+                Console.WriteLine("Enter the map size: ");
                 int.TryParse(Console.ReadLine(), out size);
 
                 // create 2x2 array
@@ -27,13 +29,27 @@ namespace IntelligentMiner.ConsoleApp
                 // set the player to its position in the grid
                 game.Map[player.PositionX, player.PositionY] = player;
 
+                Console.WriteLine("Enter the X-coordinate of the gold: ");
+                int.TryParse(Console.ReadLine(), out goldX);
 
-                for (int i = 0; i < size; i++)
+                Console.WriteLine("Enter the Y-coordinate of the gold: ");
+                int.TryParse(Console.ReadLine(), out goldY);
+
+                bool end = false;
+                var stepCount = 0;
+                while(!end)
                 {
-                    player.MoveRandomly();
+                    player.MoveRandomly(size);
                     Console.WriteLine(string.Format("Player is trying to move to coordinates [{0},{1}]", player.PositionX, player.PositionY));
+                    stepCount++;
+
+                    if (player.PositionX == goldX && player.PositionY == goldY)
+                    {
+                        end = true;
+                    }
                 }
 
+                Console.WriteLine(string.Format("Found in {0} steps", stepCount));
                 // TODO: ask for trap location
                 //Console.WriteLine(string.Format("Player is at {0}"));
 
@@ -46,6 +62,7 @@ namespace IntelligentMiner.ConsoleApp
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+                Console.Read();
             }
             
         }

@@ -25,11 +25,12 @@ namespace IntelligentMiner.Common
 			set { _positionY = value; }
 		}
 
-		public Queue<int[,]> PositionHistory { get; set; }
+		public List<Tuple<int,int>> PositionHistory { get; set; }
 
 		public Player()
 		{
 			Symbol = "P";
+			PositionHistory = new List<Tuple<int, int>>();
 		}
 
 		public void MoveUp()
@@ -56,12 +57,11 @@ namespace IntelligentMiner.Common
 			PositionX += 1;
 		}
 
-		public void MoveRandomly()
+		public void MoveRandomly(int gridSize)
 		{
 			var possibleDirections = Enum.GetValues(typeof(Directions));
-			Thread.Sleep(100);
 			var random = new Random();
-
+			Thread.Sleep(100);
 			var direction = (Directions)possibleDirections.GetValue(random.Next(0,possibleDirections.Length));
 			switch (direction)
 			{
@@ -81,14 +81,33 @@ namespace IntelligentMiner.Common
 					break;
 			}
 
+			// if out of bounds,
+			if (Math.Abs(PositionX) >= gridSize || Math.Abs(PositionY) >= gridSize)
+			{
+				// get last coordinates
+				if (PositionHistory.Count > 0)
+				{
+					PositionX = PositionHistory[PositionHistory.Count - 1].Item1;
+					PositionY = PositionHistory[PositionHistory.Count - 1].Item2;
+				}
+				else
+				{
+					PositionX = 0;
+					PositionY = 0;
+				}
+				
+				// then go again
+				MoveRandomly(gridSize);
+			}
+			else
+			{
+				// historize steps
+				PositionHistory.Add(new Tuple<int, int>(PositionX, PositionY));
+			}
+
 		}
 
-		public void EnqueueLastPosition(int[,] pos)
-		{
-
-			// save last position
-			PositionHistory.Enqueue(pos);
-		}
+	
 	}
 
 
