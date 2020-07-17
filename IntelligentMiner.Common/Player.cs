@@ -81,10 +81,10 @@ namespace IntelligentMiner.Common
 					break;
 			}
 
-			// if out of bounds,
-			if (Math.Abs(PositionX) >= gridSize || Math.Abs(PositionY) >= gridSize)
+			// if out of bounds, or  if negative
+			if ((Math.Abs(PositionX) >= gridSize || Math.Abs(PositionY) >= gridSize) || (PositionX < 0 || PositionY < 0))
 			{
-				// get last coordinates
+				// get last coordinates and make it the current position
 				if (PositionHistory.Count > 0)
 				{
 					PositionX = PositionHistory[PositionHistory.Count - 1].Item1;
