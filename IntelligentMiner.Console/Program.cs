@@ -27,6 +27,7 @@ namespace IntelligentMiner.ConsoleApp
         {
             int stepCount = 0;
             int size = 0;
+            bool end = false;
 
             try
             {
@@ -43,7 +44,7 @@ namespace IntelligentMiner.ConsoleApp
                 Console.WriteLine("Enter the map size: ");
                 int.TryParse(Console.ReadLine(), out size);
 
-                Console.WriteLine("Enter the X and Y coordinates of the golden square, comma-separated. Example: [2,3] (without the brackets) ");
+                Console.WriteLine("Enter the indices of the golden square, comma-separated. Example: [2,3] (without the square brackets) ");
                 var coords = Console.ReadLine().Split(',');
                 int goldX, goldY = 0;
                 int.TryParse( coords[0], out goldX);
@@ -52,11 +53,10 @@ namespace IntelligentMiner.ConsoleApp
                 var gold = new GoldenSquare();
                 gold.Position.Row = goldX;
                 gold.Position.Column = goldY;
-
-                bool end = false;
                
 
-                Game game = new Game(size, gold);
+                Game game = new Game(size);
+                game.AddGold(goldX, goldY);
                 Player player = new Player();
 
                 game.Map[player.Position.Row, player.Position.Column] = player;
@@ -142,7 +142,7 @@ namespace IntelligentMiner.ConsoleApp
 
                 }
 
-                Console.WriteLine(string.Format("Found in {0} steps", stepCount));
+                Console.WriteLine(string.Format("Found in {0} moves, and presumably a lot of rotations.", stepCount));
                 Console.Read();
             }
             catch (Exception ex)

@@ -116,7 +116,7 @@ namespace IntelligentMiner.Common
                 cell = game.Scan(Position.Row, Position.Column, Facing, "front");
                 if (cell.CellItemType == CellItemType.Wall)
                 {
-                    Console.WriteLine("The player ran into a wall. Aborting moves.");
+                    Console.WriteLine("The player ran into a thick wall and cannot move forward. Aborting the remaining moves, if any.");
                     break;
                 }
 
