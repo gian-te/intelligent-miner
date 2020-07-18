@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IntelligentMiner.Common.Enums;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -7,6 +8,7 @@ namespace IntelligentMiner.Common
     public class CellItem
     {
         public string Symbol { get; set; }
+        public CellItemType CellItemType { get; set; }
 
         public CellItem()
         {

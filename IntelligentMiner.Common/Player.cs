@@ -40,8 +40,9 @@ namespace IntelligentMiner.Common
 		public Player()
 		{
 			Symbol = "P";
-			PositionHistory = new List<Tuple<int, int>>();
 			Facing = "E";
+            PositionHistory = new List<Tuple<int, int>>();
+            CellItemType = CellItemType.Player;
 		}
 
 		public void MoveUp()
@@ -92,7 +93,7 @@ namespace IntelligentMiner.Common
 		{
 			var possibleDirections = Enum.GetValues(typeof(Directions));
 			var random = new Random();
-			Thread.Sleep(100);
+			Thread.Sleep(200);
 			var direction = (Directions)possibleDirections.GetValue(random.Next(0,possibleDirections.Length));
 			switch (direction)
 			{

@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using IntelligentMiner.Common.Enums;
 
 namespace IntelligentMiner.Common
 {
-    public class Trap : CellItem
+    public class Pit : CellItem
     {
         // does nothing for now
-        public Trap()
+        public Pit()
         {
             Symbol = "T";
+            CellItemType = CellItemType.Pit;
         }
     }
 }

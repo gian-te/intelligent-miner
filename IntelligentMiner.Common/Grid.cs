@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IntelligentMiner.Common.Enums;
+using System;
 using System.Collections.Generic;
 
 namespace IntelligentMiner.Common
@@ -33,18 +34,34 @@ namespace IntelligentMiner.Common
 
         public void AddTrap(int row, int col)
         {
-            Map[row, col] = new Trap();
+            Map[row, col] = new Pit();
            
         }
 
         public void AddGold(int row, int col)
         {
-            Map[row, col] = new Gold();
+            Map[row, col] = new GoldenSquare();
         }
 
         public void AddBeacon(int row, int col)
         {
             Map[row, col] = new Beacon();
+        }
+
+        public CellItemType GetCellType(int row, int col)
+        {
+            var cell = Map[row, col];
+            CellItemType type;
+            if (cell != null)
+            {
+                type = cell.CellItemType;
+            }
+            else
+            {
+                type = CellItemType.Empty;
+            }
+
+            return type;
         }
     }
 }

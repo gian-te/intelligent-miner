@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using IntelligentMiner.Common.Enums;
 
 namespace IntelligentMiner.Common
 {
@@ -9,6 +10,7 @@ namespace IntelligentMiner.Common
         public Beacon()
         {
             Symbol = "B";
+            CellItemType = CellItemType.Beacon;
         }
     }
 }

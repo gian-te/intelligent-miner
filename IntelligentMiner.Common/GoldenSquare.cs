@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using IntelligentMiner.Common.Enums;
 
 namespace IntelligentMiner.Common
 {
-    public class Gold : CellItem
+    public class GoldenSquare : CellItem
     {
-        public Gold()
+        public GoldenSquare()
         {
             Symbol = "G";
+            CellItemType = CellItemType.GoldenSquare;
         }
     }
 }
