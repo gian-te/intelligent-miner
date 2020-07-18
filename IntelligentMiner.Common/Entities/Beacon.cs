@@ -7,7 +7,7 @@ namespace IntelligentMiner.Common
 {
     public class Beacon : BaseCellItem
     {
-        public Beacon()
+        protected override void Initialize()
         {
             Symbol = "B";
             CellItemType = CellItemType.Beacon;

@@ -7,8 +7,7 @@ namespace IntelligentMiner.Common
 {
     public class Pit : BaseCellItem
     {
-        // does nothing for now
-        public Pit()
+        protected override void Initialize()
         {
             Symbol = "T";
             CellItemType = CellItemType.Pit;

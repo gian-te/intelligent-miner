@@ -6,6 +6,8 @@ namespace IntelligentMiner.Common
 {
     public class Game
     {
+        public int Size { get; set; }
+
         private BaseCellItem[,] _map;
 
         /// <summary>
@@ -30,6 +32,7 @@ namespace IntelligentMiner.Common
         public Game(int n)
         {
             Map = new BaseCellItem[n,n];
+            Size = n;
         }
 
         public void AddTrap(int row, int col)
@@ -76,10 +79,21 @@ namespace IntelligentMiner.Common
             try
             {
                 cell = Map[row, col];
+
+                // empty cell but not wall
+                if (cell == null)
+                {
+                    cell = new BaseCellItem();
+                    cell.Position.Row = row;
+                    cell.Position.Column = col;
+                }
             }
             catch
             {
-                return cell;
+                cell = new BaseCellItem()
+                {
+                    CellItemType = CellItemType.Wall
+                };
             }
 
             return cell;

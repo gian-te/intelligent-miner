@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace IntelligentMiner.ConsoleApp
@@ -27,8 +28,6 @@ namespace IntelligentMiner.ConsoleApp
             try
             {
                 var size = 0;
-                var goldX = 0;
-                var goldY = 0;
 
                 //Choose initial intelligence
                 string intell = "";
@@ -43,14 +42,21 @@ namespace IntelligentMiner.ConsoleApp
                 Console.WriteLine("Enter the map size: ");
                 int.TryParse(Console.ReadLine(), out size);
 
-                Console.WriteLine("Enter the X-coordinate of the gold: ");
-                int.TryParse(Console.ReadLine(), out goldX);
+                Console.WriteLine("Enter the X and Y coordinates of the golden square, comma-separated. Example: [2,3] (without the brackets) ");
+                var coords = Console.ReadLine().Split(',');
+                int goldX, goldY = 0;
+                int.TryParse( coords[0], out goldX);
+                int.TryParse( coords[1], out goldY);
 
-                Console.WriteLine("Enter the Y-coordinate of the gold: ");
-                int.TryParse(Console.ReadLine(), out goldY);
+                var gold = new GoldenSquare();
+                gold.Position.Row = goldX;
+                gold.Position.Column = goldY;
 
                 bool end = false;
                 var stepCount = 0;
+
+                Game game;
+                var player = new Player();
 
                 while (!end)
                 {
@@ -74,15 +80,14 @@ namespace IntelligentMiner.ConsoleApp
 
                             foreach (string strategy in generator.Strategies)
                             {
-                                var game = new Game(size);
-                                var player = new Player();
+                                game = new Game(size);
                                 player.Position.Row = 0;
                                 player.Position.Column = 0;
 
                                 game.Map[player.Position.Row, player.Position.Column] = player;
-                                game.AddGold(goldX, goldY);
+                                game.AddGold(gold.Position.Row, gold.Position.Column);
 
-                                while (stepCount < stepsLimit || (player.Position.Row != goldX && player.Position.Column != goldY))
+                                while (stepCount < stepsLimit || (player.Position.Row != gold.Position.Row && player.Position.Column != gold.Position.Column))
                                 {
                                     
                                     player.scanCount++;
@@ -109,24 +114,35 @@ namespace IntelligentMiner.ConsoleApp
                     else //Moves randomly
                     {
                         // create 2x2 array
-                        var game = new Game(size);
+                        game = new Game(size);
 
-                        var player = new Player();
                         player.Position.Row = 0;
                         player.Position.Column = 0;
 
                         // set the player to its position in the grid
                         game.Map[player.Position.Row, player.Position.Column] = player;
 
-                        player.MoveRandomly(size);
-                        Console.WriteLine(string.Format("Player is trying to move to coordinates [{0},{1}]", player.Position.Row, player.Position.Column));
+                        Thread.Sleep(500);
+                        // 1. randomize move between Rotate or Move
+                        var action = player.RandomizeAction();
+
+                        if (action == "rotate")
+                        {
+                            // 2. if Rotate, randomize how many times it will rotate 90-degrees
+                            player.RotateRandomTimes();
+                        }
+                        else if (action == "move")
+                        {
+                            // 3. if Move, randomize how many times it will move
+                            var cell = player.Move(game);
+                            if (cell.CellItemType == Common.Enums.CellItemType.GoldenSquare || cell.CellItemType == Common.Enums.CellItemType.Pit)
+                            {
+                                end = true;
+                            }
+                        }
 
                         stepCount++;
-
-                        if (player.Position.Row == goldX && player.Position.Column == goldY)
-                        {
-                            end = true;
-                        }
+                        Console.WriteLine();
                     }
 
                 }
@@ -140,5 +156,6 @@ namespace IntelligentMiner.ConsoleApp
                 Console.Read();
             }
         }
+
     }
 }

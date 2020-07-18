@@ -7,7 +7,7 @@ namespace IntelligentMiner.Common
 {
     public class GoldenSquare : BaseCellItem
     {
-        public GoldenSquare()
+        protected override void Initialize()
         {
             Symbol = "G";
             CellItemType = CellItemType.GoldenSquare;

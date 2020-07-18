@@ -1,8 +1,9 @@
-﻿using IntelligentMiner.Common.Enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
+using IntelligentMiner.Common.Enums;
+using IntelligentMiner.Common.Utilities;
 
 namespace IntelligentMiner.Common
 {
@@ -10,10 +11,6 @@ namespace IntelligentMiner.Common
 
     public class Player : BaseCellItem
     {
-        /// <summary>
-        /// Container of the 0-based indices of X and Y
-        /// </summary>
-        public Position Position { get; set; }
 
         public List<Tuple<int, int>> PositionHistory { get; set; }
 
@@ -27,44 +24,21 @@ namespace IntelligentMiner.Common
 
         public int backtrackCount { get; set; }
 
-        public Player()
+
+        protected override void Initialize()
         {
+            base.Initialize();
             Symbol = "P";
-            Facing = Direction.East;
-            Position = new Position();
             PositionHistory = new List<Tuple<int, int>>();
             CellItemType = CellItemType.Player;
-        }
-
-
-        /* Obsolete */
-        public void MoveUp()
-        {
-            // row = row + 0, col = col + 1
-            Position.Column += 1;
-        }
-
-        public void MoveDown()
-        {
-            // row = row + 0, col = col - 1
-            Position.Column -= 1;
-        }
-
-        public void MoveLeft()
-        {
-            // row = row - 1, col = col + 0
-            Position.Row -= 1;
-        }
-
-        public void MoveRight()
-        {
-            // row = row + 1, col = col + 0
-            Position.Row += 1;
+            RandomizeFacing();
         }
 
         public Tuple<int, int> Rotate()
         {
             Tuple<int, int> cellInFront = null;
+
+            var initialDirection = Facing.ToString();
             if (Facing == Direction.North)
             {
                 Facing = Direction.East;
@@ -87,59 +61,9 @@ namespace IntelligentMiner.Common
                 cellInFront = new Tuple<int, int>(Position.Row, Position.Column + 1);
             }
 
+            Console.WriteLine("Rotated from {0} to {1}", initialDirection, Facing.ToString());
             // return the cell which the player is facing after rotating 90 degrees
             return cellInFront;
-        }
-
-
-        public void MoveRandomly(int gridSize)
-        {
-            var possibleDirections = Enum.GetValues(typeof(Direction));
-            var random = new Random();
-            Thread.Sleep(200);
-            var direction = (Direction)possibleDirections.GetValue(random.Next(0, possibleDirections.Length));
-            switch (direction)
-            {
-                case Direction.North:
-                    MoveUp();
-                    break;
-                case Direction.South:
-                    MoveDown();
-                    break;
-                case Direction.East:
-                    MoveLeft();
-                    break;
-                case Direction.West:
-                    MoveRight();
-                    break;
-                default:
-                    break;
-            }
-
-            // if out of bounds, or  if negative
-            if ((Math.Abs(Position.Row) >= gridSize || Math.Abs(Position.Column) >= gridSize) || (Position.Row < 0 || Position.Column < 0))
-            {
-                // get last coordinates and make it the current position
-                if (PositionHistory.Count > 0)
-                {
-                    Position.Row = PositionHistory[PositionHistory.Count - 1].Item1;
-                    Position.Column = PositionHistory[PositionHistory.Count - 1].Item2;
-                }
-                else
-                {
-                    Position.Row = 0;
-                    Position.Column = 0;
-                }
-
-                // then go again
-                MoveRandomly(gridSize);
-            }
-            else
-            {
-                // historize steps if random move is valid.
-                PositionHistory.Add(new Tuple<int, int>(Position.Row, Position.Column));
-            }
-
         }
 
         public void MoveSmartly()
@@ -152,6 +76,104 @@ namespace IntelligentMiner.Common
             //Gawin yung strat experiment
         }
 
+        public string RandomizeAction()
+        {
+            var value = Randomizer.RandomizeNumber();
+
+            if (value >= 1 && value <= 50)
+            {
+                return "rotate";
+            }
+            else
+            {
+                return "move";
+            }
+        }
+
+        public void RotateRandomTimes()
+        {
+            // arbitrary range of 1 to 10
+            var times = Randomizer.RandomizeNumber(1, 10);
+            Console.WriteLine(string.Format("The player will rotate {0} times!", times));
+
+            
+            for (int i = 0; i < times; i++)
+            {
+                Rotate();
+                Thread.Sleep(500);
+            }
+            
+        }
+
+        public BaseCellItem Move(Game game)
+        {
+            var times = Randomizer.RandomizeNumber(1, game.Size);
+            Console.WriteLine(string.Format("The player will move {0} times!", times));
+
+            BaseCellItem cell = null;
+            for (int i = 0; i < times; i++)
+            {
+                cell = game.Scan(Position.Row, Position.Column, Facing, "front");
+                if (cell.CellItemType == CellItemType.Wall)
+                {
+                    Console.WriteLine("The player ran into a wall. Aborting moves.");
+                    break;
+                }
+
+                Position.Row = cell.Position.Row;
+                Position.Column = cell.Position.Column;
+                if (cell.CellItemType == CellItemType.Pit)
+                {
+                    // die
+                    Console.WriteLine("The player died a horrible death.");
+                    break;
+                }
+                else if (cell.CellItemType == CellItemType.GoldenSquare)
+                {
+                    // win
+                    Console.WriteLine("The player has struck gold.");
+                    break;
+                }
+                else if (cell.CellItemType == CellItemType.Beacon)
+                {
+                    // clue
+                    Console.WriteLine("The player found a beacon.");
+                    break;
+                }
+
+                PositionHistory.Add(new Tuple<int, int>(Position.Row, Position.Column));
+                Console.WriteLine(string.Format("Player moved to coordinates [{0},{1}]", Position.Row, Position.Column));
+
+            }
+            return cell;
+        }
+
+        public void RandomizeFacing()
+        {
+            // 25% for each direction
+
+            var num = Randomizer.RandomizeNumber();
+            if (num >= 1 && num <= 25)
+            {
+                Facing = Direction.North;
+            }
+            else if (num >= 26 && num <= 50)
+            {
+                Facing = Direction.East;
+            }
+            else if (num >= 51 && num <= 75)
+            {
+                Facing = Direction.South;
+            }
+            else if (num >= 76 && num <= 100)
+            {
+                Facing = Direction.West;
+            }
+
+            Console.WriteLine(string.Format("The player is initially facing {0}" , Facing.ToString()));
+        }
+
+        
     }
 
 
