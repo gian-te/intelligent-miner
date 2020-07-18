@@ -98,6 +98,7 @@ namespace IntelligentMiner.Common
             return cellInFront;
         }
 
+
 		public void MoveRandomly(int gridSize)
 		{
 			var possibleDirections = Enum.GetValues(typeof(Directions));
@@ -148,9 +149,14 @@ namespace IntelligentMiner.Common
 
 		}
 
+		public void MoveSmartly()
+		{
+			//Dito totoo
+		}
+
 		public void MoveWithStrategy(string strat)
 		{
-			//Gawin yung strat
+			//Gawin yung strat experiment
 		}
 
 	}

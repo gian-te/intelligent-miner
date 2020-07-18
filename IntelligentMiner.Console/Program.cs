@@ -33,7 +33,7 @@ namespace IntelligentMiner.ConsoleApp
                 //Choose initial intelligence
                 string intell = "";
 
-                while (intell != "r" && intell != "s")
+                while (intell != "r" && intell != "s" && intell != "test")
                 {
                     Console.Clear();
                     Console.WriteLine("Choose Intelligence Level (R/S): ");
@@ -54,7 +54,7 @@ namespace IntelligentMiner.ConsoleApp
 
                 while (!end)
                 {
-                    if (intell == "s") //Moves intelligently
+                    if (intell == "test") //Moves intelligently
                     {
 
                         // Declare parameters
@@ -67,7 +67,7 @@ namespace IntelligentMiner.ConsoleApp
                         // Generate strategies mapping
                         var generator = new Generators();
                         generator.GeneratePossibilities();
-                        generator.GenerateStrategies();
+                        generator.GenerateStrategies(200);
 
                         for (int gen = 0; gen < generations; gen++)
                         {
@@ -78,8 +78,6 @@ namespace IntelligentMiner.ConsoleApp
                                 var player = new Player();
                                 player.PositionX = 0;
                                 player.PositionY = 0;
-                                string current = "";
-                                string front = "";
 
                                 game.Map[player.PositionX, player.PositionY] = player;
                                 game.AddGold(goldX, goldY);
@@ -88,29 +86,7 @@ namespace IntelligentMiner.ConsoleApp
                                 {
                                     player.scanCount++;
 
-                                    //Scan front of robot
-                                    if (player.Facing == "N" && (player.PositionY - 1) < 0)
-                                    {
-                                        front = "Wall";
-                                    }
-                                    else if (player.Facing == "E" && (player.PositionX + 1) >= size)
-                                    {
-                                        front = "Wall";
-                                    }
-                                    else if (player.Facing == "S" && (player.PositionY + 1) >= size)
-                                    {
-                                        front = "Wall";
-                                    }
-                                    else if (player.Facing == "W" && (player.PositionX - 1) < 0)
-                                    {
-                                        front = "Wall";
-                                    }
-                                    else
-                                    {
-                                        //Check what's in front if not wall
-                                    }
-
-                                    player.MoveWithStrategy(generator.Situations.IndexOf(("a", "a")).ToString());
+                                    player.MoveWithStrategy(generator.Situations.IndexOf(()).ToString());
                                     stepCount++;
                                 }
 
@@ -121,6 +97,10 @@ namespace IntelligentMiner.ConsoleApp
                         }
 
                         end = true;
+                    }
+                    else if (intell == "s")
+                    {
+                        //Dito yung totoo
                     }
                     else //Moves randomly
                     {

@@ -36,22 +36,23 @@ namespace IntelligentMiner.Common
 
         public void GeneratePossibilities()
         {
-            string[] possibleStates = {"Empty", "Wall", "Beacon", "Trap", "Square"};
+            //Check all current states (Empty, Wall, Beacon, Pit, Golden Square)
+            string[] possibleStates = {"GoldenSquare", "Beacon", "Pit", "Player", "Empty", "Wall"};
 
             foreach (string state in possibleStates)
             {
                 foreach (string state2 in possibleStates)
                 {
+                    //State 1 = Current State 2 = Front
                     situations.Add((state, state2));
                 }
             }
         }
 
-        public void GenerateStrategies()
+        public void GenerateStrategies(int population)
         {
             //Generate 200 Strategies
             var random = new Random();
-            int population = 200;
             for (int i = 0; i < population; i++)
             {
                 //Generate moves based on strategies

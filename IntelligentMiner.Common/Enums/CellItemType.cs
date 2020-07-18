@@ -10,6 +10,7 @@ namespace IntelligentMiner.Common.Enums
         Beacon,
         Pit,
         Player,
-        Empty
+        Empty,
+        Wall
     }
 }
