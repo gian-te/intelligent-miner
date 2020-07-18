@@ -9,7 +9,7 @@ namespace IntelligentMiner.Common
     {
         protected override void Initialize()
         {
-            Symbol = "T";
+            Symbol = "P";
             CellItemType = CellItemType.Pit;
         }
     }

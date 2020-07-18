@@ -28,7 +28,7 @@ namespace IntelligentMiner.Common
         protected override void Initialize()
         {
             base.Initialize();
-            Symbol = "P";
+            Symbol = "M";
             PositionHistory = new List<Tuple<int, int>>();
             CellItemType = CellItemType.Player;
             RandomizeFacing();

@@ -35,8 +35,8 @@ namespace IntelligentMiner.WPF
                 IsIntelligent = false,
                 _pits = "2,2\r\n2,1",
                 _beacons = "1,1",
-                Gold = " 1,2",
-                Size = 3
+                Gold = "1,2",
+                Size = 4
             };
             this.DataContext = _viewModel;
         }
@@ -59,6 +59,14 @@ namespace IntelligentMiner.WPF
                 game.LoadGame(options);
                 game.Show();
                 this.Hide();
+
+                if (options.IsRandom)
+                {
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        Task.Run(() => game.PlayRandom());
+                    }); 
+                }
             }
             catch (Exception ex)
             {

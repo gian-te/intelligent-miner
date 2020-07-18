@@ -13,6 +13,7 @@ namespace IntelligentMiner.Common
 
         public BaseCellItem()
         {
+            Symbol = "E";
             CellItemType = CellItemType.Empty; // default cell type
             Position = new Position();
             Initialize();

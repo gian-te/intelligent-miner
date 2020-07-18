@@ -32,6 +32,13 @@ namespace IntelligentMiner.Common
         public Game(int n, GoldenSquare gold = null, Beacon beacon = null, List<Pit> pits = null)
         {
             Map = new BaseCellItem[n,n];
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    Map[i, j] = new BaseCellItem();
+                }
+            }
             Size = n;
 
             if (gold != null)

@@ -7,22 +7,16 @@
         mc:Ignorable="d"
         Title="Super Miner Bros." Height="450" Width="800">
     <Window.Resources>
-        <DataTemplate x:Key="DataTemplate_Level2">
-            <Button Content="{Binding}" Height="40" Width="50" Margin="4,4,4,4"/>
-        </DataTemplate>
-
-        <DataTemplate x:Key="DataTemplate_Level1">
-            <ItemsControl ItemsSource="{Binding}" ItemTemplate="{DynamicResource DataTemplate_Level2}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel Orientation="Horizontal"/>
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-            </ItemsControl>
-        </DataTemplate>
 
     </Window.Resources>
     <Grid>
-        <ItemsControl x:Name="lst" ItemTemplate="{DynamicResource DataTemplate_Level1}"/>
+        <DataGrid Name="c_dataGrid"
+          RowHeaderWidth="0"
+          ColumnHeaderHeight="0"
+          AutoGenerateColumns="True"
+          AutoGeneratingColumn="c_dataGrid_AutoGeneratingColumn">
+            
+        </DataGrid>
+
     </Grid>
 </Window>
