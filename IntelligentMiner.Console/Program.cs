@@ -86,7 +86,7 @@ namespace IntelligentMiner.ConsoleApp
                                 {
                                     player.scanCount++;
 
-                                    player.MoveWithStrategy(generator.Situations.IndexOf(()).ToString());
+                                    //player.MoveWithStrategy(generator.Situations.IndexOf(()).ToString());
                                     stepCount++;
                                 }
 
