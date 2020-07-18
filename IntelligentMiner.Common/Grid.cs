@@ -41,5 +41,10 @@ namespace IntelligentMiner.Common
         {
             Map[row, col] = new Gold();
         }
+
+        public void AddBeacon(int row, int col)
+        {
+            Map[row, col] = new Beacon();
+        }
     }
 }

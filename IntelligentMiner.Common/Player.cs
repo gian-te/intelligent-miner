@@ -27,10 +27,21 @@ namespace IntelligentMiner.Common
 
 		public List<Tuple<int,int>> PositionHistory { get; set; }
 
+		public string Facing { get; set; }
+
+		public int scanCount { get; set; }
+
+		public int moveCount { get; set; }
+
+		public int rotateCount { get; set; }
+
+		public int backtrackCount { get; set; }
+
 		public Player()
 		{
 			Symbol = "P";
 			PositionHistory = new List<Tuple<int, int>>();
+			Facing = "E";
 		}
 
 		public void MoveUp()
@@ -55,6 +66,26 @@ namespace IntelligentMiner.Common
 		{
 			// row = row + 1, col = col + 0
 			PositionX += 1;
+		}
+
+		public void Rotate()
+		{
+			if(Facing == "N")
+			{
+				Facing = "E";
+			}
+			else if(Facing == "E")
+			{
+				Facing = "S";
+			}
+			else if (Facing == "S")
+			{
+				Facing = "W";
+			}
+			else
+			{
+				Facing = "N";
+			}
 		}
 
 		public void MoveRandomly(int gridSize)
@@ -107,7 +138,11 @@ namespace IntelligentMiner.Common
 
 		}
 
-	
+		public void MoveWithStrategy(string strat)
+		{
+			//Gawin yung strat
+		}
+
 	}
 
 
