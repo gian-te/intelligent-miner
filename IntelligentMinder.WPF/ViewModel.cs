@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IntelligentMinder.WPF
+namespace IntelligentMiner.WPF
 {
     /// <summary>
     /// Load the Entities and put some logic here

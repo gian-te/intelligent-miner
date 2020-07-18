@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntelligentMiner.ConsoleApp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntelligentMiner.Common", "IntelligentMiner.Common\IntelligentMiner.Common.csproj", "{7F8E0BD5-57EC-4620-A507-3E11F8642CBA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntelligentMinder.WPF", "IntelligentMinder.WPF\IntelligentMinder.WPF.csproj", "{7FD6D2E8-5AD3-47E3-8DBA-01AF5715C0F8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntelligentMiner.WPF", "IntelligentMinder.WPF\IntelligentMiner.WPF.csproj", "{7FD6D2E8-5AD3-47E3-8DBA-01AF5715C0F8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

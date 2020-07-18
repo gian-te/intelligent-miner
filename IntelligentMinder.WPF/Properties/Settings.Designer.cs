@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace IntelligentMinder.WPF.Properties
+namespace IntelligentMiner.WPF.Properties
 {
 
 
