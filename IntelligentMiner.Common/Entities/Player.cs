@@ -31,6 +31,7 @@ namespace IntelligentMiner.Common
         {
             Symbol = "P";
             Facing = Direction.East;
+            Position = new Position();
             PositionHistory = new List<Tuple<int, int>>();
             CellItemType = CellItemType.Player;
         }
