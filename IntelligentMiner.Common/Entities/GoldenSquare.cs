@@ -5,12 +5,12 @@ using IntelligentMiner.Common.Enums;
 
 namespace IntelligentMiner.Common
 {
-    public class Beacon : CellItem
+    public class GoldenSquare : BaseCellItem
     {
-        public Beacon()
+        public GoldenSquare()
         {
-            Symbol = "B";
-            CellItemType = CellItemType.Beacon;
+            Symbol = "G";
+            CellItemType = CellItemType.GoldenSquare;
         }
     }
 }

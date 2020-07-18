@@ -8,7 +8,7 @@ namespace IntelligentMiner.Common
 {
 	
 
-	public class Player : CellItem
+	public class Player : BaseCellItem
     {
 		private int _positionX;
 		private int _positionY;

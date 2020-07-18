@@ -5,12 +5,12 @@ using System.Text;
 
 namespace IntelligentMiner.Common
 {
-    public class CellItem
+    public class BaseCellItem
     {
         public string Symbol { get; set; }
         public CellItemType CellItemType { get; set; }
 
-        public CellItem()
+        public BaseCellItem()
         {
             Initialize();
         }

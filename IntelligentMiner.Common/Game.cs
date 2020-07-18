@@ -4,14 +4,14 @@ using System.Collections.Generic;
 
 namespace IntelligentMiner.Common
 {
-    public class Grid
+    public class Game
     {
-        private CellItem[,] _map;
+        private BaseCellItem[,] _map;
 
         /// <summary>
         /// Property for a 2D Array
         /// </summary>
-        public CellItem[,] Map
+        public BaseCellItem[,] Map
         {
             get { return _map; }
             set { _map = value; }
@@ -27,9 +27,9 @@ namespace IntelligentMiner.Common
         }
 
 
-        public Grid(int n)
+        public Game(int n)
         {
-            Map = new CellItem[n,n];
+            Map = new BaseCellItem[n,n];
         }
 
         public void AddTrap(int row, int col)

@@ -61,7 +61,7 @@ namespace IntelligentMiner.ConsoleApp
 
                             foreach(string strategy in generator.Strategies)
                             {
-                                var game = new Grid(size);
+                                var game = new Game(size);
                                 var player = new Player();
                                 player.PositionX = 0;
                                 player.PositionY = 0;
@@ -112,7 +112,7 @@ namespace IntelligentMiner.ConsoleApp
                     else //Moves randomly
                     {
                         // create 2x2 array
-                        var game = new Grid(size);
+                        var game = new Game(size);
                         //game.AddGold(1, 1);
                         //game.AddTrap(1, 1);
                         //game.AddBeacon(1, 1);
