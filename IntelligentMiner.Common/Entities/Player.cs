@@ -107,7 +107,7 @@ namespace IntelligentMiner.Common
 
         public BaseCellItem Move(Game game)
         {
-            var times = Randomizer.RandomizeNumber(1, game.Size + 1);
+            var times = Randomizer.RandomizeNumber(1, game.Size);
             Console.WriteLine(string.Format("The player will move to the {0} for {1} times!", Facing.ToString(), times));
 
             BaseCellItem cell = null;

@@ -28,74 +28,88 @@ namespace IntelligentMiner.WPF.Game
     {
         public event PropertyChangedEventHandler PropertyChanged;
         IntelligentMiner.Common.Game game;
+        Player player;
         public GameWindow()
         {
             InitializeComponent();
+            DataContext = this;
         }
 
+        private DataView gridData;
+        public DataView GridData { get { return gridData; } set { gridData = value; NotifyPropertyChanged("GridData"); } }
+
+        private void NotifyPropertyChanged(string str)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(str));
+            }
+        }
 
         public void LoadGame(GameOptions gameOptions)
         {
             game = new Common.Game(gameOptions.Size);
+            player = new Player()
+            {
+                Position = new Position()
+                {
+                    Row  = 0,
+                    Column = 0
+                }
+            };
+            game.Map[player.Position.Row, player.Position.Column] = player;
             var gold = new GoldenSquare();
             var goldCoordinates = gameOptions.Gold.Split(',');
-            gold.Position.Row = int.Parse(goldCoordinates[0]) ;
+            gold.Position.Row = int.Parse(goldCoordinates[0]);
             gold.Position.Column = int.Parse(goldCoordinates[1]);
             game.AddGold(gold.Position.Row, gold.Position.Column);
             RefreshGrid();
         }
 
-     
+
 
         public void PlayRandom()
         {
-           Task.Run(() =>
+            Task.Run(() =>
 
-           {
+            {
 
-               bool end = false;
-               Player player = new Player();
-               game.Map[player.Position.Row, player.Position.Column] = player;
-               while (!end)
-               {
+                bool end = false;
+                while (!end)
+                {
                     // 1. randomize move between Rotate or Move
                     var action = player.RandomizeAction();
 
-                   if (action == "rotate")
-                   {
+                    if (action == "rotate")
+                    {
                         // 2. if Rotate, randomize how many times it will rotate 90-degrees
                         player.RotateRandomTimes();
-                   }
-                   else if (action == "move")
-                   {
+                    }
+                    else if (action == "move")
+                    {
                         // 3. if Move, randomize how many times it will move
                         var cell = player.Move(game);
-                       if (cell.CellItemType == Common.Enums.CellItemType.GoldenSquare || cell.CellItemType == Common.Enums.CellItemType.Pit)
-                       {
-                           end = true;
-                       }
+                        if (cell.CellItemType == Common.Enums.CellItemType.GoldenSquare || cell.CellItemType == Common.Enums.CellItemType.Pit)
+                        {
+                            end = true;
+                        }
 
-                   }
-                   //Task.Run(() =>
-                   //{
-                   //    Dispatcher.Invoke(() => RefreshGrid());
+                    }
 
-                   //});
-                   
-                   Dispatcher.Invoke(() => RefreshGrid());
+                    this.Dispatcher.Invoke(() => RefreshGrid());
 
-                   //stepCount++;
-                   Console.WriteLine();
-               }
+                    //stepCount++;
+                    Console.WriteLine();
+                }
 
-           });
-            
+            });
+
         }
 
         private void RefreshGrid()
         {
-            c_dataGrid.ItemsSource = null;
-            c_dataGrid.ItemsSource = GetBindable2DArray<BaseCellItem>(game.Map);
+            GridData = GetBindable2DArray<BaseCellItem>(game.Map);
+            c_dataGrid.ItemsSource = GridData;
         }
 
         private void c_dataGrid_AutoGeneratingColumn(object sender, DataGridAutoGeneratingColumnEventArgs e)
@@ -105,6 +119,12 @@ namespace IntelligentMiner.WPF.Game
             binding.Path = new PropertyPath(binding.Path.Path + ".Value.Symbol");
         }
 
+        /// <summary>
+        /// [GIAN] this is wrong
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="array"></param>
+        /// <returns></returns>
         public DataView GetBindable2DArray<T>(T[,] array)
         {
             DataTable dataTable = new DataTable();
@@ -118,9 +138,9 @@ namespace IntelligentMiner.WPF.Game
                 dataTable.Rows.Add(dataRow);
             }
             DataView dataView = new DataView(dataTable);
-            for (int i = 0; i < array.GetLength(0); i++)
+            for (int i = 0; i < array.GetLength(1); i++)
             {
-                for (int j = 0; j < array.GetLength(1); j++)
+                for (int j = 0; j < array.GetLength(0); j++)
                 {
                     int a = i;
                     int b = j;
