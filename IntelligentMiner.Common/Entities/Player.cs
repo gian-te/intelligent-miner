@@ -17,7 +17,7 @@ namespace IntelligentMiner.Common
 
         public List<Tuple<int, int>> PositionHistory { get; set; }
 
-        public string Facing { get; set; }
+        public Direction Facing { get; set; }
 
         public int scanCount { get; set; }
 
@@ -30,11 +30,13 @@ namespace IntelligentMiner.Common
         public Player()
         {
             Symbol = "P";
-            Facing = "E";
+            Facing = Direction.East;
             PositionHistory = new List<Tuple<int, int>>();
             CellItemType = CellItemType.Player;
         }
 
+
+        /* Obsolete */
         public void MoveUp()
         {
             // row = row + 0, col = col + 1
@@ -61,26 +63,26 @@ namespace IntelligentMiner.Common
 
         public Tuple<int, int> Rotate()
         {
-            Tuple<int, int> cellInFront;
-            if (Facing == "N")
+            Tuple<int, int> cellInFront = null;
+            if (Facing == Direction.North)
             {
-                Facing = "E";
+                Facing = Direction.East;
                 cellInFront = new Tuple<int, int>(Position.Row + 1, Position.Column);
             }
-            else if (Facing == "E")
+            else if (Facing == Direction.East)
             {
-                Facing = "S";
+                Facing = Direction.South;
                 cellInFront = new Tuple<int, int>(Position.Row, Position.Column - 1);
 
             }
-            else if (Facing == "S")
+            else if (Facing == Direction.South)
             {
-                Facing = "W";
+                Facing = Direction.West;
                 cellInFront = new Tuple<int, int>(Position.Row - 1, Position.Column);
             }
-            else
+            else if (Facing == Direction.West)
             {
-                Facing = "N";
+                Facing = Direction.North;
                 cellInFront = new Tuple<int, int>(Position.Row, Position.Column + 1);
             }
 
@@ -91,22 +93,22 @@ namespace IntelligentMiner.Common
 
         public void MoveRandomly(int gridSize)
         {
-            var possibleDirections = Enum.GetValues(typeof(Directions));
+            var possibleDirections = Enum.GetValues(typeof(Direction));
             var random = new Random();
             Thread.Sleep(200);
-            var direction = (Directions)possibleDirections.GetValue(random.Next(0, possibleDirections.Length));
+            var direction = (Direction)possibleDirections.GetValue(random.Next(0, possibleDirections.Length));
             switch (direction)
             {
-                case Directions.North:
+                case Direction.North:
                     MoveUp();
                     break;
-                case Directions.South:
+                case Direction.South:
                     MoveDown();
                     break;
-                case Directions.East:
+                case Direction.East:
                     MoveLeft();
                     break;
-                case Directions.West:
+                case Direction.West:
                     MoveRight();
                     break;
                 default:

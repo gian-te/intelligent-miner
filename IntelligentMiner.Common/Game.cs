@@ -48,52 +48,41 @@ namespace IntelligentMiner.Common
             Map[row, col] = new Beacon();
         }
 
-        public CellItemType GetCellType(int row, int col, string Facing, string scan_type = "current")
+        public BaseCellItem Scan(int row, int col, Direction Facing, string scan_type = "current")
         {
 
             if (scan_type == "front")
             {
 
-                if (Facing == "N")
+                if (Facing == Direction.North)
                 {
                     col--;
                 }
-                else if (Facing == "E")
+                else if (Facing == Direction.East)
                 {
                     row++;
                 }
-                else if (Facing == "S")
+                else if (Facing == Direction.South)
                 {
                     col++;
                 }
-                else
+                else if (Facing == Direction.West)
                 {
                     row--;
                 }
-
             }
 
-            var cell = Map[row, col];
-            CellItemType type = cell.CellItemType;
-
+            BaseCellItem cell = null;
             try
             {
-                if (cell != null)
-                {
-                    type = cell.CellItemType;
-                }
-                else
-                {
-                    type = CellItemType.Empty;
-                }
+                cell = Map[row, col];
             }
-            catch (Exception)
+            catch
             {
-
-                type = CellItemType.Wall;
+                throw;
             }
 
-            return type;
+            return cell;
         }
 
         public bool IsCellValid(int row, int col)

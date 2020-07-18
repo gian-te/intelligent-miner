@@ -7,7 +7,7 @@ namespace IntelligentMiner.Common.Enums
     /// <summary>
     /// Used for knowing where the Player is currently facing
     /// </summary>
-    enum Directions
+    public enum Direction
     {
         North,
         South,

@@ -84,9 +84,13 @@ namespace IntelligentMiner.ConsoleApp
 
                                 while (stepCount < stepsLimit || (player.Position.Row != goldX && player.Position.Column != goldY))
                                 {
+                                    
                                     player.scanCount++;
+                                    var front = game.Scan(player.Position.Row, player.Position.Column, player.Facing, "front");
+                                    var current = game.Scan(player.Position.Row, player.Position.Column, player.Facing);
 
-                                    //player.MoveWithStrategy(generator.Situations.IndexOf(()).ToString());
+
+                                    player.MoveWithStrategy(generator.Situations.IndexOf((current.CellItemType.ToString(), front.CellItemType.ToString())).ToString());
                                     stepCount++;
                                 }
 
