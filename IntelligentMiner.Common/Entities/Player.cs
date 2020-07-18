@@ -113,7 +113,7 @@ namespace IntelligentMiner.Common
             BaseCellItem cell = null;
             for (int i = 0; i < times; i++)
             {
-                Thread.Sleep(100);
+                Thread.Sleep(250);
                 cell = game.Scan(Position.Row, Position.Column, Facing, "front");
                 if (cell.CellItemType == CellItemType.Wall)
                 {

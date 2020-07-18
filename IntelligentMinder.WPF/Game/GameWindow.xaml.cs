@@ -77,6 +77,7 @@ namespace IntelligentMiner.WPF.Game
                 bool end = false;
                 while (!end)
                 {
+                    //Thread.Sleep(200);
                     // 1. randomize move between Rotate or Move
                     var action = player.RandomizeAction();
 
