@@ -16,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Threading;
 
 namespace IntelligentMiner.WPF
 {
@@ -62,10 +63,7 @@ namespace IntelligentMiner.WPF
 
                 if (options.IsRandom)
                 {
-                    this.Dispatcher.Invoke(() =>
-                    {
-                        Task.Run(() => game.PlayRandom());
-                    }); 
+                    game.PlayRandom();
                 }
             }
             catch (Exception ex)

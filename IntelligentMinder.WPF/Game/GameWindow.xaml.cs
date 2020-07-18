@@ -17,6 +17,7 @@ using System.Windows.Shapes;
 using System.ComponentModel;
 using System.Data;
 using System.Threading;
+using IntelligentMiner.Common.Utilities;
 
 namespace IntelligentMiner.WPF.Game
 {
@@ -41,44 +42,57 @@ namespace IntelligentMiner.WPF.Game
             gold.Position.Row = int.Parse(goldCoordinates[0]) ;
             gold.Position.Column = int.Parse(goldCoordinates[1]);
             game.AddGold(gold.Position.Row, gold.Position.Column);
-            ReloadGrid();
+            RefreshGrid();
         }
 
      
 
         public void PlayRandom()
         {
-            bool end = false;
-            Player player = new Player();
-            while (!end)
-            {
-                Thread.Sleep(500);
-                // 1. randomize move between Rotate or Move
-                var action = player.RandomizeAction();
+           Task.Run(() =>
 
-                if (action == "rotate")
-                {
-                    // 2. if Rotate, randomize how many times it will rotate 90-degrees
-                    player.RotateRandomTimes();
-                }
-                else if (action == "move")
-                {
-                    // 3. if Move, randomize how many times it will move
-                    var cell = player.Move(game);
-                    if (cell.CellItemType == Common.Enums.CellItemType.GoldenSquare || cell.CellItemType == Common.Enums.CellItemType.Pit)
-                    {
-                        end = true;
-                    }
+           {
 
-                }
-                Dispatcher.Invoke(() => ReloadGrid() );                
-                //stepCount++;
-                Console.WriteLine();
-            }
+               bool end = false;
+               Player player = new Player();
+               game.Map[player.Position.Row, player.Position.Column] = player;
+               while (!end)
+               {
+                    // 1. randomize move between Rotate or Move
+                    var action = player.RandomizeAction();
+
+                   if (action == "rotate")
+                   {
+                        // 2. if Rotate, randomize how many times it will rotate 90-degrees
+                        player.RotateRandomTimes();
+                   }
+                   else if (action == "move")
+                   {
+                        // 3. if Move, randomize how many times it will move
+                        var cell = player.Move(game);
+                       if (cell.CellItemType == Common.Enums.CellItemType.GoldenSquare || cell.CellItemType == Common.Enums.CellItemType.Pit)
+                       {
+                           end = true;
+                       }
+
+                   }
+                   //Task.Run(() =>
+                   //{
+                   //    Dispatcher.Invoke(() => RefreshGrid());
+
+                   //});
+                   
+                   Dispatcher.Invoke(() => RefreshGrid());
+
+                   //stepCount++;
+                   Console.WriteLine();
+               }
+
+           });
             
         }
 
-        private void ReloadGrid()
+        private void RefreshGrid()
         {
             c_dataGrid.ItemsSource = null;
             c_dataGrid.ItemsSource = GetBindable2DArray<BaseCellItem>(game.Map);
