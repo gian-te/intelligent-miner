@@ -76,13 +76,13 @@ namespace IntelligentMiner.ConsoleApp
                             {
                                 var game = new Game(size);
                                 var player = new Player();
-                                player.PositionX = 0;
-                                player.PositionY = 0;
+                                player.Position.Row = 0;
+                                player.Position.Column = 0;
 
-                                game.Map[player.PositionX, player.PositionY] = player;
+                                game.Map[player.Position.Row, player.Position.Column] = player;
                                 game.AddGold(goldX, goldY);
 
-                                while (stepCount < stepsLimit || (player.PositionX != goldX && player.PositionY != goldY))
+                                while (stepCount < stepsLimit || (player.Position.Row != goldX && player.Position.Column != goldY))
                                 {
                                     player.scanCount++;
 
@@ -106,23 +106,20 @@ namespace IntelligentMiner.ConsoleApp
                     {
                         // create 2x2 array
                         var game = new Game(size);
-                        //game.AddGold(1, 1);
-                        //game.AddTrap(1, 1);
-                        //game.AddBeacon(1, 1);
 
                         var player = new Player();
-                        player.PositionX = 0;
-                        player.PositionY = 0;
+                        player.Position.Row = 0;
+                        player.Position.Column = 0;
 
                         // set the player to its position in the grid
-                        game.Map[player.PositionX, player.PositionY] = player;
+                        game.Map[player.Position.Row, player.Position.Column] = player;
 
                         player.MoveRandomly(size);
-                        Console.WriteLine(string.Format("Player is trying to move to coordinates [{0},{1}]", player.PositionX, player.PositionY));
+                        Console.WriteLine(string.Format("Player is trying to move to coordinates [{0},{1}]", player.Position.Row, player.Position.Column));
 
                         stepCount++;
 
-                        if (player.PositionX == goldX && player.PositionY == goldY)
+                        if (player.Position.Row == goldX && player.Position.Column == goldY)
                         {
                             end = true;
                         }
