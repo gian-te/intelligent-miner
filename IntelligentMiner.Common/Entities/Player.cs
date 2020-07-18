@@ -69,25 +69,34 @@ namespace IntelligentMiner.Common
 			PositionX += 1;
 		}
 
-		public void Rotate()
+		public Tuple<int, int> Rotate()
 		{
+            Tuple<int, int> cellInFront;
 			if(Facing == "N")
 			{
 				Facing = "E";
+                cellInFront = new Tuple<int, int>(PositionX + 1, PositionY);
 			}
 			else if(Facing == "E")
 			{
 				Facing = "S";
-			}
-			else if (Facing == "S")
+                cellInFront = new Tuple<int, int>(PositionX, PositionY - 1);
+
+            }
+            else if (Facing == "S")
 			{
 				Facing = "W";
-			}
-			else
+                cellInFront = new Tuple<int, int>(PositionX - 1, PositionY);
+            }
+            else
 			{
-				Facing = "N";
-			}
-		}
+                Facing = "N";
+                cellInFront = new Tuple<int, int>(PositionX, PositionY + 1);
+            }
+
+            // return the cell which the player is facing after rotating 90 degrees
+            return cellInFront;
+        }
 
 
 		public void MoveRandomly(int gridSize)
@@ -134,7 +143,7 @@ namespace IntelligentMiner.Common
 			}
 			else
 			{
-				// historize steps
+				// historize steps if random move is valid.
 				PositionHistory.Add(new Tuple<int, int>(PositionX, PositionY));
 			}
 
