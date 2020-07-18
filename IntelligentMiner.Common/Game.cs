@@ -79,7 +79,7 @@ namespace IntelligentMiner.Common
             }
             catch
             {
-                throw;
+                return cell;
             }
 
             return cell;
