@@ -29,10 +29,15 @@ namespace IntelligentMiner.Common
         }
 
 
-        public Game(int n)
+        public Game(int n, GoldenSquare gold = null, Beacon beacon = null, List<Pit> pits = null)
         {
             Map = new BaseCellItem[n,n];
             Size = n;
+
+            if (gold != null)
+            {
+                Map[gold.Position.Row, gold.Position.Column] = gold;
+            }
         }
 
         public void AddTrap(int row, int col)
@@ -79,14 +84,13 @@ namespace IntelligentMiner.Common
             try
             {
                 cell = Map[row, col];
-
                 // empty cell but not wall
                 if (cell == null)
                 {
                     cell = new BaseCellItem();
-                    cell.Position.Row = row;
-                    cell.Position.Column = col;
                 }
+                cell.Position.Row = row;
+                cell.Position.Column = col;
             }
             catch
             {
@@ -113,6 +117,24 @@ namespace IntelligentMiner.Common
             }
 
             return retVal;
+        }
+
+
+        /// <summary>
+        /// Must clear the player if the player moves away in a cell
+        /// </summary>
+        public void ClearCell(int row, int col)
+        {
+            Map[row, col] = new BaseCellItem();
+        }
+
+        /// <summary>
+        /// Assignts a player to a cell in the Map
+        /// </summary>
+        /// <param name="game"></param>
+        public void AssignPlayerToCell(Player player)
+        {
+            Map[player.Position.Row, player.Position.Column] = player;
         }
     }
 }

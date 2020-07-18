@@ -13,9 +13,9 @@ namespace IntelligentMiner.Common
 
         public BaseCellItem()
         {
-            Initialize();
             CellItemType = CellItemType.Empty; // default cell type
             Position = new Position();
+            Initialize();
         }
 
         protected virtual void Initialize()

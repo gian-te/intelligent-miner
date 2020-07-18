@@ -107,8 +107,8 @@ namespace IntelligentMiner.Common
 
         public BaseCellItem Move(Game game)
         {
-            var times = Randomizer.RandomizeNumber(1, game.Size);
-            Console.WriteLine(string.Format("The player will move {0} times!", times));
+            var times = Randomizer.RandomizeNumber(1, game.Size + 1);
+            Console.WriteLine(string.Format("The player will move to the {0} for {1} times!", Facing.ToString(), times));
 
             BaseCellItem cell = null;
             for (int i = 0; i < times; i++)
@@ -120,8 +120,18 @@ namespace IntelligentMiner.Common
                     break;
                 }
 
+                // remove the player from its current cell
+                game.ClearCell(Position.Row, Position.Column);
+
+                // assign new coordinates to the player
                 Position.Row = cell.Position.Row;
                 Position.Column = cell.Position.Column;
+
+                game.AssignPlayerToCell(this);
+
+                Console.WriteLine(string.Format("Player moved to coordinates [{0},{1}]", Position.Row, Position.Column));
+                PositionHistory.Add(new Tuple<int, int>(Position.Row, Position.Column));
+
                 if (cell.CellItemType == CellItemType.Pit)
                 {
                     // die
@@ -141,8 +151,6 @@ namespace IntelligentMiner.Common
                     break;
                 }
 
-                PositionHistory.Add(new Tuple<int, int>(Position.Row, Position.Column));
-                Console.WriteLine(string.Format("Player moved to coordinates [{0},{1}]", Position.Row, Position.Column));
 
             }
             return cell;
@@ -172,8 +180,6 @@ namespace IntelligentMiner.Common
 
             Console.WriteLine(string.Format("The player is initially facing {0}" , Facing.ToString()));
         }
-
-        
     }
 
 

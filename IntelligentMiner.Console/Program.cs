@@ -25,10 +25,11 @@ namespace IntelligentMiner.ConsoleApp
 
         private static void Play()
         {
+            int stepCount = 0;
+            int size = 0;
+
             try
             {
-                var size = 0;
-
                 //Choose initial intelligence
                 string intell = "";
 
@@ -53,10 +54,12 @@ namespace IntelligentMiner.ConsoleApp
                 gold.Position.Column = goldY;
 
                 bool end = false;
-                var stepCount = 0;
+               
 
-                Game game;
-                var player = new Player();
+                Game game = new Game(size, gold);
+                Player player = new Player();
+
+                game.Map[player.Position.Row, player.Position.Column] = player;
 
                 while (!end)
                 {
@@ -113,15 +116,6 @@ namespace IntelligentMiner.ConsoleApp
                     }
                     else //Moves randomly
                     {
-                        // create 2x2 array
-                        game = new Game(size);
-
-                        player.Position.Row = 0;
-                        player.Position.Column = 0;
-
-                        // set the player to its position in the grid
-                        game.Map[player.Position.Row, player.Position.Column] = player;
-
                         Thread.Sleep(500);
                         // 1. randomize move between Rotate or Move
                         var action = player.RandomizeAction();
@@ -139,6 +133,7 @@ namespace IntelligentMiner.ConsoleApp
                             {
                                 end = true;
                             }
+
                         }
 
                         stepCount++;
