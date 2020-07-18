@@ -13,6 +13,19 @@ namespace IntelligentMiner.ConsoleApp
         {
             try
             {
+                Play();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.Read();
+            }
+        }
+
+        private static void Play()
+        {
+            try
+            {
                 var size = 0;
                 var goldX = 0;
                 var goldY = 0;
@@ -37,9 +50,9 @@ namespace IntelligentMiner.ConsoleApp
                 int.TryParse(Console.ReadLine(), out goldY);
 
                 bool end = false;
-                var stepCount = 0;       
+                var stepCount = 0;
 
-                while(!end)
+                while (!end)
                 {
                     if (intell == "s") //Moves intelligently
                     {
@@ -50,7 +63,7 @@ namespace IntelligentMiner.ConsoleApp
                         int crossoverChance = 10;
                         double stepsLimit = size * size;
                         double fitnessMeasure = 0;
-                        
+
                         // Generate strategies mapping
                         var generator = new Generators();
                         generator.GeneratePossibilities();
@@ -59,7 +72,7 @@ namespace IntelligentMiner.ConsoleApp
                         for (int gen = 0; gen < generations; gen++)
                         {
 
-                            foreach(string strategy in generator.Strategies)
+                            foreach (string strategy in generator.Strategies)
                             {
                                 var game = new Game(size);
                                 var player = new Player();
@@ -71,7 +84,7 @@ namespace IntelligentMiner.ConsoleApp
                                 game.Map[player.PositionX, player.PositionY] = player;
                                 game.AddGold(goldX, goldY);
 
-                                while(stepCount < stepsLimit || (player.PositionX != goldX && player.PositionY != goldY))
+                                while (stepCount < stepsLimit || (player.PositionX != goldX && player.PositionY != goldY))
                                 {
                                     player.scanCount++;
 
@@ -138,13 +151,6 @@ namespace IntelligentMiner.ConsoleApp
                 }
 
                 Console.WriteLine(string.Format("Found in {0} steps", stepCount));
-                // TODO: ask for trap location
-                //Console.WriteLine(string.Format("Player is at {0}"));
-
-                // TODO: ask for gold location
-
-
-                // TODO: render 2x2 array in console.
                 Console.Read();
             }
             catch (Exception ex)
@@ -152,7 +158,6 @@ namespace IntelligentMiner.ConsoleApp
                 Console.WriteLine(ex.Message);
                 Console.Read();
             }
-            
         }
     }
 }

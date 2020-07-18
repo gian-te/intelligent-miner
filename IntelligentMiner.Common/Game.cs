@@ -63,5 +63,21 @@ namespace IntelligentMiner.Common
 
             return type;
         }
+
+        public bool IsCellValid(int row, int col)
+        {
+            var retVal = false;
+            try
+            {
+                var cell = Map[row, col];
+                retVal = true;
+            }
+            catch (Exception ex)
+            {
+                retVal = false;
+            }
+
+            return retVal;
+        }
     }
 }

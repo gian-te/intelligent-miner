@@ -4,11 +4,14 @@ using System.Text;
 
 namespace IntelligentMiner.Common.Enums
 {
+    /// <summary>
+    /// Used for knowing where the Player is currently facing
+    /// </summary>
     enum Directions
     {
-        Up,
-        Down,
-        Left,
-        Right
+        North,
+        South,
+        East,
+        West
     }
 }

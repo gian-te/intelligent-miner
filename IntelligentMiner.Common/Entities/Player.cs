@@ -106,16 +106,16 @@ namespace IntelligentMiner.Common
 			var direction = (Directions)possibleDirections.GetValue(random.Next(0,possibleDirections.Length));
 			switch (direction)
 			{
-				case Directions.Up:
+				case Directions.North:
 					MoveUp();
 					break;
-				case Directions.Down:
+				case Directions.South:
 					MoveDown();
 					break;
-				case Directions.Left:
+				case Directions.East:
 					MoveLeft();
 					break;
-				case Directions.Right:
+				case Directions.West:
 					MoveRight();
 					break;
 				default:
