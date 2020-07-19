@@ -34,8 +34,8 @@ namespace IntelligentMiner.WPF
             {
                 MovesRandomly = true,
                 MovesIntelligently = false,
-                _pits = "2,2\r\n2,1",
-                _beacons = "1,1",
+                pits = "2,2\r\n2,1\r\n",
+                beacons = "1,1\r\n",
                 Gold = "1,2",
                 Size = 3 
             };
@@ -51,8 +51,8 @@ namespace IntelligentMiner.WPF
                 // Validate here
                 var options = _viewModel;
                 string[] stringSeparators = new string[] { "\r\n" };
-                List<string> _pits = options._pits.Split(stringSeparators, StringSplitOptions.None).ToList();
-                List<string> _beacons = options._beacons.Split(stringSeparators, StringSplitOptions.None).ToList();
+                List<string> _pits = options.pits.Split(stringSeparators, StringSplitOptions.None).ToList();
+                List<string> _beacons = options.beacons.Split(stringSeparators, StringSplitOptions.None).ToList();
                 options.Beacons = _pits;
                 options.Pits = _beacons;
 
@@ -78,17 +78,15 @@ namespace IntelligentMiner.WPF
         {
             try
             {
-                List<string> _pits = null;
-                List<string> _beacons = null;
                 List<int> _beaconValues = null;
-                Tuple<int, int> goldenSquare = null;
+                //Tuple<int, int> goldenSquare = null;
 
-                (goldenSquare, _beacons, _beaconValues, _pits) = GenerateRandomInit(_viewModel.Size);
+                // let the binding do the work
+                GenerateRandomInit();
 
                 //txtGoldenSquare.Text = String.Concat(goldenSquare.Item1, ",", goldenSquare.Item2);
                 
-                // let the binding do the work
-                _viewModel.Gold = String.Concat(goldenSquare.Item1, ",", goldenSquare.Item2); 
+                //_viewModel.Gold = String.Concat(goldenSquare.Item1, ",", goldenSquare.Item2); 
 
             }
             catch (Exception ex)
@@ -99,17 +97,20 @@ namespace IntelligentMiner.WPF
         }
 
         //Still has bugs
-        public (Tuple<int, int>, List<string>, List<int>, List<string>) GenerateRandomInit(int gridSize)
+        public void GenerateRandomInit()
         {
+            int gridSize = _viewModel.Size;
+
+
             int row = 0;
             int col = 0;
             int i = 0;
 
             //20% Pits & Beacons
             double numberOfPitsandBeacons = Math.Round((gridSize * gridSize) * 0.20);
-            List<string> _beacons = new List<string>();
+            //List<string> _beacons = new List<string>();
             List<int> _beaconValues = new List<int>();
-            List<string> _pits = new List<string>();
+            //List<string> _pits = new List<string>();
             List<Tuple<int, int>> existingCoordinates = new List<Tuple<int, int>>();
 
             existingCoordinates.Add(new Tuple<int, int>(0, 0));
@@ -122,6 +123,7 @@ namespace IntelligentMiner.WPF
             }
 
             Tuple<int, int> _goldensquare = new Tuple<int, int>(row, col);
+            _viewModel.Gold = string.Concat(_goldensquare.Item1, ',', _goldensquare.Item2);
             existingCoordinates.Add(new Tuple<int, int>(row, col));
 
             //Create Beacons
@@ -152,7 +154,7 @@ namespace IntelligentMiner.WPF
 
                     if (chooseAlignment == 0) { beaconValue = Math.Abs(_goldensquare.Item1 - row); }
                     else { beaconValue = Math.Abs(_goldensquare.Item1 - col); }
-                    _beacons.Add(coordinates);
+                    _viewModel.beacons += (coordinates + "\r\n");
                     _beaconValues.Add(beaconValue);
                     existingCoordinates.Add(coord);
                     i++;
@@ -172,13 +174,11 @@ namespace IntelligentMiner.WPF
 
                 if (!existingCoordinates.Contains(coord))
                 {
-                    _pits.Add(coordinates);
+                    _viewModel.pits += (coordinates + "\r\n");
                     existingCoordinates.Add(coord);
                     i++;
                 }
             }
-
-            return (_goldensquare, _beacons, _beaconValues, _pits);
 
         }
 
