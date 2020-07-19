@@ -150,13 +150,35 @@ namespace IntelligentMiner.WPF
             //    }
             //}
 
-            //Create Beacons
-            for (int j = 0; j < numberOfPitsandBeacons; j++)
-            {
-                Thread beaconThread = new Thread(() => createBeaconCoords(gridSize, _goldensquare, existingCoordinates));
-                beaconThread.IsBackground = true;
-                beaconThread.Start();
-            }
+            Task.Run(
+                () =>
+
+                
+                    Parallel.Invoke(
+                        () =>
+                        {
+                            //Create Beacons
+                            for (int j = 0; j < numberOfPitsandBeacons; j++)
+                            {
+                                Thread beaconThread = new Thread(() => createBeaconCoords(gridSize, _goldensquare, existingCoordinates));
+                                beaconThread.IsBackground = true;
+                                beaconThread.Start();
+                            }
+
+                        },
+                        () =>
+                        {
+                            //Create Pits 
+                            for (int j = 0; j < numberOfPitsandBeacons; j++)
+                            {
+                                Thread pitThread = new Thread(() => createPitCoords(gridSize, existingCoordinates));
+                                pitThread.IsBackground = true;
+                                pitThread.Start();
+                            }
+                        }
+                        )
+                
+                );
 
             //while (i < numberOfPitsandBeacons)
             //{
@@ -174,13 +196,7 @@ namespace IntelligentMiner.WPF
             //    }
             //}
 
-            //Create Pits 
-            for (int j = 0; j < numberOfPitsandBeacons; j++)
-            {
-                Thread pitThread = new Thread(() => createPitCoords(gridSize, existingCoordinates));
-                pitThread.IsBackground = true;
-                pitThread.Start();
-            }
+
 
         }
 
