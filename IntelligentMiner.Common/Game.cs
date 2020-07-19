@@ -59,9 +59,11 @@ namespace IntelligentMiner.Common
             Map[row, col] = new GoldenSquare();
         }
 
-        public void AddBeacon(int row, int col)
+        public void AddBeacon(int row, int col, int value)
         {
-            Map[row, col] = new Beacon();
+            var beacon = new Beacon();
+            beacon.Value = value;
+            Map[row, col] = beacon;
         }
 
         public BaseCellItem Scan(int row, int col, Direction Facing, string scan_type = "current")

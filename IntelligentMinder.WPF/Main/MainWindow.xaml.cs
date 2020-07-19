@@ -100,7 +100,8 @@ namespace IntelligentMiner.WPF
         public void GenerateRandomInit()
         {
             int gridSize = _viewModel.Size;
-
+            _viewModel.pits = String.Empty;
+            _viewModel.beacons = String.Empty;
 
             int row = 0;
             int col = 0;
@@ -109,7 +110,7 @@ namespace IntelligentMiner.WPF
             //20% Pits & Beacons
             double numberOfPitsandBeacons = Math.Round((gridSize * gridSize) * 0.20);
             //List<string> _beacons = new List<string>();
-            List<int> _beaconValues = new List<int>();
+            //List<int> _beaconValues = new List<int>();
             //List<string> _pits = new List<string>();
             List<Tuple<int, int>> existingCoordinates = new List<Tuple<int, int>>();
 
@@ -154,8 +155,8 @@ namespace IntelligentMiner.WPF
 
                     if (chooseAlignment == 0) { beaconValue = Math.Abs(_goldensquare.Item1 - row); }
                     else { beaconValue = Math.Abs(_goldensquare.Item1 - col); }
-                    _viewModel.beacons += (coordinates + "\r\n");
-                    _beaconValues.Add(beaconValue);
+                    _viewModel.beacons += (coordinates + "=" + beaconValue.ToString() + "\r\n");
+                    //_beaconValues.Add(beaconValue);
                     existingCoordinates.Add(coord);
                     i++;
                 }

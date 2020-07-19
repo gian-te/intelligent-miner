@@ -10,7 +10,6 @@ namespace IntelligentMiner.Common
         public string Symbol { get; set; }
         public CellItemType CellItemType { get; set; }
         public Position Position { get; set; }
-        public int Value { get; set; }
 
         public BaseCellItem()
         {
