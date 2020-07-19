@@ -108,7 +108,7 @@ namespace IntelligentMiner.Common
         public BaseCellItem Move(Game game)
         {
             var times = Randomizer.RandomizeNumber(1, game.Size);
-            Console.WriteLine(string.Format("The player will move to the {0} for {1} times!", Facing.ToString(), times));
+            Console.WriteLine(string.Format("The player will move to the {0} for {1} time(s)!", Facing.ToString(), times));
 
             BaseCellItem cell = null;
             for (int i = 0; i < times; i++)
@@ -148,7 +148,7 @@ namespace IntelligentMiner.Common
                 else if (cell.CellItemType == CellItemType.Beacon)
                 {
                     // clue
-                    Console.WriteLine("The player found a beacon.");
+                    Console.WriteLine("The player has found a beacon.");
                     break;
                 }
 

@@ -38,7 +38,7 @@ namespace IntelligentMiner.WPF
                 pits = "2,2\r\n2,1\r\n",
                 beacons = "1,1=1\r\n2,2=1\r\n",
                 Gold = "1,2",
-                Size = 3
+                Size = 4
             };
             this.DataContext = _viewModel;
         }
