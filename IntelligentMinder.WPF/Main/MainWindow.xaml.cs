@@ -234,9 +234,8 @@ namespace IntelligentMiner.WPF
 
                 int beaconValue;
                 int chooseAlignment = Randomizer.RandomizeNumber(0, 2);
-                int row = Randomizer.RandomizeNumber(0, gridSize);
-                int col = Randomizer.RandomizeNumber(0, gridSize);
-                Tuple<int, int> coord = new Tuple<int, int>(row, col);
+                int row = 0;
+                int col = 0;
 
                 //0 Create beacon in row of golden square
                 if (chooseAlignment == 0)
@@ -251,6 +250,8 @@ namespace IntelligentMiner.WPF
                     col = _goldensquare.Item2;
 
                 }
+
+                Tuple<int, int> coord = new Tuple<int, int>(row, col);
 
                 lock (syncLock)
                 {
