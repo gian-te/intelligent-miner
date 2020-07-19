@@ -90,10 +90,10 @@ namespace IntelligentMiner.Common
             }
         }
 
-        public void RotateRandomTimes()
+        public void RotateRandomTimes(int num = 10)
         {
             // arbitrary range of 1 to 10
-            var times = Randomizer.RandomizeNumber(1, 10);
+            var times = Randomizer.RandomizeNumber(1, num);
             Console.WriteLine(string.Format("The player will rotate {0} times!", times));
 
             

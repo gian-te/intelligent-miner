@@ -83,7 +83,7 @@ namespace IntelligentMiner.WPF.Game
                     if (action == "rotate")
                     {
                         // 2. if Rotate, randomize how many times it will rotate 90-degrees
-                        player.RotateRandomTimes();
+                        player.RotateRandomTimes(game.Size);
                     }
                     else if (action == "move")
                     {
@@ -94,9 +94,9 @@ namespace IntelligentMiner.WPF.Game
                             end = true;
                         }
                         this.Dispatcher.Invoke(() => RefreshGrid());
-                        Thread.Sleep(10000);
-
                     }
+
+                    Thread.Sleep(2000);
 
 
                     //stepCount++;
