@@ -8,10 +8,16 @@
         Title="Super Miner Bros." Height="337.031" Width="986">
     <Grid Margin="0,0,0,36">
         <Button Content="Start the game!" HorizontalAlignment="Left" VerticalAlignment="Top" Width="96" Margin="434,208,0,0" Height="35" Click="Button_Click"/>
-        <GroupBox Header="Intelligence Level" HorizontalAlignment="Left" Height="122" Margin="31,50,0,0" VerticalAlignment="Top" Width="163">
-            <StackPanel Margin="0,10,0,0">
+        <GroupBox Header="Intelligence Level" HorizontalAlignment="Left" Height="61" Margin="31,50,0,0" VerticalAlignment="Top" Width="163">
+            <StackPanel Margin="0,5,0,0">
                 <RadioButton Name="rdoRandom" IsChecked="{Binding Path=IsRandom, Mode=TwoWay}"  Content="Random"/>
                 <RadioButton Name="rdoIntelligent" IsChecked="{Binding Path=IsIntelligent, Mode=TwoWay}" Content="Intelligent"/>
+            </StackPanel>
+        </GroupBox>
+        <GroupBox Header="Initialize Objects" HorizontalAlignment="Left" Height="61" Margin="31,110,0,0" VerticalAlignment="Top" Width="163">
+            <StackPanel Margin="0,5,0,0">
+                <RadioButton Name="rdoRandomInit" IsChecked="{Binding Path=IsRandom, Mode=TwoWay}"  Content="Random" Checked="rdoRandomInit_Checked"/>
+                <RadioButton Name="rdoManualInit" IsChecked="{Binding Path=IsManual, Mode=TwoWay}" Content="Manual"/>
             </StackPanel>
         </GroupBox>
         <GroupBox Header="Traps" HorizontalAlignment="Left" Height="122" Margin="226,50,0,0" VerticalAlignment="Top" Width="159">

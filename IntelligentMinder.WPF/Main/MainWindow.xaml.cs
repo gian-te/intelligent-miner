@@ -73,6 +73,19 @@ namespace IntelligentMiner.WPF
             }
 
         }
+
+        private void rdoRandomInit_Checked(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
     }
 
 

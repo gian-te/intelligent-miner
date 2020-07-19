@@ -82,7 +82,7 @@ namespace IntelligentMiner.Common
                 col = Randomizer.RandomizeNumber(0, gridSize);
             }
 
-            Map[row, col] = new GoldenSquare();
+            //Map[row, col] = new GoldenSquare();
             Tuple<int, int> _goldensquare = new Tuple<int, int>(row, col);
 
             //Create Beacons
@@ -116,7 +116,7 @@ namespace IntelligentMiner.Common
                 {
                     if (chooseAlignment == 0) { beacon.Value = Math.Abs(_goldensquare.Item1 - row); }
                     else { beacon.Value = Math.Abs(_goldensquare.Item1 - col); }
-                    Map[row, col] = beacon;
+                    //Map[row, col] = beacon;
                     _beacons.Add(coordinate);
                     i++;
                 }
@@ -139,7 +139,7 @@ namespace IntelligentMiner.Common
                     && (!_traps.Contains(coordinate)) //Not in list of Beacons
                    )
                 {
-                    Map[row, col] = new Pit();
+                    //Map[row, col] = new Pit();
                     _traps.Add(coordinate);
                     i++;
                 }
