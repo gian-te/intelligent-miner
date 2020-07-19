@@ -85,7 +85,10 @@ namespace IntelligentMiner.WPF
 
                 (goldenSquare, _beacons, _beaconValues, _pits) = GenerateRandomInit(_viewModel.Size);
 
-                txtGoldenSquare.Text = String.Concat(goldenSquare.Item1, ",", goldenSquare.Item2);
+                //txtGoldenSquare.Text = String.Concat(goldenSquare.Item1, ",", goldenSquare.Item2);
+                
+                // let the binding do the work
+                _viewModel.Gold = String.Concat(goldenSquare.Item1, ",", goldenSquare.Item2); 
 
             }
             catch (Exception ex)
