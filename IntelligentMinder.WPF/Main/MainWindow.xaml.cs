@@ -104,8 +104,9 @@ namespace IntelligentMiner.WPF
             int col = 0;
             //int i = 0;
 
-            //20% Pits & Beacons
-            double numberOfPitsandBeacons = Math.Round((gridSize * gridSize) * 0.20);
+            //20% Pits &  5% Beacons
+            double numberOfBeacons = Math.Round((gridSize * gridSize) * 0.05);
+            double numberOfPits = Math.Round((gridSize * gridSize) * 0.20);
             List<Tuple<int, int>> existingCoordinates = new List<Tuple<int, int>>();
 
             existingCoordinates.Add(new Tuple<int, int>(0, 0));
@@ -129,7 +130,7 @@ namespace IntelligentMiner.WPF
                         () =>
                         {
                             //Create Beacons
-                            for (int j = 0; j < numberOfPitsandBeacons; j++)
+                            for (int j = 0; j < numberOfBeacons; j++)
                             {
                                 Thread beaconThread = new Thread(() => createBeaconCoords(gridSize, _goldensquare, existingCoordinates));
                                 beaconThread.IsBackground = true;
@@ -140,7 +141,7 @@ namespace IntelligentMiner.WPF
                         () =>
                         {
                             //Create Pits 
-                            for (int j = 0; j < numberOfPitsandBeacons; j++)
+                            for (int j = 0; j < numberOfPits; j++)
                             {
                                 Thread pitThread = new Thread(() => createPitCoords(gridSize, existingCoordinates));
                                 pitThread.IsBackground = true;

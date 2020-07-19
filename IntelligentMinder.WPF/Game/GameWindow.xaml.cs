@@ -83,8 +83,6 @@ namespace IntelligentMiner.WPF.Game
             RefreshGrid();
         }
 
-
-
         public void PlayRandom()
         {
             Task.Run(() =>
