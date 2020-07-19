@@ -16,7 +16,6 @@ namespace IntelligentMiner.Common
         {
             Symbol = "-";
             CellItemType = CellItemType.Empty; // default cell type
-            Value = 0; //For Beacon
             Position = new Position();
             Initialize();
         }

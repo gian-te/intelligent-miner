@@ -64,91 +64,6 @@ namespace IntelligentMiner.Common
             Map[row, col] = new Beacon();
         }
 
-        public (Tuple<int, int>, List<string>, List<string>) AddRandom(int gridSize)
-        {
-            int row = 0;
-            int col = 0;
-            int i = 0;
-
-            //20% Pits & Beacons
-            double numberOfPitsandBeacons = Math.Round((gridSize*gridSize) * 0.20);
-            List<string> _traps = new List<string>();
-            List<string> _beacons = new List<string>();
-
-            //Create Golden Square
-            while (row == 0 && col == 0)
-            {
-                row = Randomizer.RandomizeNumber(0, gridSize);
-                col = Randomizer.RandomizeNumber(0, gridSize);
-            }
-
-            //Map[row, col] = new GoldenSquare();
-            Tuple<int, int> _goldensquare = new Tuple<int, int>(row, col);
-
-            //Create Beacons
-            while (i < numberOfPitsandBeacons)
-            {
-
-                var beacon = new Beacon();
-                int chooseAlignment = Randomizer.RandomizeNumber(0, 2);
-
-                //0 Create beacon in row of golden square
-                if (chooseAlignment  == 0)
-                {
-                    row = _goldensquare.Item1;
-                    col = Randomizer.RandomizeNumber(0, gridSize);
-                }
-                //Create beacon in column of golden square
-                else
-                {
-                    row = Randomizer.RandomizeNumber(0, gridSize);
-                    col = _goldensquare.Item2;
-
-                }
-
-                string coordinate = String.Concat(row, ',', col);
-
-                if (
-                        (row != 0 && col != 0) //Check if not in player intial position
-                    && (row != _goldensquare.Item1 && col != _goldensquare.Item2) //Check if not in Golden Square
-                    && (!_beacons.Contains(coordinate)) //Not in list of Beacons
-                   )
-                {
-                    if (chooseAlignment == 0) { beacon.Value = Math.Abs(_goldensquare.Item1 - row); }
-                    else { beacon.Value = Math.Abs(_goldensquare.Item1 - col); }
-                    //Map[row, col] = beacon;
-                    _beacons.Add(coordinate);
-                    i++;
-                }
-            }
-
-            i = 0;
-
-            //Create Pits - for polishing
-            while (i < numberOfPitsandBeacons)
-            {
-
-                row = Randomizer.RandomizeNumber(0, gridSize);
-                col = Randomizer.RandomizeNumber(0, gridSize);
-                string coordinate = String.Concat(row, ',', col);
-
-                if (
-                        (row != 0 && col != 0) //Check if not in player intial position
-                    && (row != _goldensquare.Item1 && col != _goldensquare.Item2) //Check if not in Golden Square
-                    && (!_beacons.Contains(coordinate)) //Not in list of Beacons
-                    && (!_traps.Contains(coordinate)) //Not in list of Beacons
-                   )
-                {
-                    //Map[row, col] = new Pit();
-                    _traps.Add(coordinate);
-                    i++;
-                }
-            }
-
-            return (_goldensquare, _beacons, _traps);
-
-        }
-
         public BaseCellItem Scan(int row, int col, Direction Facing, string scan_type = "current")
         {
 
@@ -204,7 +119,7 @@ namespace IntelligentMiner.Common
                 var cell = Map[row, col];
                 retVal = true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 retVal = false;
             }
