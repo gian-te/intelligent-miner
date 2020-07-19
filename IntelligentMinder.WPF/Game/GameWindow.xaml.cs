@@ -58,11 +58,28 @@ namespace IntelligentMiner.WPF.Game
                 }
             };
             game.Map[player.Position.Row, player.Position.Column] = player;
-            var gold = new GoldenSquare();
+
+            //var gold = new GoldenSquare();
+            //gold.Position.Row = int.Parse(goldCoordinates[0]);
+            //gold.Position.Column = int.Parse(goldCoordinates[1]);
+            //game.AddGold(gold.Position.Row, gold.Position.Column);
+
+            //Add objects to map
             var goldCoordinates = gameOptions.Gold.Split(',');
-            gold.Position.Row = int.Parse(goldCoordinates[0]);
-            gold.Position.Column = int.Parse(goldCoordinates[1]);
-            game.AddGold(gold.Position.Row, gold.Position.Column);
+            game.AddGold(int.Parse(goldCoordinates[0]), int.Parse(goldCoordinates[1]));
+
+            foreach (var item in gameOptions.Pits)
+            {
+                var pitCoordinates = item.Split(',');
+                game.AddPit(int.Parse(pitCoordinates[0]), int.Parse(pitCoordinates[1]));
+            }
+
+            foreach (var item in gameOptions.Beacons)
+            {
+                var beaconCoordinates = item.Split(',','=');
+                game.AddBeacon(int.Parse(beaconCoordinates[0]), int.Parse(beaconCoordinates[1]), int.Parse(beaconCoordinates[2]));
+            }
+
             RefreshGrid();
         }
 

@@ -48,7 +48,7 @@ namespace IntelligentMiner.Common
             }
         }
 
-        public void AddTrap(int row, int col)
+        public void AddPit(int row, int col)
         {
             Map[row, col] = new Pit();
            
