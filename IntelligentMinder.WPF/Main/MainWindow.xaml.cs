@@ -32,8 +32,8 @@ namespace IntelligentMiner.WPF
             // MVVM pattern
             _viewModel = new GameOptions()
             {
-                IsRandom = true,
-                IsIntelligent = false,
+                MovesRandomly = true,
+                MovesIntelligently = false,
                 _pits = "2,2\r\n2,1",
                 _beacons = "1,1",
                 Gold = "1,2",
@@ -61,7 +61,7 @@ namespace IntelligentMiner.WPF
                 game.Show();
                 this.Hide();
 
-                if (options.IsRandom)
+                if (options.MovesRandomly)
                 {
                     game.PlayRandom();
                 }
@@ -83,12 +83,12 @@ namespace IntelligentMiner.WPF
                 List<int> _beaconValues = null;
                 Tuple<int, int> goldenSquare = null;
 
-                (goldenSquare, _beacons, _beaconValues, _pits) = GenerateRandomInit(Int32.Parse(txtGridSize.Text));
+                (goldenSquare, _beacons, _beaconValues, _pits) = GenerateRandomInit(_viewModel.Size);
 
                 txtGoldenSquare.Text = String.Concat(goldenSquare.Item1, ",", goldenSquare.Item2);
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
                 throw;

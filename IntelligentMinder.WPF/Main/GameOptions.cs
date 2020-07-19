@@ -13,9 +13,13 @@ namespace IntelligentMiner.WPF.Main
     {
         public int Size { get; set; }
 
-        public bool IsIntelligent { get; set; }
+        public bool MovesIntelligently { get; set; }
 
-        public bool IsRandom { get; set; }
+        public bool MovesRandomly { get; set; }
+
+        public bool RandomInit { get; set; }
+
+        public bool ManualInit { get; set; }
 
         public string _pits { get; set; }
 
