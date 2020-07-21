@@ -39,7 +39,7 @@ namespace IntelligentMiner.WPF.Game
             _viewModel = new PlayerInfo()
             {
                 Facing = p.Facing.ToString(),
-                PositionHistory = "Starting at position: 0,0\r\n Facing: " + p.Facing.ToString(),
+                PositionHistory = "Starting at position: 0,0\r\nFacing: " + p.Facing.ToString(),
                 scanCount = p.scanCount,
                 moveCount = p.moveCount,
                 rotateCount = p.rotateCount,
@@ -69,6 +69,8 @@ namespace IntelligentMiner.WPF.Game
                 _viewModel.PositionHistory += String.Concat("Moved to: ", p.Position.Row, ", ", p.Position.Column);
                 _viewModel.moveCount = p.moveCount;
             }
+            _viewModel.PositionHistory += Environment.NewLine;
+
             _viewModel.scanCount = p.scanCount;
             _viewModel.backtrackCount = p.backtrackCount;
         }

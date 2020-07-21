@@ -25,9 +25,9 @@ namespace IntelligentMiner.WPF.Game
         private int _rotateCount;
         private int _backtrackCount;
 
-        public string PositionHistory { get { return _positionHistory; } set { _positionHistory = value; NotifyPropertyChanged("positionHistory"); } }
+        public string PositionHistory { get { return _positionHistory; } set { _positionHistory = value; NotifyPropertyChanged("PositionHistory"); } }
 
-        public string Facing { get { return _facing; } set{ _facing = value; NotifyPropertyChanged("facingDir"); } }
+        public string Facing { get { return _facing; } set{ _facing = value; NotifyPropertyChanged("Facing"); } }
 
         public int scanCount { get { return _scanCount; } set { _scanCount = value; NotifyPropertyChanged("scanCount"); } }
 

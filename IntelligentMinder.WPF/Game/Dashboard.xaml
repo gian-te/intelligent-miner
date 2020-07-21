@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:IntelligentMiner.WPF.Game"
         mc:Ignorable="d"
-        Title="Dashboard" Height="430" Width="208">
+        Title="Dashboard" Height="435.614" Width="266.381">
     <Grid>
-        <GroupBox Header="Player Information" HorizontalAlignment="Left" Height="180" Margin="10,10,0,0" VerticalAlignment="Top" Width="180">
+        <GroupBox Header="Player Information" HorizontalAlignment="Left" Height="180" Margin="38,10,0,0" VerticalAlignment="Top" Width="180">
             <Grid ShowGridLines="True" VerticalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="60"></ColumnDefinition>
@@ -21,19 +21,19 @@
                     <RowDefinition Height="30"></RowDefinition>
                 </Grid.RowDefinitions>
                 <Label Content="Direction:" Margin="0,0,0,0" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                <TextBox Height="22" Margin="10,0,0,0" IsReadOnly="True" HorizontalAlignment="Left" Text="{Binding facingDir}" Width="89" AcceptsReturn="False" TextWrapping="Wrap" Name ="txtFacing"  Grid.Row="0" Grid.Column="1"/>
+                <TextBox Height="22" Margin="10,0,0,0" IsReadOnly="True" HorizontalAlignment="Left" Text="{Binding Facing, Mode=TwoWay}" Width="89" AcceptsReturn="False" TextWrapping="Wrap" Name ="txtFacing"  Grid.Row="0" Grid.Column="1"/>
                 <Label Content="Scan:" Margin="0,0,0,0"  Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                <TextBox Height="22" Margin="10,0,0,0" IsReadOnly="True" HorizontalAlignment="Left" Text="{Binding scanCount}" Width="89" AcceptsReturn="False" TextWrapping="Wrap" Name ="txtScan" Grid.Row="1" Grid.Column="1"/>
+                <TextBox Height="22" Margin="10,0,0,0" IsReadOnly="True" HorizontalAlignment="Left" Text="{Binding scanCount, Mode=TwoWay}" Width="89" AcceptsReturn="False" TextWrapping="Wrap" Name ="txtScan" Grid.Row="1" Grid.Column="1"/>
                 <Label Content="Move:" Margin="0,0,0,0" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                <TextBox Height="22" Margin="10,0,0,0" IsReadOnly="True" HorizontalAlignment="Left" Text="{Binding moveCount}" Width="89" AcceptsReturn="False" TextWrapping="Wrap" Name ="txtMove" Grid.Row="2" Grid.Column="1"/>
+                <TextBox Height="22" Margin="10,0,0,0" IsReadOnly="True" HorizontalAlignment="Left" Text="{Binding moveCount, Mode=TwoWay}" Width="89" AcceptsReturn="False" TextWrapping="Wrap" Name ="txtMove" Grid.Row="2" Grid.Column="1"/>
                 <Label Content="Rotate:" Margin="0,0,0,0" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                <TextBox Height="22" Margin="10,0,0,0" IsReadOnly="True" HorizontalAlignment="Left" Text="{Binding rotateCount}" Width="89" AcceptsReturn="False" TextWrapping="Wrap" Name ="txtRotate" Grid.Row="3" Grid.Column="1"/>
+                <TextBox Height="22" Margin="10,0,0,0" IsReadOnly="True" HorizontalAlignment="Left" Text="{Binding rotateCount, Mode=TwoWay}" Width="89" AcceptsReturn="False" TextWrapping="Wrap" Name ="txtRotate" Grid.Row="3" Grid.Column="1"/>
                 <Label Content="Backtrack:" Margin="0,0,0,0" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                <TextBox Height="22" Margin="10,0,0,0" IsReadOnly="True" HorizontalAlignment="Left" Text="{Binding backtrackCount}" Width="89" AcceptsReturn="False" TextWrapping="Wrap" Name ="txtBacktrack" Grid.Row="4" Grid.Column="1"/>
+                <TextBox Height="22" Margin="10,0,0,0" IsReadOnly="True" HorizontalAlignment="Left" Text="{Binding backtrackCount, Mode=TwoWay}" Width="89" AcceptsReturn="False" TextWrapping="Wrap" Name ="txtBacktrack" Grid.Row="4" Grid.Column="1"/>
             </Grid>
         </GroupBox>
-        <GroupBox Header="Actions" HorizontalAlignment="Left" Height="200" Margin="10,0,0,10" VerticalAlignment="Bottom" Width="180">
-            <TextBox Name="txtActions" HorizontalAlignment="Left" Height="177" Margin="0,0,0,0" IsReadOnly="True" Text="{Binding Path=positionHistory}" VerticalAlignment="Top" Width="167" AcceptsReturn="False" TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+        <GroupBox Header="Actions" HorizontalAlignment="Left" Height="200" Margin="38,0,0,10" VerticalAlignment="Bottom" Width="180">
+            <TextBox Name="txtActions" HorizontalAlignment="Left" Height="177" Margin="0,0,0,0" IsReadOnly="True" Text="{Binding Path=PositionHistory}" VerticalAlignment="Top" Width="167" AcceptsReturn="False" TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
         </GroupBox>
     </Grid>
 </Window>
