@@ -1,4 +1,5 @@
-﻿using IntelligentMiner.WPF.Main;
+﻿using IntelligentMiner.WPF.Game;
+using IntelligentMiner.WPF.Main;
 using IntelligentMiner.Common;
 using System;
 using System.Collections.Generic;
@@ -29,6 +30,7 @@ namespace IntelligentMiner.WPF.Game
         public event PropertyChangedEventHandler PropertyChanged;
         IntelligentMiner.Common.Game game;
         Player player;
+        Dashboard dashboard;
         public GameWindow()
         {
             InitializeComponent();
@@ -80,6 +82,9 @@ namespace IntelligentMiner.WPF.Game
                 game.AddBeacon(int.Parse(beaconCoordinates[0]), int.Parse(beaconCoordinates[1]), int.Parse(beaconCoordinates[2]));
             }
 
+            dashboard = new Dashboard(player);
+            dashboard.Show();
+
             RefreshGrid();
         }
 
@@ -111,7 +116,8 @@ namespace IntelligentMiner.WPF.Game
                         this.Dispatcher.Invoke(() => RefreshGrid());
                     }
 
-                    Thread.Sleep(2000);
+                    dashboard.UpdateDashboard(player, action);
+                    //Thread.Sleep(100);
 
 
                     //stepCount++;
