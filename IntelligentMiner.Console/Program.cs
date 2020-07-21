@@ -120,12 +120,12 @@ namespace IntelligentMiner.ConsoleApp
                         // 1. randomize move between Rotate or Move
                         var action = player.RandomizeAction();
 
-                        if (action == "rotate")
+                        if (action == Common.Enums.ActionType.Rotate)
                         {
                             // 2. if Rotate, randomize how many times it will rotate 90-degrees
                             player.RotateRandomTimes();
                         }
-                        else if (action == "move")
+                        else if (action == Common.Enums.ActionType.Move)
                         {
                             // 3. if Move, randomize how many times it will move
                             var cell = player.Move(game);
