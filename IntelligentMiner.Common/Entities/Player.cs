@@ -42,22 +42,26 @@ namespace IntelligentMiner.Common
             if (Facing == Direction.North)
             {
                 Facing = Direction.East;
+                Symbol = "\u2192";
                 cellInFront = new Tuple<int, int>(Position.Row + 1, Position.Column);
             }
             else if (Facing == Direction.East)
             {
                 Facing = Direction.South;
+                Symbol = "\u2193";
                 cellInFront = new Tuple<int, int>(Position.Row, Position.Column - 1);
 
             }
             else if (Facing == Direction.South)
             {
                 Facing = Direction.West;
+                Symbol = "\u2190";
                 cellInFront = new Tuple<int, int>(Position.Row - 1, Position.Column);
             }
             else if (Facing == Direction.West)
             {
                 Facing = Direction.North;
+                Symbol = "\u2191";
                 cellInFront = new Tuple<int, int>(Position.Row, Position.Column + 1);
             }
 
@@ -169,18 +173,22 @@ namespace IntelligentMiner.Common
             if (num >= 1 && num <= 25)
             {
                 Facing = Direction.North;
+                Symbol = "\u2191";
             }
             else if (num >= 26 && num <= 50)
             {
                 Facing = Direction.East;
+                Symbol = "\u2192";
             }
             else if (num >= 51 && num <= 75)
             {
                 Facing = Direction.South;
+                Symbol = "\u2193";
             }
             else if (num >= 76 && num <= 100)
             {
                 Facing = Direction.West;
+                Symbol = "\u2190";
             }
 
             Console.WriteLine(string.Format("The player is initially facing {0}" , Facing.ToString()));

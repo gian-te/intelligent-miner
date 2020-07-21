@@ -39,7 +39,7 @@ namespace IntelligentMiner.WPF.Game
             _viewModel = new PlayerInfo()
             {
                 Facing = p.Facing.ToString(),
-                PositionHistory = "Starting at position: 0,0\r\nFacing: " + p.Facing.ToString(),
+                PositionHistory = "Starting at position: 0,0\r\nFacing: " + p.Facing.ToString() + "\r\n",
                 scanCount = p.scanCount,
                 moveCount = p.moveCount,
                 rotateCount = p.rotateCount,
@@ -61,7 +61,7 @@ namespace IntelligentMiner.WPF.Game
             if (action == "rotate")
             {
                 _viewModel.Facing = p.Facing.ToString();
-                _viewModel.PositionHistory += String.Concat("Rotated:", p.Facing.ToString());
+                _viewModel.PositionHistory += String.Concat("Rotated: ", p.Facing.ToString());
                 _viewModel.rotateCount = p.rotateCount;
             }
             else if (action == "move")
