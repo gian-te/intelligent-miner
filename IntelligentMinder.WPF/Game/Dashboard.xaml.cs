@@ -78,5 +78,11 @@ namespace IntelligentMiner.WPF.Game
             _viewModel.scanCount = p.Metrics.scanCount;
             _viewModel.backtrackCount = p.Metrics.backtrackCount;
         }
+
+        private void txtActions_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var txtBox = sender as TextBox;
+            txtBox.ScrollToEnd();
+        }
     }
 }

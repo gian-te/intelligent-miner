@@ -5,9 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:IntelligentMiner.WPF"
         mc:Ignorable="d"
-        Title="Super Miner Bros." Height="337.031" Width="986">
-    <Grid Margin="0,0,0,36">
-        <Button Content="Start the game!" HorizontalAlignment="Left" VerticalAlignment="Top" Width="96" Margin="434,208,0,0" Height="35" Click="Button_Click"/>
+        Title="Super Miner Bros." Height="272.031" Width="986"
+        WindowStartupLocation="CenterScreen">
+    <Grid Margin="0,0,0,2">
+        <Button Content="Start the game!" HorizontalAlignment="Left" VerticalAlignment="Top" Width="96" Margin="434,189,0,0" Height="35" Click="Button_Click"/>
         <GroupBox Header="Intelligence Level" HorizontalAlignment="Left" Height="61" Margin="31,50,0,0" VerticalAlignment="Top" Width="163">
             <StackPanel Margin="0,5,0,0">
                 <RadioButton Name="rdoRandom" IsChecked="{Binding Path=MovesRandomly, Mode=TwoWay}"  Content="Random"/>

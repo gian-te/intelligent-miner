@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:IntelligentMiner.WPF.Game"
         mc:Ignorable="d"
-        Title="Dashboard" Height="435.614" Width="266.381">
+        Title="Dashboard" Height="435.614" Width="266.381"
+        WindowStartupLocation="Manual">
     <Grid>
         <GroupBox Header="Player Information" HorizontalAlignment="Left" Height="180" Margin="38,10,0,0" VerticalAlignment="Top" Width="180">
             <Grid ShowGridLines="True" VerticalAlignment="Center">
@@ -33,7 +34,7 @@
             </Grid>
         </GroupBox>
         <GroupBox Header="Actions" HorizontalAlignment="Left" Height="200" Margin="38,0,0,10" VerticalAlignment="Bottom" Width="180">
-            <TextBox Name="txtActions" HorizontalAlignment="Left" Height="177" Margin="0,0,0,0" IsReadOnly="True" Text="{Binding Path=PositionHistory}" VerticalAlignment="Top" Width="167" AcceptsReturn="False" TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+            <TextBox Name="txtActions" HorizontalAlignment="Left" Height="177" Margin="0,0,0,0" IsReadOnly="True" Text="{Binding Path=PositionHistory}" VerticalAlignment="Top" Width="167" AcceptsReturn="False" TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Auto" TextChanged="txtActions_TextChanged"/>
         </GroupBox>
     </Grid>
 </Window>
