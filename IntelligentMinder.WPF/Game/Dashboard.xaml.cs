@@ -51,7 +51,7 @@ namespace IntelligentMiner.WPF.Game
 
         public void UpdateDashboard(Player p, ActionType action)
         {
-            if (action ==  ActionType.Rotate)
+            if (action == ActionType.Rotate)
             {
                 _viewModel.Facing = p.Facing.ToString();
                 _viewModel.PositionHistory += String.Concat("Rotated: ", p.Facing.ToString());
@@ -79,10 +79,20 @@ namespace IntelligentMiner.WPF.Game
             _viewModel.backtrackCount = p.Metrics.backtrackCount;
         }
 
-        private void txtActions_TextChanged(object sender, TextChangedEventArgs e)
+        private async void txtActions_TextChanged(object sender, TextChangedEventArgs e)
         {
-            var txtBox = sender as TextBox;
-            txtBox.ScrollToEnd();
+            await Task.Delay(200);
+            ScrollToEnd();
+        }
+
+        public void ScrollToEnd()
+        {
+            Task.Run(() =>
+                {
+                    Dispatcher.Invoke( () => txtActions.ScrollToEnd());
+                   
+
+                });
         }
     }
 }

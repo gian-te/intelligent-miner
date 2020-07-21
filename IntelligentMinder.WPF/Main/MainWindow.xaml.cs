@@ -64,6 +64,7 @@ namespace IntelligentMiner.WPF
                 GameWindow game = new GameWindow();
                 game.LoadGame(options);
                 game.Show();
+                game.Owner = this;
                 this.Hide();
 
                 if (options.MovesRandomly)

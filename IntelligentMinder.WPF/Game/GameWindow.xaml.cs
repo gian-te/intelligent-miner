@@ -56,7 +56,7 @@ namespace IntelligentMiner.WPF.Game
             {
                 Position = new Position()
                 {
-                    Row  = 0,
+                    Row = 0,
                     Column = 0
                 }
             };
@@ -71,21 +71,30 @@ namespace IntelligentMiner.WPF.Game
             var goldCoordinates = gameOptions.Gold.Split(',');
             game.AddGold(int.Parse(goldCoordinates[0]), int.Parse(goldCoordinates[1]));
 
-            foreach (var item in gameOptions.Pits)
-            {
-                var pitCoordinates = item.Split(',');
-                game.AddPit(int.Parse(pitCoordinates[0]), int.Parse(pitCoordinates[1]));
-            }
+            Parallel.Invoke(
+                () =>
+                {
+                    foreach (var item in gameOptions.Pits)
+                    {
+                        var pitCoordinates = item.Split(',');
+                        game.AddPit(int.Parse(pitCoordinates[0]), int.Parse(pitCoordinates[1]));
+                    }
+                },
+                () =>
+                {
+                    foreach (var item in gameOptions.Beacons)
+                    {
+                        var beaconCoordinates = item.Split(',', '=');
+                        game.AddBeacon(int.Parse(beaconCoordinates[0]), int.Parse(beaconCoordinates[1]), int.Parse(beaconCoordinates[2]));
+                    }
+                }
+            );
 
-            foreach (var item in gameOptions.Beacons)
-            {
-                var beaconCoordinates = item.Split(',','=');
-                game.AddBeacon(int.Parse(beaconCoordinates[0]), int.Parse(beaconCoordinates[1]), int.Parse(beaconCoordinates[2]));
-            }
+
 
             dashboard = new Dashboard(player);
             dashboard.Show();
-
+            
             RefreshGrid();
         }
 
@@ -99,12 +108,12 @@ namespace IntelligentMiner.WPF.Game
                     // 1. randomize move between Rotate or Move
                     ActionType action = player.RandomizeAction();
 
-                    if (action ==  ActionType.Rotate)
+                    if (action == ActionType.Rotate)
                     {
                         // 2. if Rotate, randomize how many times it will rotate 90-degrees
                         player.RotateRandomTimes(game.Size);
                     }
-                    else if (action ==  ActionType.Move)
+                    else if (action == ActionType.Move)
                     {
                         // 3. if Move, randomize how many times it will move
                         var cell = player.Move(game);
@@ -184,6 +193,12 @@ namespace IntelligentMiner.WPF.Game
                 }
             }
             return dataView;
+        }
+
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            dashboard.Close();
+            Owner.Show();
         }
     }
 

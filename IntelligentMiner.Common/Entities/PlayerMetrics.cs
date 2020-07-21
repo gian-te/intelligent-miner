@@ -18,6 +18,7 @@ namespace IntelligentMiner.Common
             }
         }
 
+
         private string _positionHistory;
         private string _facing;
         private int _scanCount;

@@ -188,6 +188,7 @@ namespace IntelligentMiner.Common
                 Symbol = "\u2190";
             }
 
+            Metrics.Facing = Facing.ToString();
             Console.WriteLine(string.Format("The player is initially facing {0}" , Facing.ToString()));
         }
     }

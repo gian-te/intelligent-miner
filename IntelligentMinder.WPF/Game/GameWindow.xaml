@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:IntelligentMiner.WPF.Game"
         mc:Ignorable="d" SizeToContent="WidthAndHeight"
         Title="Super Miner Bros." Height="450" Width="800"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen"
+        Closing="Window_Closing">
     <Window.Resources>
 
     </Window.Resources>

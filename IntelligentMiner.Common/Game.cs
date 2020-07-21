@@ -64,7 +64,7 @@ namespace IntelligentMiner.Common
             var beacon = new Beacon();
             beacon.Value = value;
             //For testing
-            beacon.Symbol = beacon.Symbol + '(' + value.ToString() + ')';
+            beacon.Symbol = beacon.Symbol + ":" + value.ToString();
             Map[row, col] = beacon;
         }
 
