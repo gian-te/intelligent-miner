@@ -19,6 +19,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Threading;
 using IntelligentMiner.Common.Utilities;
+using IntelligentMiner.Common.Enums;
 
 namespace IntelligentMiner.WPF.Game
 {
@@ -91,27 +92,33 @@ namespace IntelligentMiner.WPF.Game
         public void PlayRandom()
         {
             Task.Run(() =>
-
             {
-
                 bool end = false;
                 while (!end)
                 {
                     // 1. randomize move between Rotate or Move
-                    var action = player.RandomizeAction();
+                    ActionType action = player.RandomizeAction();
 
-                    if (action == "rotate")
+                    if (action ==  ActionType.Rotate)
                     {
                         // 2. if Rotate, randomize how many times it will rotate 90-degrees
                         player.RotateRandomTimes(game.Size);
                     }
-                    else if (action == "move")
+                    else if (action ==  ActionType.Move)
                     {
                         // 3. if Move, randomize how many times it will move
                         var cell = player.Move(game);
-                        if (cell.CellItemType == Common.Enums.CellItemType.GoldenSquare || cell.CellItemType == Common.Enums.CellItemType.Pit)
+                        if (cell.CellItemType == Common.Enums.CellItemType.GoldenSquare)
                         {
                             end = true;
+                            dashboard.UpdateDashboard(player, action); // update move
+                            action = ActionType.Win;
+                        }
+                        else if (cell.CellItemType == Common.Enums.CellItemType.Pit)
+                        {
+                            end = true;
+                            dashboard.UpdateDashboard(player, action);
+                            action = ActionType.Die;
                         }
                         this.Dispatcher.Invoke(() => RefreshGrid());
                     }

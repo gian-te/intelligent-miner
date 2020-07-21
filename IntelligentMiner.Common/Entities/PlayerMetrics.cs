@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using IntelligentMiner.Common.Enums;
 using System.ComponentModel;
 
-namespace IntelligentMiner.WPF.Game
+namespace IntelligentMiner.Common
 {
-    public class PlayerInfo : INotifyPropertyChanged
+    public class PlayerMetrics : INotifyPropertyChanged
     {
         private void NotifyPropertyChanged(string str)
         {

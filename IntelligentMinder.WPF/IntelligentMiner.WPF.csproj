@@ -60,7 +60,6 @@
     <Compile Include="Game\GameWindow.xaml.cs">
       <DependentUpon>GameWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Game\PlayerInfo.cs" />
     <Compile Include="Main\GameOptions.cs" />
     <Compile Include="ViewModel.cs" />
     <Page Include="Game\Dashboard.xaml">

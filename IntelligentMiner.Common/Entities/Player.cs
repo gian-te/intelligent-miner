@@ -16,13 +16,7 @@ namespace IntelligentMiner.Common
 
         public Direction Facing { get; set; }
 
-        public int scanCount { get; set; }
-
-        public int moveCount { get; set; }
-
-        public int rotateCount { get; set; }
-
-        public int backtrackCount { get; set; }
+        public PlayerMetrics Metrics { get; set; }
 
 
         protected override void Initialize()
@@ -31,6 +25,7 @@ namespace IntelligentMiner.Common
             Symbol = "M";
             PositionHistory = new List<Tuple<int, int>>();
             CellItemType = CellItemType.Player;
+            Metrics = new PlayerMetrics();
             RandomizeFacing();
         }
 
@@ -65,7 +60,7 @@ namespace IntelligentMiner.Common
                 cellInFront = new Tuple<int, int>(Position.Row, Position.Column + 1);
             }
 
-            rotateCount += 1;
+            Metrics.rotateCount++;
             Console.WriteLine("Rotated from {0} to {1}", initialDirection, Facing.ToString());
             // return the cell which the player is facing after rotating 90 degrees
             return cellInFront;
@@ -81,17 +76,17 @@ namespace IntelligentMiner.Common
             //Gawin yung strat experiment
         }
 
-        public string RandomizeAction()
+        public ActionType RandomizeAction()
         {
             var value = Randomizer.RandomizeNumber();
 
             if (value >= 1 && value <= 50)
             {
-                return "rotate";
+                return ActionType.Rotate;
             }
             else
             {
-                return "move";
+                return ActionType.Move;
             }
         }
 
@@ -120,7 +115,8 @@ namespace IntelligentMiner.Common
             {
                 Thread.Sleep(100);
                 cell = game.Scan(Position.Row, Position.Column, Facing, "front");
-                scanCount += 1;
+                //scanCount += 1;
+                Metrics.scanCount++;
                 if (cell.CellItemType == CellItemType.Wall)
                 {
                     Console.WriteLine("The player ran into a thick wall and cannot move forward. Aborting the remaining moves, if any.");
@@ -138,7 +134,8 @@ namespace IntelligentMiner.Common
 
                 Console.WriteLine(string.Format("Player moved to coordinates [{0},{1}]", Position.Row, Position.Column));
                 PositionHistory.Add(new Tuple<int, int>(Position.Row, Position.Column));
-                moveCount += 1;
+                //moveCount += 1;
+                Metrics.moveCount++;
                 
 
                 if (cell.CellItemType == CellItemType.Pit)

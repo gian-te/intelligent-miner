@@ -17,6 +17,7 @@ using System.Windows.Shapes;
 using System.ComponentModel;
 using System.Data;
 using System.Threading;
+using IntelligentMiner.Common.Enums;
 
 namespace IntelligentMiner.WPF.Game
 {
@@ -27,7 +28,7 @@ namespace IntelligentMiner.WPF.Game
 
     public partial class Dashboard : INotifyPropertyChanged
     {
-        PlayerInfo _viewModel;
+        PlayerMetrics _viewModel;
         Player player;
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -36,15 +37,7 @@ namespace IntelligentMiner.WPF.Game
             InitializeComponent();
 
             player = p;
-            _viewModel = new PlayerInfo()
-            {
-                Facing = p.Facing.ToString(),
-                PositionHistory = "Starting at position: 0,0\r\nFacing: " + p.Facing.ToString() + "\r\n",
-                scanCount = p.scanCount,
-                moveCount = p.moveCount,
-                rotateCount = p.rotateCount,
-                backtrackCount = p.backtrackCount
-            };
+            _viewModel = p.Metrics;
 
             this.DataContext = _viewModel;
         }
@@ -56,23 +49,34 @@ namespace IntelligentMiner.WPF.Game
             }
         }
 
-        public void UpdateDashboard(Player p, string action)
+        public void UpdateDashboard(Player p, ActionType action)
         {
-            if (action == "rotate")
+            if (action ==  ActionType.Rotate)
             {
                 _viewModel.Facing = p.Facing.ToString();
                 _viewModel.PositionHistory += String.Concat("Rotated: ", p.Facing.ToString());
-                _viewModel.rotateCount = p.rotateCount;
+                _viewModel.rotateCount = p.Metrics.rotateCount;
             }
-            else if (action == "move")
+            else if (action == ActionType.Move)
             {
                 _viewModel.PositionHistory += String.Concat("Moved to: ", p.Position.Row, ", ", p.Position.Column);
-                _viewModel.moveCount = p.moveCount;
+                _viewModel.moveCount = p.Metrics.moveCount;
             }
+            else if (action == ActionType.Die)
+            {
+                _viewModel.PositionHistory += String.Concat("The player died a horrible death.");
+
+            }
+            else if (action == ActionType.Win)
+            {
+                _viewModel.PositionHistory += String.Concat("The player has struck gold");
+
+            }
+
             _viewModel.PositionHistory += Environment.NewLine;
 
-            _viewModel.scanCount = p.scanCount;
-            _viewModel.backtrackCount = p.backtrackCount;
+            _viewModel.scanCount = p.Metrics.scanCount;
+            _viewModel.backtrackCount = p.Metrics.backtrackCount;
         }
     }
 }
