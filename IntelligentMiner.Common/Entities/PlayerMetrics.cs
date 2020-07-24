@@ -18,13 +18,13 @@ namespace IntelligentMiner.Common
             }
         }
 
-
         private string _positionHistory;
         private string _facing;
         private int _scanCount;
         private int _moveCount;
         private int _rotateCount;
         private int _backtrackCount;
+        private int _gameSpeed;
 
         public string PositionHistory { get { return _positionHistory; } set { _positionHistory = value; NotifyPropertyChanged("PositionHistory"); } }
 
@@ -37,6 +37,8 @@ namespace IntelligentMiner.Common
         public int rotateCount { get { return _rotateCount; } set { _rotateCount = value; NotifyPropertyChanged("rotateCount"); } }
 
         public int backtrackCount { get { return _backtrackCount; } set { _backtrackCount = value; NotifyPropertyChanged("backtrackCount"); } }
+
+        public int gameSpeed { get { return _gameSpeed; } set { _gameSpeed = value; NotifyPropertyChanged("gameSpeed"); } }
 
         public event PropertyChangedEventHandler PropertyChanged;
     }

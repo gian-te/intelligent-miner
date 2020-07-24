@@ -162,8 +162,8 @@ namespace IntelligentMiner.WPF.Game
                         dashboard.UpdateDashboard(player, action);
                     }
 
+                    if(player.Metrics.gameSpeed > 0) { Thread.Sleep(player.Metrics.gameSpeed);}
                     this.Dispatcher.Invoke(() => RefreshGrid());
-                    Thread.Sleep(300);
                 }
             });
         }

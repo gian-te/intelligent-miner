@@ -100,9 +100,14 @@ namespace IntelligentMiner.WPF
 
         private void rdoManualInit_Checked(object sender, RoutedEventArgs e)
         {
-            _viewModel.pits = String.Empty;
-            _viewModel.beacons = String.Empty;
-            _viewModel.Gold = String.Empty;
+            //_viewModel.pits = String.Empty;
+            //_viewModel.beacons = String.Empty;
+            //_viewModel.Gold = String.Empty;
+            //_viewModel.Size = 8;
+
+            _viewModel.pits = "2,2\r\n2,1\r\n";
+            _viewModel.beacons = "1,1=1\r\n2,2=1\r\n";
+            _viewModel.Gold = "1,2";
             _viewModel.Size = 8;
         }
 

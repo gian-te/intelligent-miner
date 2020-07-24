@@ -38,6 +38,7 @@ namespace IntelligentMiner.WPF.Game
 
             player = p;
             _viewModel = p.Metrics;
+            _viewModel.gameSpeed = 200;
 
             this.DataContext = _viewModel;
         }
