@@ -18,7 +18,7 @@
         <GroupBox Header="Initialize Objects" HorizontalAlignment="Left" Height="61" Margin="31,110,0,0" VerticalAlignment="Top" Width="163">
             <StackPanel Margin="0,5,0,0">
                 <RadioButton Name="rdoRandomInit" IsChecked="{Binding Path=RandomInit, Mode=TwoWay}"  Content="Random" Checked="rdoRandomInit_Checked"/>
-                <RadioButton Name="rdoManualInit" IsChecked="{Binding Path=ManualInit, Mode=TwoWay}" Content="Manual"/>
+                <RadioButton Name="rdoManualInit" IsChecked="{Binding Path=ManualInit, Mode=TwoWay}" Content="Manual" Checked="rdoManualInit_Checked"/>
             </StackPanel>
         </GroupBox>
         <GroupBox Header="Pits" HorizontalAlignment="Left" Height="122" Margin="226,50,0,0" VerticalAlignment="Top" Width="159">

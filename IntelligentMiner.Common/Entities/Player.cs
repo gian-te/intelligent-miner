@@ -37,26 +37,26 @@ namespace IntelligentMiner.Common
             if (Facing == Direction.North)
             {
                 Facing = Direction.East;
-                Symbol = "\u2192";
+                Symbol = "M(\u2192)";
                 cellInFront = new Tuple<int, int>(Position.Row + 1, Position.Column);
             }
             else if (Facing == Direction.East)
             {
                 Facing = Direction.South;
-                Symbol = "\u2193";
+                Symbol = "M(\u2193)";
                 cellInFront = new Tuple<int, int>(Position.Row, Position.Column - 1);
 
             }
             else if (Facing == Direction.South)
             {
                 Facing = Direction.West;
-                Symbol = "\u2190";
+                Symbol = "M(\u2190)";
                 cellInFront = new Tuple<int, int>(Position.Row - 1, Position.Column);
             }
             else if (Facing == Direction.West)
             {
                 Facing = Direction.North;
-                Symbol = "\u2191";
+                Symbol = "M(\u2191)";
                 cellInFront = new Tuple<int, int>(Position.Row, Position.Column + 1);
             }
 
@@ -64,11 +64,6 @@ namespace IntelligentMiner.Common
             Console.WriteLine("Rotated from {0} to {1}", initialDirection, Facing.ToString());
             // return the cell which the player is facing after rotating 90 degrees
             return cellInFront;
-        }
-
-        public void MoveSmartly()
-        {
-            //Dito totoo
         }
 
         public void MoveWithStrategy(string strat)
@@ -105,9 +100,10 @@ namespace IntelligentMiner.Common
             
         }
 
-        public BaseCellItem Move(Game game)
+        public BaseCellItem Move(Game game, bool random)
         {
-            var times = Randomizer.RandomizeNumber(1, game.Size);
+            int times = 1;
+            if (random) { times = Randomizer.RandomizeNumber(1, game.Size); }
             Console.WriteLine(string.Format("The player will move to the {0} for {1} time(s)!", Facing.ToString(), times));
 
             BaseCellItem cell = null;
@@ -132,12 +128,15 @@ namespace IntelligentMiner.Common
 
                 game.AssignPlayerToCell(this);
 
+                var newCoordinates = new Tuple<int, int>(Position.Row, Position.Column);
+
                 Console.WriteLine(string.Format("Player moved to coordinates [{0},{1}]", Position.Row, Position.Column));
-                PositionHistory.Add(new Tuple<int, int>(Position.Row, Position.Column));
+                if (PositionHistory.Contains(newCoordinates)) { Metrics.backtrackCount++; }
+                PositionHistory.Add(newCoordinates);
                 //moveCount += 1;
                 Metrics.moveCount++;
-                
 
+                
                 if (cell.CellItemType == CellItemType.Pit)
                 {
                     // die
@@ -170,22 +169,22 @@ namespace IntelligentMiner.Common
             if (num >= 1 && num <= 25)
             {
                 Facing = Direction.North;
-                Symbol = "\u2191";
+                Symbol = "M(\u2191)";
             }
             else if (num >= 26 && num <= 50)
             {
                 Facing = Direction.East;
-                Symbol = "\u2192";
+                Symbol = "M(\u2192)";
             }
             else if (num >= 51 && num <= 75)
             {
                 Facing = Direction.South;
-                Symbol = "\u2193";
+                Symbol = "M(\u2193)";
             }
             else if (num >= 76 && num <= 100)
             {
                 Facing = Direction.West;
-                Symbol = "\u2190";
+                Symbol = "M(\u2190)";
             }
 
             Metrics.Facing = Facing.ToString();

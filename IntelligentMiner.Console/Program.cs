@@ -128,7 +128,7 @@ namespace IntelligentMiner.ConsoleApp
                         else if (action == Common.Enums.ActionType.Move)
                         {
                             // 3. if Move, randomize how many times it will move
-                            var cell = player.Move(game);
+                            var cell = player.Move(game, true);
                             if (cell.CellItemType == Common.Enums.CellItemType.GoldenSquare || cell.CellItemType == Common.Enums.CellItemType.Pit)
                             {
                                 end = true;

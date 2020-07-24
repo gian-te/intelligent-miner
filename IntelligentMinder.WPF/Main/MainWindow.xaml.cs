@@ -38,7 +38,7 @@ namespace IntelligentMiner.WPF
                 pits = "2,2\r\n2,1\r\n",
                 beacons = "1,1=1\r\n2,2=1\r\n",
                 Gold = "1,2",
-                Size = 4
+                Size = 8
             };
             this.DataContext = _viewModel;
         }
@@ -71,6 +71,10 @@ namespace IntelligentMiner.WPF
                 {
                     game.PlayRandom();
                 }
+                else if (options.MovesIntelligently)
+                {
+                    game.PlayIntelligently();
+                }
             }
             catch (Exception)
             {
@@ -92,6 +96,14 @@ namespace IntelligentMiner.WPF
             {
                 throw;
             }
+        }
+
+        private void rdoManualInit_Checked(object sender, RoutedEventArgs e)
+        {
+            _viewModel.pits = String.Empty;
+            _viewModel.beacons = String.Empty;
+            _viewModel.Gold = String.Empty;
+            _viewModel.Size = 8;
         }
 
         //Still has bugs

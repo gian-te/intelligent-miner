@@ -22,8 +22,9 @@ namespace IntelligentMiner.WPF.Main
         private string _gold;
         private string _beacons;
         private string _pits;
+        private int _size;
 
-        public int Size { get; set; }
+        public int Size { get { return _size; } set { _size = value; NotifyPropertyChanged("Size"); } }
 
         public bool MovesIntelligently { get; set; }
 

@@ -98,6 +98,76 @@ namespace IntelligentMiner.WPF.Game
             RefreshGrid();
         }
 
+        public void PlayIntelligently()
+        {
+            Task.Run(() =>
+            {
+                bool end = false;
+                int rotateCounter = 0;
+
+                while (!end)
+                {
+                    ActionType action = new ActionType();
+                    BaseCellItem cell = new BaseCellItem();
+                    BaseCellItem scanned = game.Scan(player.Position.Row, player.Position.Column, player.Facing, "front");
+
+                    if (scanned.CellItemType == CellItemType.Wall)
+                    {
+                        player.Rotate();
+                        rotateCounter++;
+                        action = ActionType.Rotate;
+                    }
+                    else if (scanned.CellItemType == CellItemType.Pit)
+                    {
+                        player.Rotate();
+                        rotateCounter++;
+                        action = ActionType.Rotate;
+                    }
+                    else if (scanned.CellItemType == CellItemType.Empty)
+                    {
+                        Tuple<int, int> frontScanned = new Tuple<int, int>(scanned.Position.Row, scanned.Position.Column);
+                        if(!player.PositionHistory.Contains(frontScanned))
+                        {
+                            cell = player.Move(game, false);
+                            action = ActionType.Move;
+                        }
+                        else if (player.PositionHistory.Contains(frontScanned) && rotateCounter >= 3)
+                        {
+                            cell = player.Move(game, false);
+                            rotateCounter = 0;
+                            action = ActionType.Move;
+                        }
+                        else
+                        {
+                            player.Rotate();
+                            rotateCounter++;
+                            action = ActionType.Rotate;
+                        }
+                    }
+                    else if (  scanned.CellItemType == CellItemType.Beacon 
+                            || scanned.CellItemType ==  CellItemType.GoldenSquare )
+                    {
+                        cell = player.Move(game, false);
+                        action = ActionType.Move;
+                    }
+
+                    if (scanned.CellItemType == CellItemType.GoldenSquare)
+                    {
+                        action = ActionType.Win;
+                        dashboard.UpdateDashboard(player, action);
+                        end = true;
+                    }
+                    else
+                    {
+                        dashboard.UpdateDashboard(player, action);
+                    }
+
+                    this.Dispatcher.Invoke(() => RefreshGrid());
+                    Thread.Sleep(300);
+                }
+            });
+        }
+
         public void PlayRandom()
         {
             Task.Run(() =>
@@ -116,7 +186,7 @@ namespace IntelligentMiner.WPF.Game
                     else if (action == ActionType.Move)
                     {
                         // 3. if Move, randomize how many times it will move
-                        var cell = player.Move(game);
+                        var cell = player.Move(game, true);
                         if (cell.CellItemType == Common.Enums.CellItemType.GoldenSquare)
                         {
                             end = true;
