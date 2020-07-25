@@ -117,15 +117,23 @@ namespace IntelligentMiner.WPF.Game
                     // discover the map
                     player.Facing = Direction.East;
                     player.Discover(game);
+                    action = ActionType.Rotate;
+                    dashboard.UpdateDashboard(player, action); // update move
 
                     player.Facing = Direction.South;
                     player.Discover(game);
+                    action = ActionType.Rotate;
+                    dashboard.UpdateDashboard(player, action); // update move
 
                     player.Facing = Direction.North;
                     player.Discover(game);
+                    action = ActionType.Rotate;
+                    dashboard.UpdateDashboard(player, action); // update move
 
                     player.Facing = Direction.West;
                     player.Discover(game);
+                    action = ActionType.Rotate;
+                    dashboard.UpdateDashboard(player, action); // update move
 
                     // move the player to the popped element at the top of the fringe
                     var t = player.MoveWithStrategy(game);
