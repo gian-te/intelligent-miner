@@ -38,7 +38,7 @@ namespace IntelligentMiner.WPF.Game
 
             player = p;
             _viewModel = p.Metrics;
-            _viewModel.gameSpeed = 1000;
+            _viewModel.gameSpeed = 3000;
 
             this.DataContext = _viewModel;
         }
@@ -78,7 +78,8 @@ namespace IntelligentMiner.WPF.Game
 
             _viewModel.scanCount = p.Metrics.scanCount;
             _viewModel.backtrackCount = p.Metrics.backtrackCount;
-            Thread.Sleep(_viewModel.gameSpeed);
+            // not advisable
+            //Thread.Sleep(_viewModel.gameSpeed);
         }
 
         private async void txtActions_TextChanged(object sender, TextChangedEventArgs e)
