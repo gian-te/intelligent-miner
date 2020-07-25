@@ -1,4 +1,5 @@
-﻿using IntelligentMiner.Common.Enums;
+﻿using IntelligentMiner.Common.Entities;
+using IntelligentMiner.Common.Enums;
 using IntelligentMiner.Common.Utilities;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,10 @@ namespace IntelligentMiner.Common
         public int Size { get; set; }
 
         private BaseCellItem[,] _map;
+
+        public Node SearchSpace { get; set; }
+        public Node CurrentNode { get; set; }
+        public Dictionary<(int, int), Node> NodeMemo { get; set; }
 
         /// <summary>
         /// Property for a 2D Array
@@ -46,6 +51,9 @@ namespace IntelligentMiner.Common
             {
                 Map[gold.Position.Row, gold.Position.Column] = gold;
             }
+
+            NodeMemo = new Dictionary<(int, int), Node>();
+           
         }
 
         public void AddPit(int row, int col)
@@ -68,7 +76,7 @@ namespace IntelligentMiner.Common
             Map[row, col] = beacon;
         }
 
-        public BaseCellItem Scan(int row, int col, Direction Facing, string scan_type = "current")
+        public BaseCellItem GetCell(int row, int col, Direction Facing, string scan_type = "current")
         {
 
             if (scan_type == "front")
@@ -148,5 +156,7 @@ namespace IntelligentMiner.Common
         {
             Map[player.Position.Row, player.Position.Column] = player;
         }
+
+
     }
 }

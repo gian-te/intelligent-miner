@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
+using IntelligentMiner.Common.Entities;
 using IntelligentMiner.Common.Enums;
 using IntelligentMiner.Common.Utilities;
 
@@ -66,9 +67,28 @@ namespace IntelligentMiner.Common
             return cellInFront;
         }
 
-        public void MoveWithStrategy(string strat)
+        public CellItemType MoveWithStrategy(Game game)
         {
-            //Gawin yung strat experiment
+            CellItemType retVal;
+            game.ClearCell(Position.Row, Position.Column);
+            if (game.CurrentNode.Children.Count > 0)
+            {
+                var poppedNode = game.CurrentNode.Children.Pop();
+                Position.Row = poppedNode.Position.Row;
+                Position.Column = poppedNode.Position.Column;
+                game.CurrentNode = poppedNode;
+                retVal = poppedNode.CellItemType;
+            }
+            else
+            {
+                var poppedNode = game.CurrentNode.Parent;
+                Position.Row = poppedNode.Position.Row;
+                Position.Column = poppedNode.Position.Column;
+                game.CurrentNode = poppedNode;
+                retVal = poppedNode.CellItemType;
+            }
+            game.AssignPlayerToCell(this);
+            return retVal;
         }
 
         public ActionType RandomizeAction()
@@ -100,7 +120,17 @@ namespace IntelligentMiner.Common
             
         }
 
-        public BaseCellItem Move(Game game, bool random)
+        /// <summary>
+        /// get the cell without moving to the cell
+        /// </summary>
+        /// <param name="game"></param>
+        /// <returns></returns>
+        public BaseCellItem ScanForward(Game game)
+        {
+            return game.GetCell(Position.Row, Position.Column, Facing, "front");
+        }
+
+        public BaseCellItem MoveForward(Game game, bool random)
         {
             int times = 1;
             if (random) { times = Randomizer.RandomizeNumber(1, game.Size); }
@@ -110,7 +140,7 @@ namespace IntelligentMiner.Common
             for (int i = 0; i < times; i++)
             {
                 Thread.Sleep(100);
-                cell = game.Scan(Position.Row, Position.Column, Facing, "front");
+                cell = ScanForward(game);
                 //scanCount += 1;
                 Metrics.scanCount++;
                 if (cell.CellItemType == CellItemType.Wall)
@@ -161,6 +191,29 @@ namespace IntelligentMiner.Common
             return cell;
         }
 
+        public void Discover(Game game)
+        {
+            BaseCellItem cell;
+            cell = ScanForward(game);
+            if (cell.CellItemType != CellItemType.Wall && cell.CellItemType != CellItemType.Pit)
+            {
+                if (!game.NodeMemo.ContainsKey((cell.Position.Row, cell.Position.Column)))
+                {
+                    // create initial node
+                    Node node = new Node();
+                    node.Position.Row = cell.Position.Row;
+                    node.Position.Column = cell.Position.Column;
+                    node.CellItemType = cell.CellItemType;
+                    node.Parent = game.CurrentNode;
+                    // add the node object to the dictionary to prevent duplicate objects per cell.
+                    game.NodeMemo.Add((cell.Position.Row, cell.Position.Column), node);
+
+                    game.CurrentNode.Children.Push(node);
+                }
+            }
+          
+        }
+
         public void RandomizeFacing()
         {
             // 25% for each direction
@@ -189,6 +242,20 @@ namespace IntelligentMiner.Common
 
             Metrics.Facing = Facing.ToString();
             Console.WriteLine(string.Format("The player is initially facing {0}" , Facing.ToString()));
+        }
+
+        public void Think()
+        {
+            // build a graph of known visited nodes using the position history
+
+
+            // if there is a beacon in the visited notes, reduce the grid to a smaller M by M grid where M is the size of the grid from the beacon to the maximum number of steps where the golden square is
+            // for example, if the beacon is in cell 1,1 with a value of 3, reduce the grid to a 4x4 grid, from 0,0 to 4,4.
+            // we do this to minimize the search space, we don't need the rest of the tiles since we know that the golden square is within 4 cells from the beacon.
+
+
+
+            // 
         }
     }
 

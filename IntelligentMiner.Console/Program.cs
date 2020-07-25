@@ -94,11 +94,11 @@ namespace IntelligentMiner.ConsoleApp
                                 {
                                     
                                     player.Metrics.scanCount++;
-                                    var front = game.Scan(player.Position.Row, player.Position.Column, player.Facing, "front");
-                                    var current = game.Scan(player.Position.Row, player.Position.Column, player.Facing);
+                                    var front = game.GetCell(player.Position.Row, player.Position.Column, player.Facing, "front");
+                                    var current = game.GetCell(player.Position.Row, player.Position.Column, player.Facing);
 
 
-                                    player.MoveWithStrategy(generator.Situations.IndexOf((current.CellItemType.ToString(), front.CellItemType.ToString())).ToString());
+                                    //player.MoveWithStrategy(generator.Situations.IndexOf((current.CellItemType.ToString(), front.CellItemType.ToString())).ToString());
                                     stepCount++;
                                 }
 
@@ -128,7 +128,7 @@ namespace IntelligentMiner.ConsoleApp
                         else if (action == Common.Enums.ActionType.Move)
                         {
                             // 3. if Move, randomize how many times it will move
-                            var cell = player.Move(game, true);
+                            var cell = player.MoveForward(game, true);
                             if (cell.CellItemType == Common.Enums.CellItemType.GoldenSquare || cell.CellItemType == Common.Enums.CellItemType.Pit)
                             {
                                 end = true;

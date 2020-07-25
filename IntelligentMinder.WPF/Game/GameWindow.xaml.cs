@@ -20,6 +20,7 @@ using System.Data;
 using System.Threading;
 using IntelligentMiner.Common.Utilities;
 using IntelligentMiner.Common.Enums;
+using IntelligentMiner.Common.Entities;
 
 namespace IntelligentMiner.WPF.Game
 {
@@ -62,11 +63,6 @@ namespace IntelligentMiner.WPF.Game
             };
             game.Map[player.Position.Row, player.Position.Column] = player;
 
-            //var gold = new GoldenSquare();
-            //gold.Position.Row = int.Parse(goldCoordinates[0]);
-            //gold.Position.Column = int.Parse(goldCoordinates[1]);
-            //game.AddGold(gold.Position.Row, gold.Position.Column);
-
             //Add objects to map
             var goldCoordinates = gameOptions.Gold.Split(',');
             game.AddGold(int.Parse(goldCoordinates[0]), int.Parse(goldCoordinates[1]));
@@ -90,8 +86,6 @@ namespace IntelligentMiner.WPF.Game
                 }
             );
 
-
-
             dashboard = new Dashboard(player);
             dashboard.Show();
             
@@ -102,71 +96,52 @@ namespace IntelligentMiner.WPF.Game
         {
             Task.Run(() =>
             {
-                bool end = false;
-                int rotateCounter = 0;
+                // create initial node
+                Node root = new Node();
+                root.Position.Row = player.Position.Row;
+                root.Position.Column = player.Position.Column;
+                root.CellItemType = player.CellItemType;
 
+                // add the root node to the search space
+                game.SearchSpace = root;
+
+                // add the node object to the dictionary to prevent duplicate objects per cell.
+                game.NodeMemo.Add((root.Position.Row, root.Position.Column), root);
+                game.CurrentNode = root;
+
+                // player to discover the rest of the nodes
+                bool end = false;
                 while (!end)
                 {
-                    ActionType action = new ActionType();
-                    BaseCellItem cell = new BaseCellItem();
-                    BaseCellItem scanned = game.Scan(player.Position.Row, player.Position.Column, player.Facing, "front");
+                    // discover the map
+                    player.Facing = Direction.East;
+                    player.Discover(game);
 
-                    if (scanned.CellItemType == CellItemType.Wall)
-                    {
-                        player.Rotate();
-                        rotateCounter++;
-                        action = ActionType.Rotate;
-                    }
-                    else if (scanned.CellItemType == CellItemType.Pit)
-                    {
-                        player.Rotate();
-                        rotateCounter++;
-                        action = ActionType.Rotate;
-                    }
-                    else if (scanned.CellItemType == CellItemType.Empty)
-                    {
-                        Tuple<int, int> frontScanned = new Tuple<int, int>(scanned.Position.Row, scanned.Position.Column);
-                        if(!player.PositionHistory.Contains(frontScanned))
-                        {
-                            cell = player.Move(game, false);
-                            action = ActionType.Move;
-                        }
-                        else if (player.PositionHistory.Contains(frontScanned) && rotateCounter >= 3)
-                        {
-                            cell = player.Move(game, false);
-                            rotateCounter = 0;
-                            action = ActionType.Move;
-                        }
-                        else
-                        {
-                            player.Rotate();
-                            rotateCounter++;
-                            action = ActionType.Rotate;
-                        }
-                    }
-                    else if (  scanned.CellItemType == CellItemType.Beacon 
-                            || scanned.CellItemType ==  CellItemType.GoldenSquare )
-                    {
-                        cell = player.Move(game, false);
-                        action = ActionType.Move;
-                    }
+                    player.Facing = Direction.South;
+                    player.Discover(game);
 
-                    if (scanned.CellItemType == CellItemType.GoldenSquare)
+                    player.Facing = Direction.North;
+                    player.Discover(game);
+
+                    player.Facing = Direction.West;
+                    player.Discover(game);
+
+                    // move the player to the popped element at the top of the fringe
+                    var t = player.MoveWithStrategy(game);
+                    if (t == CellItemType.GoldenSquare)
                     {
-                        action = ActionType.Win;
-                        dashboard.UpdateDashboard(player, action);
                         end = true;
-                    }
-                    else
-                    {
+                        var action = ActionType.Win;
                         dashboard.UpdateDashboard(player, action);
                     }
 
-                    if(player.Metrics.gameSpeed > 0) { Thread.Sleep(player.Metrics.gameSpeed);}
                     this.Dispatcher.Invoke(() => RefreshGrid());
+
                 }
             });
         }
+
+      
 
         public void PlayRandom()
         {
@@ -186,7 +161,7 @@ namespace IntelligentMiner.WPF.Game
                     else if (action == ActionType.Move)
                     {
                         // 3. if Move, randomize how many times it will move
-                        var cell = player.Move(game, true);
+                        var cell = player.MoveForward(game, true);
                         if (cell.CellItemType == Common.Enums.CellItemType.GoldenSquare)
                         {
                             end = true;
