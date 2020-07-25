@@ -87,6 +87,8 @@ namespace IntelligentMiner.Common
                 game.CurrentNode = poppedNode;
                 retVal = poppedNode.CellItemType;
             }
+            Metrics.moveCount++;
+            
             game.AssignPlayerToCell(this);
             return retVal;
         }
@@ -127,6 +129,7 @@ namespace IntelligentMiner.Common
         /// <returns></returns>
         public BaseCellItem ScanForward(Game game)
         {
+            Metrics.scanCount++;
             return game.GetCell(Position.Row, Position.Column, Facing, "front");
         }
 
@@ -195,6 +198,7 @@ namespace IntelligentMiner.Common
         {
             BaseCellItem cell;
             cell = ScanForward(game);
+            Metrics.scanCount++;
             if (cell.CellItemType != CellItemType.Wall && cell.CellItemType != CellItemType.Pit)
             {
                 if (!game.NodeMemo.ContainsKey((cell.Position.Row, cell.Position.Column)))

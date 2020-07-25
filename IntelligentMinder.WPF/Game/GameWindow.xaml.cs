@@ -113,6 +113,7 @@ namespace IntelligentMiner.WPF.Game
                 bool end = false;
                 while (!end)
                 {
+                    ActionType action;
                     // discover the map
                     player.Facing = Direction.East;
                     player.Discover(game);
@@ -128,12 +129,14 @@ namespace IntelligentMiner.WPF.Game
 
                     // move the player to the popped element at the top of the fringe
                     var t = player.MoveWithStrategy(game);
+                    action = ActionType.Move;
                     if (t == CellItemType.GoldenSquare)
                     {
                         end = true;
-                        var action = ActionType.Win;
-                        dashboard.UpdateDashboard(player, action);
+                        action = ActionType.Win;
+                        //dashboard.UpdateDashboard(player, action);
                     }
+                    dashboard.UpdateDashboard(player, action); // update move
 
                     this.Dispatcher.Invoke(() => RefreshGrid());
 

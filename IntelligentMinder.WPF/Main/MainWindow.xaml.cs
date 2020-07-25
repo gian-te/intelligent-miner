@@ -35,9 +35,9 @@ namespace IntelligentMiner.WPF
             {
                 MovesRandomly = true,
                 MovesIntelligently = false,
-                pits = "2,2\r\n2,1\r\n",
+                pits = "2,1\r\n6,0\r\n0,7\r\n6,7\r\n7,4\r\n7,1\r\n1,3\r\n2,5\r\n2,4\r\n5,5\r\n4,3\r\n1,6\r\n3,7",
                 beacons = "1,1=1\r\n2,2=1\r\n",
-                Gold = "1,2",
+                Gold = "5,4",
                 Size = 8
             };
             this.DataContext = _viewModel;
