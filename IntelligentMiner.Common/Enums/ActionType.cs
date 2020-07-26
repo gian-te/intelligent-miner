@@ -10,7 +10,8 @@ namespace IntelligentMiner.Common.Enums
         Scan,
         Die,
         Win,
-        Move
+        Move,
+        NoPossible
         // add the rest
     }
 }

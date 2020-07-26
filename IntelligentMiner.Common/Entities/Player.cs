@@ -194,7 +194,7 @@ namespace IntelligentMiner.Common
             return cell;
         }
 
-        public void Discover(Game game)
+        public BaseCellItem Discover(Game game)
         {
             BaseCellItem cell;
             cell = ScanForward(game);
@@ -215,6 +215,7 @@ namespace IntelligentMiner.Common
                     game.CurrentNode.Children.Push(node);
                 }
             }
+            return cell;
           
         }
 

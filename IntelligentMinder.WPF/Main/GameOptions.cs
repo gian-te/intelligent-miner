@@ -34,6 +34,8 @@ namespace IntelligentMiner.WPF.Main
 
         public bool ManualInit { get; set; }
 
+        public bool ClearInit { get; set; }
+
         public string pits { get { return _pits; } set { _pits = value; NotifyPropertyChanged("pits"); } }
 
         public string beacons { get { return _beacons; } set { _beacons = value; NotifyPropertyChanged("beacons"); } }

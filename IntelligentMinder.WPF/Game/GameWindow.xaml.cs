@@ -96,6 +96,9 @@ namespace IntelligentMiner.WPF.Game
         {
             Task.Run(() =>
             {
+
+                int gameSpeed = 200;
+
                 // create initial node
                 Node root = new Node();
                 root.Position.Row = player.Position.Row;
@@ -113,46 +116,99 @@ namespace IntelligentMiner.WPF.Game
                 bool end = false;
                 while (!end)
                 {
-                    ActionType action;
-                    // discover the map
-                    player.Facing = Direction.East;
-                    player.Discover(game);
-                    action = ActionType.Rotate;
-                    dashboard.UpdateDashboard(player, action); // update move
 
-                    player.Facing = Direction.South;
-                    player.Discover(game);
-                    action = ActionType.Rotate;
-                    dashboard.UpdateDashboard(player, action); // update move
-
-                    player.Facing = Direction.North;
-                    player.Discover(game);
-                    action = ActionType.Rotate;
-                    dashboard.UpdateDashboard(player, action); // update move
-
-                    player.Facing = Direction.West;
-                    player.Discover(game);
-                    action = ActionType.Rotate;
-                    dashboard.UpdateDashboard(player, action); // update move
-
-                    // move the player to the popped element at the top of the fringe
-                    var t = player.MoveWithStrategy(game);
-                    action = ActionType.Move;
-                    if (t == CellItemType.GoldenSquare)
+                    while (dashboard.pauseStatus())
                     {
-                        end = true;
-                        action = ActionType.Win;
-                        //dashboard.UpdateDashboard(player, action);
-                    }
-                    dashboard.UpdateDashboard(player, action); // update move
+                        ActionType action;
+                        BaseCellItem cell;
 
-                    this.Dispatcher.Invoke(() => RefreshGrid());
+                        // discover the map
+                        //Rotate and Scan to East
+                        player.Facing = Direction.East;
+                        action = ActionType.Rotate;
+                        player.Symbol = "M(\u2192)";
+                        player.Metrics.rotateCount++;
+                        dashboard.UpdateDashboard(player, action); // update move
+                        this.Dispatcher.Invoke(() => RefreshGrid());
+
+                        cell = player.Discover(game);
+                        action = ActionType.Scan;
+                        dashboard.UpdateDashboard(player, action, cell.CellItemType); // update move
+                        Thread.Sleep(gameSpeed);
+
+                        //Rotate and Scan to South
+                        player.Facing = Direction.South;
+                        action = ActionType.Rotate;
+                        player.Symbol = "M(\u2193)";
+                        player.Metrics.rotateCount++;
+                        dashboard.UpdateDashboard(player, action); // update move
+                        this.Dispatcher.Invoke(() => RefreshGrid());
+
+                        cell = player.Discover(game);
+                        action = ActionType.Scan;
+                        dashboard.UpdateDashboard(player, action, cell.CellItemType); // update move
+                        Thread.Sleep(gameSpeed);
+
+                        //Rotate and Scan to North
+                        player.Facing = Direction.North;
+                        action = ActionType.Rotate;
+                        player.Symbol = "M(\u2191)";
+                        player.Metrics.rotateCount++;
+                        dashboard.UpdateDashboard(player, action); // update move
+                        this.Dispatcher.Invoke(() => RefreshGrid());
+
+                        cell = player.Discover(game);
+                        action = ActionType.Scan;
+                        dashboard.UpdateDashboard(player, action, cell.CellItemType); // update move
+                        Thread.Sleep(gameSpeed);
+
+                        //Rotate and Scan to West
+                        player.Facing = Direction.West;
+                        action = ActionType.Rotate;
+                        player.Symbol = "M(\u2190)";
+                        player.Metrics.rotateCount++;
+                        dashboard.UpdateDashboard(player, action); // update move
+                        this.Dispatcher.Invoke(() => RefreshGrid());
+
+                        cell = player.Discover(game);
+                        action = ActionType.Scan;
+                        dashboard.UpdateDashboard(player, action, cell.CellItemType); // update move
+                        Thread.Sleep(gameSpeed);
+
+                        player.Symbol = "M";
+                        this.Dispatcher.Invoke(() => RefreshGrid());
+                        Thread.Sleep(gameSpeed/2);
+
+                        // move the player to the popped element at the top of the fringe
+                        CellItemType t = new CellItemType();
+                        try
+                        {
+                            t = player.MoveWithStrategy(game);
+                            action = ActionType.Move;
+                        }
+                        catch (Exception)
+                        {
+                            end = true;
+                            action = ActionType.NoPossible;
+                            t = CellItemType.Empty;
+                            //throw;
+                        }
+
+                        if (t == CellItemType.GoldenSquare)
+                        {
+                            end = true;
+                            action = ActionType.Win;
+                        }
+
+                        dashboard.UpdateDashboard(player, action); // update move
+                        this.Dispatcher.Invoke(() => RefreshGrid());
+                        Thread.Sleep(gameSpeed);
+                        if (end) { break; }
+                    }
 
                 }
             });
         }
-
-      
 
         public void PlayRandom()
         {

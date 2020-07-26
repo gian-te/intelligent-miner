@@ -38,7 +38,9 @@ namespace IntelligentMiner.WPF.Game
 
             player = p;
             _viewModel = p.Metrics;
-            _viewModel.gameSpeed = 500;
+            _viewModel.isContinue = false;
+            _viewModel.isPaused = true;
+            //_viewModel.gameSpeed = 500;
 
             this.DataContext = _viewModel;
         }
@@ -50,13 +52,19 @@ namespace IntelligentMiner.WPF.Game
             }
         }
 
-        public void UpdateDashboard(Player p, ActionType action)
+        public void UpdateDashboard(Player p, ActionType action, CellItemType celltype = CellItemType.Empty)
         {
             if (action == ActionType.Rotate)
             {
                 _viewModel.Facing = p.Facing.ToString();
-                _viewModel.PositionHistory += String.Concat("Rotated: ", p.Facing.ToString());
+                _viewModel.PositionHistory += String.Concat("Rotated to: ", p.Facing.ToString());
                 _viewModel.rotateCount = p.Metrics.rotateCount;
+            }
+            else if (action == ActionType.Scan)
+            {
+                _viewModel.Facing = p.Facing.ToString();
+                _viewModel.PositionHistory += String.Concat("Scanned: ", celltype.ToString());
+                _viewModel.scanCount = p.Metrics.scanCount;
             }
             else if (action == ActionType.Move)
             {
@@ -66,20 +74,26 @@ namespace IntelligentMiner.WPF.Game
             else if (action == ActionType.Die)
             {
                 _viewModel.PositionHistory += String.Concat("The player died a horrible death.");
-
             }
             else if (action == ActionType.Win)
             {
-                _viewModel.PositionHistory += String.Concat("The player has struck gold");
-
+                _viewModel.PositionHistory += String.Concat("The player has struck gold!");
+            }
+            else if  (action == ActionType.NoPossible)
+            {
+                _viewModel.PositionHistory += String.Concat("No more possible moves.\nGame over!");
             }
 
             _viewModel.PositionHistory += Environment.NewLine;
 
-            _viewModel.scanCount = p.Metrics.scanCount;
             _viewModel.backtrackCount = p.Metrics.backtrackCount;
+            if(action == ActionType.Win)
+            {
+                _viewModel.isPaused = false;
+                _viewModel.isContinue = false;
+            }
             // not advisable
-            Thread.Sleep(_viewModel.gameSpeed);
+            //Thread.Sleep(_viewModel.gameSpeed);
         }
 
         private async void txtActions_TextChanged(object sender, TextChangedEventArgs e)
@@ -96,6 +110,24 @@ namespace IntelligentMiner.WPF.Game
                    
 
                 });
+        }
+
+        private void btnPause_Click(object sender, RoutedEventArgs e)
+        {
+            _viewModel.isPaused = false;
+            _viewModel.isContinue = true;
+        }
+
+        private void btnContinue_Click(object sender, RoutedEventArgs e)
+        {
+
+            _viewModel.isPaused = true;
+            _viewModel.isContinue = false;
+        }
+
+        public bool pauseStatus()
+        {
+            return _viewModel.isPaused;
         }
     }
 }

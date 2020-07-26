@@ -38,7 +38,8 @@ namespace IntelligentMiner.WPF
                 pits = "2,1\r\n6,0\r\n0,7\r\n6,7\r\n7,4\r\n7,1\r\n1,3\r\n2,5\r\n2,4\r\n5,5\r\n4,3\r\n1,6\r\n3,7",
                 beacons = "0,4 = 5\r\n5,0 = 4\r\n6,4=1",
                 Gold = "5,4",
-                Size = 8
+                Size = 8,
+                ClearInit = true
             };
             this.DataContext = _viewModel;
             
@@ -48,6 +49,7 @@ namespace IntelligentMiner.WPF
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+
             try
             {
                 // Validate here
@@ -77,9 +79,8 @@ namespace IntelligentMiner.WPF
                     game.PlayIntelligently();
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
                 throw;
             }
 
@@ -90,6 +91,7 @@ namespace IntelligentMiner.WPF
             try
             {
                 // Genenrate values only
+                _viewModel.Size = 8;
                 GenerateRandomInit();
 
             }
@@ -101,18 +103,20 @@ namespace IntelligentMiner.WPF
 
         private void rdoManualInit_Checked(object sender, RoutedEventArgs e)
         {
-            //_viewModel.pits = String.Empty;
-            //_viewModel.beacons = String.Empty;
-            //_viewModel.Gold = String.Empty;
-            //_viewModel.Size = 8;
-
-            _viewModel.pits = "2,2\r\n2,1\r\n";
-            _viewModel.beacons = "1,1=1\r\n2,2=1\r\n";
-            _viewModel.Gold = "1,2";
+            _viewModel.pits = "2,1\r\n6,0\r\n0,7\r\n6,7\r\n7,4\r\n7,1\r\n1,3\r\n2,5\r\n2,4\r\n5,5\r\n4,3\r\n1,6\r\n3,7";
+            _viewModel.beacons = "0,4 = 5\r\n5,0 = 4\r\n6,4=1";
+            _viewModel.Gold = "5,4";
             _viewModel.Size = 8;
         }
 
-        //Still has bugs
+        private void rdoClearInit_Checked(object sender, RoutedEventArgs e)
+        {
+            _viewModel.pits = String.Empty;
+            _viewModel.beacons = String.Empty;
+            _viewModel.Gold = String.Empty;
+            _viewModel.Size = 0;
+        }
+
         public void GenerateRandomInit()
         {
             int gridSize = _viewModel.Size;
@@ -243,6 +247,10 @@ namespace IntelligentMiner.WPF
 
         }
 
+        private void txtGridSize_LostFocus(object sender, RoutedEventArgs e)
+        {
+            GenerateRandomInit();
+        }
     }
 
 

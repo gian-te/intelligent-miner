@@ -61,7 +61,6 @@
       <DependentUpon>GameWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Main\GameOptions.cs" />
-    <Compile Include="ViewModel.cs" />
     <Page Include="Game\Dashboard.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

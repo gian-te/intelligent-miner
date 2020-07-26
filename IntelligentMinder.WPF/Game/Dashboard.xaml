@@ -33,10 +33,14 @@
                 <TextBox Height="22" Margin="10,0,0,0" IsReadOnly="True" HorizontalAlignment="Left" Text="{Binding backtrackCount, Mode=TwoWay}" Width="89" AcceptsReturn="False" TextWrapping="Wrap" Name ="txtBacktrack" Grid.Row="4" Grid.Column="1"/>
             </Grid>
         </GroupBox>
-        <GroupBox Header="Step Delay" Height="50" Width="180" Margin="38,190,0,0" VerticalAlignment="Top" HorizontalAlignment="Left">
-            <StackPanel Orientation="Horizontal">
+        <GroupBox Header="Pause/Continue" Height="50" Width="180" Margin="38,190,0,0" VerticalAlignment="Top" HorizontalAlignment="Left">
+            <!--<StackPanel Orientation="Horizontal">
                 <Slider Name="sldrGameSpeed" Value="{Binding Path = gameSpeed}" Maximum="1000" Minimum="0" TickFrequency="100" Width="145" IsSnapToTickEnabled="True" TickPlacement="BottomRight" HorizontalAlignment="Left"/>
                 <TextBlock Text="{Binding ElementName=sldrGameSpeed, Path=Value, UpdateSourceTrigger=PropertyChanged}" Width="30" FontSize="10"/>
+            </StackPanel>-->
+            <StackPanel Orientation="Horizontal">
+                <Button Name="btnPause" Width="70" Content="Pause" IsEnabled="{Binding Path=isPaused}" Click="btnPause_Click"/>
+                <Button Name="btnContinue" Width="80" Content="Continue" Margin="18, 0 0 0" IsEnabled="{Binding Path=isContinue}" Click="btnContinue_Click"/>
             </StackPanel>
         </GroupBox>
         <GroupBox Header="Actions" HorizontalAlignment="Left" Height="200" Margin="38, 240 0 9" VerticalAlignment="Top" Width="180">
