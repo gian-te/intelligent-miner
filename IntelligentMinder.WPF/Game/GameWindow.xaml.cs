@@ -284,8 +284,8 @@ namespace IntelligentMiner.WPF.Game
                                     priorities += String.Format("{0},{1}:{2}{3}",
                                     item.Item1.Position.Row, item.Item1.Position.Column, item.Item2, Environment.NewLine);
                                 }
-                                    if (priorityChildren.Count > 0)
-                                    { MessageBox.Show(priorities); }
+                                    //if (priorityChildren.Count > 0)
+                                    //{ MessageBox.Show(priorities); }
 
                                 // move the player to the popped element at the top of the fringe
                                 CellItemType t = new CellItemType();
