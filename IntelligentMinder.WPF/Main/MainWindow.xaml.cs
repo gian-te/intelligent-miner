@@ -79,7 +79,7 @@ namespace IntelligentMiner.WPF
                     game.PlayIntelligently();
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }

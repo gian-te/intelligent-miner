@@ -17,8 +17,17 @@ namespace IntelligentMiner.Common
 
         public Direction Facing { get; set; }
 
-        public PlayerMetrics Metrics { get; set; }
+        public bool steppedOnBeacon { get; set; }
 
+        public Beacon beaconValue { get; set; }
+
+        public int maxRow { get; set; }
+
+        public int maxColumn { get; set; }
+
+        public Tuple<int, int, Direction> currentBeaconTarget { get; set; }
+
+        public PlayerMetrics Metrics { get; set; }
 
         protected override void Initialize()
         {
@@ -67,13 +76,15 @@ namespace IntelligentMiner.Common
             return cellInFront;
         }
 
-        public CellItemType MoveWithStrategy(Game game)
+        public (CellItemType, Beacon) MoveWithStrategy(Game game)
         {
             CellItemType retVal;
+            Beacon beaconValue = new Beacon();
+            var poppedNode = new Node();
             game.ClearCell(Position.Row, Position.Column);
             if (game.CurrentNode.Children.Count > 0)
             {
-                var poppedNode = game.CurrentNode.Children.Pop();
+                poppedNode = game.CurrentNode.Children.Pop();
                 Position.Row = poppedNode.Position.Row;
                 Position.Column = poppedNode.Position.Column;
                 game.CurrentNode = poppedNode;
@@ -81,16 +92,23 @@ namespace IntelligentMiner.Common
             }
             else
             {
-                var poppedNode = game.CurrentNode.Parent;
+                poppedNode = game.CurrentNode.Parent;
                 Position.Row = poppedNode.Position.Row;
                 Position.Column = poppedNode.Position.Column;
                 game.CurrentNode = poppedNode;
                 retVal = poppedNode.CellItemType;
+                Metrics.backtrackCount++;
             }
             Metrics.moveCount++;
-            
+
+            if (retVal == CellItemType.Beacon)
+            {
+                BaseCellItem cell = game.Map[poppedNode.Position.Row, poppedNode.Position.Column];
+                beaconValue  = cell as Beacon;
+            }
+
             game.AssignPlayerToCell(this);
-            return retVal;
+            return (retVal, beaconValue);
         }
 
         public ActionType RandomizeAction()
@@ -168,8 +186,7 @@ namespace IntelligentMiner.Common
                 PositionHistory.Add(newCoordinates);
                 //moveCount += 1;
                 Metrics.moveCount++;
-
-                
+ 
                 if (cell.CellItemType == CellItemType.Pit)
                 {
                     // die
@@ -194,17 +211,18 @@ namespace IntelligentMiner.Common
             return cell;
         }
 
-        public BaseCellItem Discover(Game game)
+        public (BaseCellItem, Node, int) Discover(Game game)
         {
             BaseCellItem cell;
             cell = ScanForward(game);
             Metrics.scanCount++;
+            Node node = new Node();
+            int prio = 0;
             if (cell.CellItemType != CellItemType.Wall && cell.CellItemType != CellItemType.Pit)
             {
                 if (!game.NodeMemo.ContainsKey((cell.Position.Row, cell.Position.Column)))
                 {
                     // create initial node
-                    Node node = new Node();
                     node.Position.Row = cell.Position.Row;
                     node.Position.Column = cell.Position.Column;
                     node.CellItemType = cell.CellItemType;
@@ -212,11 +230,163 @@ namespace IntelligentMiner.Common
                     // add the node object to the dictionary to prevent duplicate objects per cell.
                     game.NodeMemo.Add((cell.Position.Row, cell.Position.Column), node);
 
-                    game.CurrentNode.Children.Push(node);
+                    //game.CurrentNode.Children.Push(node);
+                    //Determine which node should be prioritized
+                    if(cell.CellItemType == CellItemType.GoldenSquare) { prio = 3; }
+                    else if (cell.CellItemType == CellItemType.Beacon) { prio = 2; }
+                    else if (cell.CellItemType == CellItemType.Empty)  { prio = 1; }
                 }
             }
-            return cell;
+            else if (cell.CellItemType == CellItemType.Pit)
+            {
+                game.PitMemo.Add((cell.Position.Row, cell.Position.Column));
+            }
+            else if (cell.CellItemType == CellItemType.Wall)
+            {
+                if (Facing == Direction.South && maxRow == 0)
+                {
+                    maxRow = cell.Position.Row;
+                }
+                else if (Facing == Direction.East && maxColumn == 0)
+                {
+                    maxColumn = cell.Position.Column;
+                }
+            }
+            return (cell, node, prio);
           
+        }
+
+        public bool DiscoverUsingBeacon(Game game, BaseCellItem cell,
+            List<(Node, double)> priorityChildren, List<(int, int, Direction)> genTargets)
+        {
+            bool isPit_Wall_Target = false;
+            cell = ScanForward(game);
+            Metrics.scanCount++;
+            if (cell.CellItemType != CellItemType.Wall && cell.CellItemType != CellItemType.Pit)
+            {
+                if (!game.BeaconMemo.ContainsKey((cell.Position.Row, cell.Position.Column)))
+                {
+
+                        double prio = 1;
+                        // create initial node
+                        Node node = new Node();
+                        node.Position.Row = cell.Position.Row;
+                        node.Position.Column = cell.Position.Column;
+                        node.CellItemType = cell.CellItemType;
+                        node.Parent = game.CurrentNode;
+                        // add the node object to the dictionary to prevent duplicate objects per cell.
+                        game.BeaconMemo.Add((cell.Position.Row, cell.Position.Column), node);
+
+                        if (cell.CellItemType == CellItemType.GoldenSquare) { prio = game.Size * game.Size + 2; }
+                        else if (cell.CellItemType == CellItemType.Beacon) { prio = game.Size * game.Size + 1; }
+                        else if (cell.CellItemType == CellItemType.Empty)
+                        {
+                            prio = ComputeDistance(currentBeaconTarget.Item1, currentBeaconTarget.Item2,
+                                cell.Position.Row, cell.Position.Column);
+                        }
+
+                        priorityChildren.Add((node, prio));
+
+                        //game.CurrentNode.Children.Push(node);
+                }
+            }
+            else if (cell.CellItemType == CellItemType.Wall || cell.CellItemType == CellItemType.Pit)
+            {
+                
+                //Update targets if wall or pit is found.
+                for (int i = 0; i < genTargets.Count; i++)
+                {
+                    if (genTargets[i].Item1 == cell.Position.Row && genTargets[i].Item2 == cell.Position.Column)
+                    {
+                        genTargets.RemoveAt(i);
+                        break;
+                    }
+                }
+
+                if (cell.CellItemType == CellItemType.Wall)
+                {
+                    if (Facing == Direction.South && maxRow == 0)
+                    {
+                        maxRow = Position.Row;
+                        isPit_Wall_Target = true;
+                    }
+                    else if (Facing == Direction.East && maxColumn == 0)
+                    {
+                        maxColumn = Position.Column;
+                        isPit_Wall_Target = true;
+                    }
+                }
+                else
+                {
+                    //If discovered is current target, change target
+                    if (currentBeaconTarget.Item1 == cell.Position.Row && currentBeaconTarget.Item2 == cell.Position.Column)
+                    {
+                        isPit_Wall_Target = true;
+                    }
+
+                    if (!game.PitMemo.Contains((cell.Position.Row, cell.Position.Column)))
+                    {
+                        game.PitMemo.Add((cell.Position.Row, cell.Position.Column));
+                    }
+
+                }
+            }
+
+            return isPit_Wall_Target;
+        }
+
+        public List<(int, int, Direction)> GenerateTargetGrids(Game game)
+        {
+            int row = 0, col = 0;
+            List<(int, int, Direction)> genTargets = new List<(int, int, Direction)>();
+
+            //Get North Target
+            row = beaconValue.Position.Row - beaconValue.Value;
+            col = beaconValue.Position.Column;
+            if (row >= 0 && !game.PitMemo.Contains((row,col)) && !game.NodeMemo.ContainsKey((row, col)))
+            {
+                genTargets.Add((row, col, Direction.West));
+            }
+
+            //Get East Target
+            row = beaconValue.Position.Row;
+            col = beaconValue.Position.Column + beaconValue.Value;
+            if (!game.PitMemo.Contains((row, col)) && !game.NodeMemo.ContainsKey((row, col)))
+            {
+                if (maxColumn > 0)
+                {
+                    if (col <= maxColumn) { genTargets.Add((row, col, Direction.East)); }
+                }
+                else
+                {
+                    genTargets.Add((row, col, Direction.South));
+                }
+            }
+
+            //Get South Target
+            row = beaconValue.Position.Row + beaconValue.Value;
+            col = beaconValue.Position.Column;
+            if (!game.PitMemo.Contains((row, col)) && !game.NodeMemo.ContainsKey((row, col)))
+            {
+                if (maxRow > 0)
+                {
+                    if (row <= maxRow) { genTargets.Add((row, col, Direction.South)); }
+                }
+                else
+                {
+                    genTargets.Add((row, col, Direction.East));
+                }
+            }
+
+            //Get West Target
+            row = beaconValue.Position.Row;
+            col = beaconValue.Position.Column - beaconValue.Value;
+            if (col >= 0 && !game.PitMemo.Contains((row, col)) && !game.NodeMemo.ContainsKey((row, col)))
+            {
+                genTargets.Add((row, col, Direction.North));
+            }
+
+            return genTargets;
         }
 
         public void RandomizeFacing()
@@ -247,6 +417,16 @@ namespace IntelligentMiner.Common
 
             Metrics.Facing = Facing.ToString();
             Console.WriteLine(string.Format("The player is initially facing {0}" , Facing.ToString()));
+        }
+
+        public double ComputeDistance(int rowA, int colA, int rowB, int colB)
+        {
+            //return Math.Abs((rowA - rowB) + (colA - colB));
+            double row = Math.Pow((double)(rowA - rowB), 2);
+            double col = Math.Pow((double)(colA - colB), 2);
+            double to_square = row + col;
+            //Make negative for prioritization stack
+            return Math.Sqrt(to_square) * -1;
         }
 
         public void Think()

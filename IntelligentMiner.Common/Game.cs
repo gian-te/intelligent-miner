@@ -15,6 +15,8 @@ namespace IntelligentMiner.Common
         public Node SearchSpace { get; set; }
         public Node CurrentNode { get; set; }
         public Dictionary<(int, int), Node> NodeMemo { get; set; }
+        public Dictionary<(int, int), Node> BeaconMemo { get; set; }
+        public List<(int, int)> PitMemo { get; set; }
 
         /// <summary>
         /// Property for a 2D Array
@@ -52,8 +54,10 @@ namespace IntelligentMiner.Common
                 Map[gold.Position.Row, gold.Position.Column] = gold;
             }
 
+            BeaconMemo = new Dictionary<(int, int), Node>();
             NodeMemo = new Dictionary<(int, int), Node>();
-           
+            PitMemo = new List<(int, int)>();
+
         }
 
         public void AddPit(int row, int col)

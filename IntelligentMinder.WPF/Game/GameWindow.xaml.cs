@@ -33,6 +33,7 @@ namespace IntelligentMiner.WPF.Game
         IntelligentMiner.Common.Game game;
         Player player;
         Dashboard dashboard;
+
         public GameWindow()
         {
             InitializeComponent();
@@ -59,7 +60,9 @@ namespace IntelligentMiner.WPF.Game
                 {
                     Row = 0,
                     Column = 0
-                }
+                },
+                maxRow = 0,
+                maxColumn = 0
             };
             game.Map[player.Position.Row, player.Position.Column] = player;
 
@@ -96,8 +99,7 @@ namespace IntelligentMiner.WPF.Game
         {
             Task.Run(() =>
             {
-
-                int gameSpeed = 200;
+                int gameSpeed = 100;
 
                 // create initial node
                 Node root = new Node();
@@ -114,95 +116,245 @@ namespace IntelligentMiner.WPF.Game
 
                 // player to discover the rest of the nodes
                 bool end = false;
+                List<(int, int, Direction)> genTargets = new List<(int, int, Direction)>();
                 while (!end)
                 {
 
                     while (dashboard.pauseStatus())
                     {
-                        ActionType action;
-                        BaseCellItem cell;
 
-                        // discover the map
-                        //Rotate and Scan to East
-                        player.Facing = Direction.East;
-                        action = ActionType.Rotate;
-                        player.Symbol = "M(\u2192)";
-                        player.Metrics.rotateCount++;
-                        dashboard.UpdateDashboard(player, action); // update move
-                        this.Dispatcher.Invoke(() => RefreshGrid());
-
-                        cell = player.Discover(game);
-                        action = ActionType.Scan;
-                        dashboard.UpdateDashboard(player, action, cell.CellItemType); // update move
-                        Thread.Sleep(gameSpeed);
-
-                        //Rotate and Scan to South
-                        player.Facing = Direction.South;
-                        action = ActionType.Rotate;
-                        player.Symbol = "M(\u2193)";
-                        player.Metrics.rotateCount++;
-                        dashboard.UpdateDashboard(player, action); // update move
-                        this.Dispatcher.Invoke(() => RefreshGrid());
-
-                        cell = player.Discover(game);
-                        action = ActionType.Scan;
-                        dashboard.UpdateDashboard(player, action, cell.CellItemType); // update move
-                        Thread.Sleep(gameSpeed);
-
-                        //Rotate and Scan to North
-                        player.Facing = Direction.North;
-                        action = ActionType.Rotate;
-                        player.Symbol = "M(\u2191)";
-                        player.Metrics.rotateCount++;
-                        dashboard.UpdateDashboard(player, action); // update move
-                        this.Dispatcher.Invoke(() => RefreshGrid());
-
-                        cell = player.Discover(game);
-                        action = ActionType.Scan;
-                        dashboard.UpdateDashboard(player, action, cell.CellItemType); // update move
-                        Thread.Sleep(gameSpeed);
-
-                        //Rotate and Scan to West
-                        player.Facing = Direction.West;
-                        action = ActionType.Rotate;
-                        player.Symbol = "M(\u2190)";
-                        player.Metrics.rotateCount++;
-                        dashboard.UpdateDashboard(player, action); // update move
-                        this.Dispatcher.Invoke(() => RefreshGrid());
-
-                        cell = player.Discover(game);
-                        action = ActionType.Scan;
-                        dashboard.UpdateDashboard(player, action, cell.CellItemType); // update move
-                        Thread.Sleep(gameSpeed);
-
-                        player.Symbol = "M";
-                        this.Dispatcher.Invoke(() => RefreshGrid());
-                        Thread.Sleep(gameSpeed/2);
-
-                        // move the player to the popped element at the top of the fringe
-                        CellItemType t = new CellItemType();
-                        try
+                        //No Beacon Stepped Yet
+                        if(!player.steppedOnBeacon)
                         {
-                            t = player.MoveWithStrategy(game);
-                            action = ActionType.Move;
+
+                            ActionType action;
+                            BaseCellItem cell;
+                            List<(Node, double)> priorityChildren = new List<(Node, double)>();
+                            int prio = 0;
+                            Node node = new Node();
+
+                            // discover the map
+                            //Rotate and Scan to East
+                            player.Facing = Direction.East;
+                            action = ActionType.Rotate;
+                            player.Symbol = "M(\u2192)";
+                            player.Metrics.rotateCount++;
+                            dashboard.UpdateDashboard(player, action); // update move
+                            this.Dispatcher.Invoke(() => RefreshGrid());
+
+                            (cell, node, prio) = player.Discover(game);
+                            if (prio > 0) { priorityChildren.Add((node, prio)); }
+                            prio = 0;
+                            action = ActionType.Scan;
+                            dashboard.UpdateDashboard(player, action, cell.CellItemType); // update move
+                            Thread.Sleep(gameSpeed);
+
+                            //Rotate and Scan to South
+                            player.Facing = Direction.South;
+                            action = ActionType.Rotate;
+                            player.Symbol = "M(\u2193)";
+                            player.Metrics.rotateCount++;
+                            dashboard.UpdateDashboard(player, action); // update move
+                            this.Dispatcher.Invoke(() => RefreshGrid());
+
+                            (cell, node, prio) = player.Discover(game);
+                            if (prio > 0) { priorityChildren.Add((node, prio)); }
+                            prio = 0;
+                            action = ActionType.Scan;
+                            dashboard.UpdateDashboard(player, action, cell.CellItemType); // update move
+                            Thread.Sleep(gameSpeed);
+
+                            //Rotate and Scan to North
+                            player.Facing = Direction.North;
+                            action = ActionType.Rotate;
+                            player.Symbol = "M(\u2191)";
+                            player.Metrics.rotateCount++;
+                            dashboard.UpdateDashboard(player, action); // update move
+                            this.Dispatcher.Invoke(() => RefreshGrid());
+
+                            (cell, node, prio) = player.Discover(game);
+                            if (prio > 0) { priorityChildren.Add((node, prio)); }
+                            prio = 0;
+                            action = ActionType.Scan;
+                            dashboard.UpdateDashboard(player, action, cell.CellItemType); // update move
+                            Thread.Sleep(gameSpeed);
+
+                            //Rotate and Scan to West
+                            player.Facing = Direction.West;
+                            action = ActionType.Rotate;
+                            player.Symbol = "M(\u2190)";
+                            player.Metrics.rotateCount++;
+                            dashboard.UpdateDashboard(player, action); // update move
+                            this.Dispatcher.Invoke(() => RefreshGrid());
+
+                            (cell, node, prio) = player.Discover(game);
+                            if (prio > 0) { priorityChildren.Add((node, prio)); }
+                            prio = 0;
+                            action = ActionType.Scan;
+                            dashboard.UpdateDashboard(player, action, cell.CellItemType); // update move
+                            Thread.Sleep(gameSpeed);
+
+                            player.Symbol = "M";
+                            this.Dispatcher.Invoke(() => RefreshGrid());
+                            Thread.Sleep(gameSpeed / 2);
+
+                            //Sort list based on ascending (greater value is more priority)
+                            priorityChildren.Sort((pair1, pair2) => pair1.Item2.CompareTo(pair2.Item2));
+                            foreach (var item in priorityChildren)
+                            {
+                                game.CurrentNode.Children.Push(item.Item1);
+                            }
+
+                            // move the player to the popped element at the top of the fringe
+                            CellItemType t = new CellItemType();
+                            try
+                            {
+                                (t, player.beaconValue) = player.MoveWithStrategy(game);
+                                action = ActionType.Move;
+                                if (t == CellItemType.Beacon) 
+                                { 
+                                    player.steppedOnBeacon = true;
+                                    genTargets = player.GenerateTargetGrids(game);
+                                    //string prints = "Possible Beacons:\n";
+                                    //foreach (var item in genTargets)
+                                    //{
+                                    //    prints += String.Concat(item.Item1, ",", item.Item2, " : ", item.Item3.ToString(), Environment.NewLine);
+                                    //}
+                                    //MessageBox.Show(prints);
+                                }
+                            }
+                            catch (Exception)
+                            {
+                                end = true;
+                                action = ActionType.NoPossible;
+                                t = CellItemType.Empty;
+                                //throw;
+                            }
+
+                            if (t == CellItemType.GoldenSquare)
+                            {
+                                end = true;
+                                action = ActionType.Win;
+                            }
+
+                            dashboard.UpdateDashboard(player, action); // update move
+                            this.Dispatcher.Invoke(() => RefreshGrid());
+                            Thread.Sleep(gameSpeed);
+
                         }
-                        catch (Exception)
+                        //Beacon Stepped
+                        else
                         {
-                            end = true;
-                            action = ActionType.NoPossible;
-                            t = CellItemType.Empty;
-                            //throw;
+                            //Head towards that direction
+                            if (player.currentBeaconTarget != null)
+                            {
+                                bool isPit_Wall_Target = false;
+                                ActionType action;
+                                Direction priorityDirection = player.currentBeaconTarget.Item3;
+                                List<(Node, double)> priorityChildren = new List<(Node, double)>();
+                                //Dictionary<Direction, Node> priorityChildren = new Dictionary<Direction, Node>();
+
+                                //Scan and rotate 4 times surroudings but prioritize direction
+                                for (int i = 0; i < 4; i++)
+                                {
+                                    action = ActionType.Rotate;
+                                    player.Rotate();
+                                    dashboard.UpdateDashboard(player, action);
+                                    this.Dispatcher.Invoke(() => RefreshGrid());
+
+                                    BaseCellItem cell = new BaseCellItem();
+                                    isPit_Wall_Target =  player.DiscoverUsingBeacon(game, cell, priorityChildren, genTargets);
+                                    action = ActionType.Scan;
+                                    dashboard.UpdateDashboard(player, action, cell.CellItemType);
+                                    Thread.Sleep(gameSpeed);
+                                }
+
+                                player.Symbol = "M";
+                                this.Dispatcher.Invoke(() => RefreshGrid());
+                                Thread.Sleep(gameSpeed / 2);
+
+                                //Sort list based on ascending (greater value is more priority)
+                                priorityChildren.Sort((pair1, pair2) => pair1.Item2.CompareTo(pair2.Item2));
+                                string priorities = String.Format("Current target: {0},{1}:{2}{3}",
+                                        player.currentBeaconTarget.Item1, player.currentBeaconTarget.Item2,
+                                        player.currentBeaconTarget.Item3.ToString(), Environment.NewLine);
+                                foreach (var item in priorityChildren)
+                                {
+                                    game.CurrentNode.Children.Push(item.Item1);
+                                    priorities += String.Format("{0},{1}:{2}{3}",
+                                    item.Item1.Position.Row, item.Item1.Position.Column, item.Item2, Environment.NewLine);
+                                }
+                                    if (priorityChildren.Count > 0)
+                                    { MessageBox.Show(priorities); }
+
+                                // move the player to the popped element at the top of the fringe
+                                CellItemType t = new CellItemType();
+                                try
+                                {
+                                    Beacon beacon = new Beacon();
+                                    (t, beacon) = player.MoveWithStrategy(game);
+                                    action = ActionType.Move;
+                                    //if (t == CellItemType.Beacon)
+                                    //{
+                                    //    player.steppedOnBeacon = true;
+                                    //    genTargets = player.GenerateTargetGrids(game);
+                                    //}
+                                }
+                                catch (Exception)
+                                {
+                                    end = true;
+                                    action = ActionType.NoPossible;
+                                    t = CellItemType.Empty;
+                                    //throw;
+                                }
+
+                                if (t == CellItemType.GoldenSquare)
+                                {
+                                    end = true;
+                                    action = ActionType.Win;
+                                }
+
+                                dashboard.UpdateDashboard(player, action); // update move
+                                this.Dispatcher.Invoke(() => RefreshGrid());
+                                Thread.Sleep(gameSpeed);
+                                if (isPit_Wall_Target)
+                                {
+                                    player.currentBeaconTarget = null;
+                                }
+
+                            }
+                            //Set a beacon target for the robot to lean towards a certain direction
+                            else
+                            {
+                                int row = 0, col = 0, index = 0;
+
+                                if (genTargets.Count > 1)
+                                {
+                                    index = Randomizer.RandomizeNumber(0, genTargets.Count);
+
+                                    row = genTargets[index].Item1;
+                                    col = genTargets[index].Item2;
+                                    player.currentBeaconTarget = new Tuple<int, int, Direction>(row, col, genTargets[index].Item3);
+                                    genTargets.RemoveAt(index);
+                                }
+                                else if (genTargets.Count == 1)
+                                {
+                                    row = genTargets[0].Item1;
+                                    col = genTargets[0].Item2;
+                                    player.currentBeaconTarget = new Tuple<int, int, Direction>(row, col, genTargets[0].Item3);
+                                    genTargets.RemoveAt(index);
+                                }
+                                else
+                                {
+                                    dashboard.UpdateDashboard(player, ActionType.NoPossible); // update move
+                                    this.Dispatcher.Invoke(() => RefreshGrid());
+                                    end = true;
+                                }
+
+                            }
+
                         }
 
-                        if (t == CellItemType.GoldenSquare)
-                        {
-                            end = true;
-                            action = ActionType.Win;
-                        }
-
-                        dashboard.UpdateDashboard(player, action); // update move
-                        this.Dispatcher.Invoke(() => RefreshGrid());
-                        Thread.Sleep(gameSpeed);
                         if (end) { break; }
                     }
 
