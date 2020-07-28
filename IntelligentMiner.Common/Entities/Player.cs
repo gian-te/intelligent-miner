@@ -428,20 +428,6 @@ namespace IntelligentMiner.Common
             //Make negative for prioritization stack
             return Math.Sqrt(to_square) * -1;
         }
-
-        public void Think()
-        {
-            // build a graph of known visited nodes using the position history
-
-
-            // if there is a beacon in the visited notes, reduce the grid to a smaller M by M grid where M is the size of the grid from the beacon to the maximum number of steps where the golden square is
-            // for example, if the beacon is in cell 1,1 with a value of 3, reduce the grid to a 4x4 grid, from 0,0 to 4,4.
-            // we do this to minimize the search space, we don't need the rest of the tiles since we know that the golden square is within 4 cells from the beacon.
-
-
-
-            // 
-        }
     }
 
 
