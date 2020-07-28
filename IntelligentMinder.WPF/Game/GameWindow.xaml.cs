@@ -133,76 +133,84 @@ namespace IntelligentMiner.WPF.Game
                             int prio = 0;
                             Node node = new Node();
 
-                            // discover the map
-                            //Rotate and Scan to East
-                            player.Facing = Direction.East;
-                            action = ActionType.Rotate;
-                            player.Symbol = "M(\u2192)";
-                            player.Metrics.rotateCount++;
-                            dashboard.UpdateDashboard(player, action); // update move
-                            this.Dispatcher.Invoke(() => RefreshGrid());
-
-                            (cell, node, prio) = player.Discover(game);
-                            if (prio > 0) { priorityChildren.Add((node, prio)); }
-                            prio = 0;
-                            action = ActionType.Scan;
-                            dashboard.UpdateDashboard(player, action, cell.CellItemType); // update move
-                            Thread.Sleep(gameSpeed);
-
-                            //Rotate and Scan to South
-                            player.Facing = Direction.South;
-                            action = ActionType.Rotate;
-                            player.Symbol = "M(\u2193)";
-                            player.Metrics.rotateCount++;
-                            dashboard.UpdateDashboard(player, action); // update move
-                            this.Dispatcher.Invoke(() => RefreshGrid());
-
-                            (cell, node, prio) = player.Discover(game);
-                            if (prio > 0) { priorityChildren.Add((node, prio)); }
-                            prio = 0;
-                            action = ActionType.Scan;
-                            dashboard.UpdateDashboard(player, action, cell.CellItemType); // update move
-                            Thread.Sleep(gameSpeed);
-
-                            //Rotate and Scan to North
-                            player.Facing = Direction.North;
-                            action = ActionType.Rotate;
-                            player.Symbol = "M(\u2191)";
-                            player.Metrics.rotateCount++;
-                            dashboard.UpdateDashboard(player, action); // update move
-                            this.Dispatcher.Invoke(() => RefreshGrid());
-
-                            (cell, node, prio) = player.Discover(game);
-                            if (prio > 0) { priorityChildren.Add((node, prio)); }
-                            prio = 0;
-                            action = ActionType.Scan;
-                            dashboard.UpdateDashboard(player, action, cell.CellItemType); // update move
-                            Thread.Sleep(gameSpeed);
-
-                            //Rotate and Scan to West
-                            player.Facing = Direction.West;
-                            action = ActionType.Rotate;
-                            player.Symbol = "M(\u2190)";
-                            player.Metrics.rotateCount++;
-                            dashboard.UpdateDashboard(player, action); // update move
-                            this.Dispatcher.Invoke(() => RefreshGrid());
-
-                            (cell, node, prio) = player.Discover(game);
-                            if (prio > 0) { priorityChildren.Add((node, prio)); }
-                            prio = 0;
-                            action = ActionType.Scan;
-                            dashboard.UpdateDashboard(player, action, cell.CellItemType); // update move
-                            Thread.Sleep(gameSpeed);
-
-                            player.Symbol = "M";
-                            this.Dispatcher.Invoke(() => RefreshGrid());
-                            Thread.Sleep(gameSpeed / 2);
-
-                            //Sort list based on ascending (greater value is more priority)
-                            priorityChildren.Sort((pair1, pair2) => pair1.Item2.CompareTo(pair2.Item2));
-                            foreach (var item in priorityChildren)
+                            // if not existing in the map,
+                            if (game.NodeMemo[(player.Position.Row, player.Position.Column)] != null)
                             {
-                                game.CurrentNode.Children.Push(item.Item1);
+                                // discover the map
+                                //Rotate and Scan to East
+                                player.Facing = Direction.East;
+                                action = ActionType.Rotate;
+                                player.Symbol = "M(\u2192)";
+                                player.Metrics.rotateCount++;
+                                dashboard.UpdateDashboard(player, action); // update move
+                                this.Dispatcher.Invoke(() => RefreshGrid());
+
+                                (cell, node, prio) = player.Discover(game);
+                                if (prio > 0) { priorityChildren.Add((node, prio)); }
+                                prio = 0;
+                                action = ActionType.Scan;
+                                dashboard.UpdateDashboard(player, action, cell.CellItemType); // update move
+                                Thread.Sleep(gameSpeed);
+
+                                //Rotate and Scan to South
+                                player.Facing = Direction.South;
+                                action = ActionType.Rotate;
+                                player.Symbol = "M(\u2193)";
+                                player.Metrics.rotateCount++;
+                                dashboard.UpdateDashboard(player, action); // update move
+                                this.Dispatcher.Invoke(() => RefreshGrid());
+
+                                (cell, node, prio) = player.Discover(game);
+                                if (prio > 0) { priorityChildren.Add((node, prio)); }
+                                prio = 0;
+                                action = ActionType.Scan;
+                                dashboard.UpdateDashboard(player, action, cell.CellItemType); // update move
+                                Thread.Sleep(gameSpeed);
+
+                                //Rotate and Scan to North
+                                player.Facing = Direction.North;
+                                action = ActionType.Rotate;
+                                player.Symbol = "M(\u2191)";
+                                player.Metrics.rotateCount++;
+                                dashboard.UpdateDashboard(player, action); // update move
+                                this.Dispatcher.Invoke(() => RefreshGrid());
+
+                                (cell, node, prio) = player.Discover(game);
+                                if (prio > 0) { priorityChildren.Add((node, prio)); }
+                                prio = 0;
+                                action = ActionType.Scan;
+                                dashboard.UpdateDashboard(player, action, cell.CellItemType); // update move
+                                Thread.Sleep(gameSpeed);
+
+                                //Rotate and Scan to West
+                                player.Facing = Direction.West;
+                                action = ActionType.Rotate;
+                                player.Symbol = "M(\u2190)";
+                                player.Metrics.rotateCount++;
+                                dashboard.UpdateDashboard(player, action); // update move
+                                this.Dispatcher.Invoke(() => RefreshGrid());
+
+                                (cell, node, prio) = player.Discover(game);
+                                if (prio > 0) { priorityChildren.Add((node, prio)); }
+                                prio = 0;
+                                action = ActionType.Scan;
+                                dashboard.UpdateDashboard(player, action, cell.CellItemType); // update move
+                                Thread.Sleep(gameSpeed);
+
+                                player.Symbol = "M";
+                                this.Dispatcher.Invoke(() => RefreshGrid());
+                                Thread.Sleep(gameSpeed / 2);
+
+                                //Sort list based on ascending (greater value is more priority)
+                                priorityChildren.Sort((pair1, pair2) => pair1.Item2.CompareTo(pair2.Item2));
+                                foreach (var item in priorityChildren)
+                                {
+                                    game.CurrentNode.Children.Push(item.Item1);
+                                }
+                            }
+                            else
+                            {
+                                   // dont discover if current node is already discovered, do no thing in this case
                             }
 
                             // move the player to the popped element at the top of the fringe
