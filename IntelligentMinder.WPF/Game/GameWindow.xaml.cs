@@ -121,7 +121,7 @@ namespace IntelligentMiner.WPF.Game
                 while (!end)
                 {
 
-                    while (dashboard.pauseStatus())
+                    while (!dashboard.pauseStatus())
                     {
 
                         //No Beacon Stepped Yet
@@ -141,8 +141,6 @@ namespace IntelligentMiner.WPF.Game
                                 //Rotate and Scan to East
                                 player.Facing = Direction.East;
                                 action = ActionType.Rotate;
-                                player.Symbol = "M(\u2192)";
-                                player.Metrics.rotateCount++;
                                 dashboard.UpdateDashboard(player, action); // update move
                                 this.Dispatcher.Invoke(() => RefreshGrid());
 
@@ -156,8 +154,6 @@ namespace IntelligentMiner.WPF.Game
                                 //Rotate and Scan to South
                                 player.Facing = Direction.South;
                                 action = ActionType.Rotate;
-                                player.Symbol = "M(\u2193)";
-                                player.Metrics.rotateCount++;
                                 dashboard.UpdateDashboard(player, action); // update move
                                 this.Dispatcher.Invoke(() => RefreshGrid());
 
@@ -171,8 +167,6 @@ namespace IntelligentMiner.WPF.Game
                                 //Rotate and Scan to North
                                 player.Facing = Direction.North;
                                 action = ActionType.Rotate;
-                                player.Symbol = "M(\u2191)";
-                                player.Metrics.rotateCount++;
                                 dashboard.UpdateDashboard(player, action); // update move
                                 this.Dispatcher.Invoke(() => RefreshGrid());
 
@@ -186,8 +180,6 @@ namespace IntelligentMiner.WPF.Game
                                 //Rotate and Scan to West
                                 player.Facing = Direction.West;
                                 action = ActionType.Rotate;
-                                player.Symbol = "M(\u2190)";
-                                player.Metrics.rotateCount++;
                                 dashboard.UpdateDashboard(player, action); // update move
                                 this.Dispatcher.Invoke(() => RefreshGrid());
 
@@ -198,7 +190,9 @@ namespace IntelligentMiner.WPF.Game
                                 dashboard.UpdateDashboard(player, action, cell.CellItemType); // update move
                                 Thread.Sleep(gameSpeed);
 
-                                player.Symbol = "M";
+                                player.Symbol = "M"; // lol
+                                // rotate here
+
                                 this.Dispatcher.Invoke(() => RefreshGrid());
                                 Thread.Sleep(gameSpeed / 2);
 

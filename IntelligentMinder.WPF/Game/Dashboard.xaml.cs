@@ -38,8 +38,7 @@ namespace IntelligentMiner.WPF.Game
 
             player = p;
             _viewModel = p.Metrics;
-            _viewModel.isContinue = false;
-            _viewModel.isPaused = true;
+            _viewModel.isPaused = false;
             //_viewModel.gameSpeed = 500;
 
             this.DataContext = _viewModel;
@@ -90,7 +89,6 @@ namespace IntelligentMiner.WPF.Game
             if(action == ActionType.Win)
             {
                 _viewModel.isPaused = false;
-                _viewModel.isContinue = false;
             }
             // not advisable
             //Thread.Sleep(_viewModel.gameSpeed);
@@ -107,22 +105,19 @@ namespace IntelligentMiner.WPF.Game
             Task.Run(() =>
                 {
                     Dispatcher.Invoke( () => txtActions.ScrollToEnd());
-                   
 
                 });
         }
 
         private void btnPause_Click(object sender, RoutedEventArgs e)
         {
-            _viewModel.isPaused = false;
-            _viewModel.isContinue = true;
+            _viewModel.isPaused = true;
         }
 
         private void btnContinue_Click(object sender, RoutedEventArgs e)
         {
 
-            _viewModel.isPaused = true;
-            _viewModel.isContinue = false;
+            _viewModel.isPaused = false;
         }
 
         public bool pauseStatus()

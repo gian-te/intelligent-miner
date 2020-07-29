@@ -15,7 +15,36 @@ namespace IntelligentMiner.Common
 
         public List<Tuple<int, int>> PositionHistory { get; set; }
 
-        public Direction Facing { get; set; }
+        private Direction _facing;
+        public Direction Facing
+        {
+            get { return _facing; }
+            set
+            {
+                if (value == Direction.East)
+                {
+                    _facing = value;
+                    Symbol = "M(\u2192)";
+                }
+                else if (value == Direction.South)
+                {
+                    _facing = value;
+                    Symbol = "M(\u2193)";
+                }
+                else if (value == Direction.West)
+                {
+                    _facing = value;
+                    Symbol = "M(\u2191)";
+                }
+                else if (value == Direction.North)
+                {
+                    _facing = value;
+                    Symbol = "M(\u2190)";
+                }
+
+                Metrics.rotateCount++;
+            }
+        }
 
         public bool steppedOnBeacon { get; set; }
 
@@ -47,30 +76,25 @@ namespace IntelligentMiner.Common
             if (Facing == Direction.North)
             {
                 Facing = Direction.East;
-                Symbol = "M(\u2192)";
                 cellInFront = new Tuple<int, int>(Position.Row + 1, Position.Column);
             }
             else if (Facing == Direction.East)
             {
                 Facing = Direction.South;
-                Symbol = "M(\u2193)";
                 cellInFront = new Tuple<int, int>(Position.Row, Position.Column - 1);
 
             }
             else if (Facing == Direction.South)
             {
                 Facing = Direction.West;
-                Symbol = "M(\u2190)";
                 cellInFront = new Tuple<int, int>(Position.Row - 1, Position.Column);
             }
             else if (Facing == Direction.West)
             {
                 Facing = Direction.North;
-                Symbol = "M(\u2191)";
                 cellInFront = new Tuple<int, int>(Position.Row, Position.Column + 1);
             }
 
-            Metrics.rotateCount++;
             Console.WriteLine("Rotated from {0} to {1}", initialDirection, Facing.ToString());
             // return the cell which the player is facing after rotating 90 degrees
             return cellInFront;
@@ -163,7 +187,6 @@ namespace IntelligentMiner.Common
                 Thread.Sleep(100);
                 cell = ScanForward(game);
                 //scanCount += 1;
-                Metrics.scanCount++;
                 if (cell.CellItemType == CellItemType.Wall)
                 {
                     Console.WriteLine("The player ran into a thick wall and cannot move forward. Aborting the remaining moves, if any.");
@@ -215,7 +238,6 @@ namespace IntelligentMiner.Common
         {
             BaseCellItem cell;
             cell = ScanForward(game);
-            Metrics.scanCount++;
             Node node = new Node();
             int prio = 0;
             if (cell.CellItemType != CellItemType.Wall && cell.CellItemType != CellItemType.Pit)
@@ -261,7 +283,6 @@ namespace IntelligentMiner.Common
         {
             bool isPit_Wall_Target_Limit = false;
             cell = ScanForward(game);
-            Metrics.scanCount++;
             if (cell.CellItemType != CellItemType.Wall && cell.CellItemType != CellItemType.Pit)
             {
                 if (!game.BeaconMemo.ContainsKey((cell.Position.Row, cell.Position.Column)))

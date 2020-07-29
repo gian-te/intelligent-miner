@@ -39,8 +39,8 @@
                 <TextBlock Text="{Binding ElementName=sldrGameSpeed, Path=Value, UpdateSourceTrigger=PropertyChanged}" Width="30" FontSize="10"/>
             </StackPanel>-->
             <StackPanel Orientation="Horizontal">
-                <Button Name="btnPause" Width="70" Content="Pause" IsEnabled="{Binding Path=isPaused}" Click="btnPause_Click"/>
-                <Button Name="btnContinue" Width="80" Content="Continue" Margin="18, 0 0 0" IsEnabled="{Binding Path=isContinue}" Click="btnContinue_Click"/>
+                <Button Name="btnPause" Width="70" Content="Pause" Click="btnPause_Click"/>
+                <Button Name="btnContinue" Width="80" Content="Continue" Margin="18, 0 0 0" Click="btnContinue_Click"/>
             </StackPanel>
         </GroupBox>
         <GroupBox Header="Actions" HorizontalAlignment="Left" Height="200" Margin="38, 240 0 9" VerticalAlignment="Top" Width="180">
