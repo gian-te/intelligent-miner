@@ -192,7 +192,7 @@ namespace IntelligentMiner.WPF.Game
 
                                 player.Symbol = "M"; // lol
                                 // rotate here
-
+                                
                                 this.Dispatcher.Invoke(() => RefreshGrid());
                                 Thread.Sleep(gameSpeed / 2);
 
@@ -202,6 +202,18 @@ namespace IntelligentMiner.WPF.Game
                                 {
                                     game.CurrentNode.Children.Push(item.Item1);
                                 }
+
+                                if (game.CurrentNode.Children.Count > 0)
+                                {
+                                    var priorityCell = game.CurrentNode.Children.Peek();
+                                    var cellinFront = player.ScanForward(game);
+                                    while (priorityCell != null && cellinFront.Position.Row != priorityCell.Position.Row && cellinFront.Position.Column != priorityCell.Position.Column)
+                                    {
+                                        player.Rotate();
+                                        cellinFront = player.ScanForward(game);
+                                    }
+                                }
+                               
                             }
                             else
                             {
@@ -222,17 +234,9 @@ namespace IntelligentMiner.WPF.Game
                                     beaconRoot.Position.Row = player.Position.Row;
                                     beaconRoot.Position.Column = player.Position.Column;
                                     beaconRoot.CellItemType = player.CellItemType;
-
-                                    // add the node object to the dictionary to prevent duplicate objects per cell.
-
+                                    
                                     game.BeaconMemo.Add((player.Position.Row, player.Position.Column), beaconRoot);
                                     genTargets = player.GenerateTargetGrids(game);
-                                    //string prints = "Possible Beacons:\n";
-                                    //foreach (var item in genTargets)
-                                    //{
-                                    //    prints += String.Concat(item.Item1, ",", item.Item2, " : ", item.Item3.ToString(), Environment.NewLine);
-                                    //}
-                                    //MessageBox.Show(prints);
                                 }
                             }
                             catch (Exception)
@@ -263,7 +267,6 @@ namespace IntelligentMiner.WPF.Game
                                 ActionType action;
                                 Direction priorityDirection = player.currentBeaconTarget.Item3;
                                 List<(Node, double)> priorityChildren = new List<(Node, double)>();
-                                //Dictionary<Direction, Node> priorityChildren = new Dictionary<Direction, Node>();
 
                                 //Scan and rotate 4 times surroudings but prioritize direction
                                 for (int i = 0; i < 4; i++)
