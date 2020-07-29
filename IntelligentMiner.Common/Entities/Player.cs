@@ -243,11 +243,11 @@ namespace IntelligentMiner.Common
             }
             else if (cell.CellItemType == CellItemType.Wall)
             {
-                if (Facing == Direction.South && maxRow == 0)
+                if (Facing == Direction.East && maxRow == 0)
                 {
                     maxRow = cell.Position.Row;
                 }
-                else if (Facing == Direction.East && maxColumn == 0)
+                else if (Facing == Direction.South && maxColumn == 0)
                 {
                     maxColumn = cell.Position.Column;
                 }
