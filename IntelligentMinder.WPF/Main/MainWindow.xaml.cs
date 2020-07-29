@@ -91,6 +91,7 @@ namespace IntelligentMiner.WPF
             try
             {
                 // Genenrate values only
+                _viewModel.Size = _viewModel.Size < 2 ? Randomizer.RandomizeNumber(2, 15) : _viewModel.Size;
                 GenerateRandomInit();
 
             }
