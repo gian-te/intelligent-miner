@@ -116,6 +116,7 @@ namespace IntelligentMiner.WPF.Game
 
                 // player to discover the rest of the nodes
                 bool end = false;
+                bool changeTarget = true;
                 List<(int, int, Direction)> genTargets = new List<(int, int, Direction)>();
                 while (!end)
                 {
@@ -222,6 +223,15 @@ namespace IntelligentMiner.WPF.Game
                                 if (t == CellItemType.Beacon) 
                                 { 
                                     player.steppedOnBeacon = true;
+
+                                    Node beaconRoot = new Node();
+                                    beaconRoot.Position.Row = player.Position.Row;
+                                    beaconRoot.Position.Column = player.Position.Column;
+                                    beaconRoot.CellItemType = player.CellItemType;
+
+                                    // add the node object to the dictionary to prevent duplicate objects per cell.
+
+                                    game.BeaconMemo.Add((player.Position.Row, player.Position.Column), beaconRoot);
                                     genTargets = player.GenerateTargetGrids(game);
                                     //string prints = "Possible Beacons:\n";
                                     //foreach (var item in genTargets)
@@ -254,9 +264,8 @@ namespace IntelligentMiner.WPF.Game
                         else
                         {
                             //Head towards that direction
-                            if (player.currentBeaconTarget != null)
+                            if (!changeTarget)
                             {
-                                bool isPit_Wall_Target = false;
                                 ActionType action;
                                 Direction priorityDirection = player.currentBeaconTarget.Item3;
                                 List<(Node, double)> priorityChildren = new List<(Node, double)>();
@@ -271,7 +280,14 @@ namespace IntelligentMiner.WPF.Game
                                     this.Dispatcher.Invoke(() => RefreshGrid());
 
                                     BaseCellItem cell = new BaseCellItem();
-                                    isPit_Wall_Target =  player.DiscoverUsingBeacon(game, cell, priorityChildren, genTargets);
+                                    if(changeTarget)
+                                    {
+                                        player.DiscoverUsingBeacon(game, cell, priorityChildren, genTargets);
+                                    }
+                                    else
+                                    {
+                                        changeTarget = player.DiscoverUsingBeacon(game, cell, priorityChildren, genTargets);
+                                    }
                                     action = ActionType.Scan;
                                     dashboard.UpdateDashboard(player, action, cell.CellItemType);
                                     Thread.Sleep(gameSpeed);
@@ -280,6 +296,8 @@ namespace IntelligentMiner.WPF.Game
                                 player.Symbol = "M";
                                 this.Dispatcher.Invoke(() => RefreshGrid());
                                 Thread.Sleep(gameSpeed / 2);
+
+                                if (changeTarget) {  continue; }
 
                                 //Sort list based on ascending (greater value is more priority)
                                 priorityChildren.Sort((pair1, pair2) => pair1.Item2.CompareTo(pair2.Item2));
@@ -292,8 +310,8 @@ namespace IntelligentMiner.WPF.Game
                                     priorities += String.Format("{0},{1}:{2}{3}",
                                     item.Item1.Position.Row, item.Item1.Position.Column, item.Item2, Environment.NewLine);
                                 }
-                                    //if (priorityChildren.Count > 0)
-                                    //{ MessageBox.Show(priorities); }
+                                //if (priorityChildren.Count > 0)
+                                //{ MessageBox.Show(priorities); }
 
                                 // move the player to the popped element at the top of the fringe
                                 CellItemType t = new CellItemType();
@@ -325,10 +343,6 @@ namespace IntelligentMiner.WPF.Game
                                 dashboard.UpdateDashboard(player, action); // update move
                                 this.Dispatcher.Invoke(() => RefreshGrid());
                                 Thread.Sleep(gameSpeed);
-                                if (isPit_Wall_Target)
-                                {
-                                    player.currentBeaconTarget = null;
-                                }
 
                             }
                             //Set a beacon target for the robot to lean towards a certain direction
@@ -352,12 +366,15 @@ namespace IntelligentMiner.WPF.Game
                                     player.currentBeaconTarget = new Tuple<int, int, Direction>(row, col, genTargets[0].Item3);
                                     genTargets.RemoveAt(index);
                                 }
-                                else
-                                {
-                                    dashboard.UpdateDashboard(player, ActionType.NoPossible); // update move
-                                    this.Dispatcher.Invoke(() => RefreshGrid());
-                                    end = true;
-                                }
+                                //else
+                                //{
+                                //    dashboard.UpdateDashboard(player, ActionType.NoPossible); // update move
+                                //    this.Dispatcher.Invoke(() => RefreshGrid());
+                                //    end = true;
+                                //}
+
+                                MessageBox.Show(String.Format("Change target to: {0},{1}", player.currentBeaconTarget.Item1, player.currentBeaconTarget.Item2));
+                                changeTarget = false;
 
                             }
 

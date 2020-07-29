@@ -259,7 +259,7 @@ namespace IntelligentMiner.Common
         public bool DiscoverUsingBeacon(Game game, BaseCellItem cell,
             List<(Node, double)> priorityChildren, List<(int, int, Direction)> genTargets)
         {
-            bool isPit_Wall_Target = false;
+            bool isPit_Wall_Target_Limit = false;
             cell = ScanForward(game);
             Metrics.scanCount++;
             if (cell.CellItemType != CellItemType.Wall && cell.CellItemType != CellItemType.Pit)
@@ -285,7 +285,15 @@ namespace IntelligentMiner.Common
                                 cell.Position.Row, cell.Position.Column);
                         }
 
-                        priorityChildren.Add((node, prio));
+                    if (currentBeaconTarget.Item1 == cell.Position.Row 
+                        && currentBeaconTarget.Item2 == cell.Position.Column
+                        && cell.CellItemType != CellItemType.GoldenSquare)
+                    {
+                        isPit_Wall_Target_Limit = true;
+                    }
+                    else
+
+                    priorityChildren.Add((node, prio));
 
                         //game.CurrentNode.Children.Push(node);
                 }
@@ -305,15 +313,15 @@ namespace IntelligentMiner.Common
 
                 if (cell.CellItemType == CellItemType.Wall)
                 {
-                    if (Facing == Direction.South && maxRow == 0)
+                    if (Facing == Direction.East)
                     {
-                        maxRow = Position.Row;
-                        isPit_Wall_Target = true;
+                        if(maxRow == 0) { maxRow = Position.Row; }
+                        if(currentBeaconTarget.Item1 > maxRow) { isPit_Wall_Target_Limit = true; }
                     }
-                    else if (Facing == Direction.East && maxColumn == 0)
+                    else if (Facing == Direction.South)
                     {
-                        maxColumn = Position.Column;
-                        isPit_Wall_Target = true;
+                        if(maxColumn == 0) { maxColumn = Position.Column; }
+                        if (currentBeaconTarget.Item2 > maxColumn) { isPit_Wall_Target_Limit = true; }
                     }
                 }
                 else
@@ -321,7 +329,7 @@ namespace IntelligentMiner.Common
                     //If discovered is current target, change target
                     if (currentBeaconTarget.Item1 == cell.Position.Row && currentBeaconTarget.Item2 == cell.Position.Column)
                     {
-                        isPit_Wall_Target = true;
+                        isPit_Wall_Target_Limit = true;
                     }
 
                     if (!game.PitMemo.Contains((cell.Position.Row, cell.Position.Column)))
@@ -332,7 +340,7 @@ namespace IntelligentMiner.Common
                 }
             }
 
-            return isPit_Wall_Target;
+            return isPit_Wall_Target_Limit;
         }
 
         public List<(int, int, Direction)> GenerateTargetGrids(Game game)
