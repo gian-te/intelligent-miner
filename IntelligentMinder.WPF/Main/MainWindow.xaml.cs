@@ -91,7 +91,6 @@ namespace IntelligentMiner.WPF
             try
             {
                 // Genenrate values only
-                _viewModel.Size = 8;
                 GenerateRandomInit();
 
             }
@@ -246,11 +245,7 @@ namespace IntelligentMiner.WPF
             }
 
         }
-
-        private void txtGridSize_LostFocus(object sender, RoutedEventArgs e)
-        {
-            GenerateRandomInit();
-        }
+        
     }
 
 
