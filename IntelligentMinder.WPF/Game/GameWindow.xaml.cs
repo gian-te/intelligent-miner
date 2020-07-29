@@ -191,7 +191,6 @@ namespace IntelligentMiner.WPF.Game
                                 Thread.Sleep(gameSpeed);
 
                                 player.Symbol = "M"; // lol
-                                // rotate here
                                 
                                 this.Dispatcher.Invoke(() => RefreshGrid());
                                 Thread.Sleep(gameSpeed / 2);
@@ -205,6 +204,7 @@ namespace IntelligentMiner.WPF.Game
 
                                 if (game.CurrentNode.Children.Count > 0)
                                 {
+                                    // rotate here
                                     var priorityCell = game.CurrentNode.Children.Peek();
                                     var cellinFront = player.ScanForward(game);
                                     while (priorityCell != null && cellinFront.Position.Row != priorityCell.Position.Row && cellinFront.Position.Column != priorityCell.Position.Column)
