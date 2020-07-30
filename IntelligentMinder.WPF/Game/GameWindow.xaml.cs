@@ -135,7 +135,7 @@ namespace IntelligentMiner.WPF.Game
                             Node node = new Node();
 
                             // if not existing in the map,
-                            if (game.NodeMemo[(player.Position.Row, player.Position.Column)] != null)
+                            if (!player.PositionHistory.Any(item => item.Item1 == player.Position.Row && item.Item2 == player.Position.Column))
                             {
                                 // discover the map
                                 //Rotate and Scan to East
@@ -370,7 +370,7 @@ namespace IntelligentMiner.WPF.Game
                                 //    end = true;
                                 //}
 
-                                MessageBox.Show(String.Format("Change target to: {0},{1}", player.currentBeaconTarget.Item1, player.currentBeaconTarget.Item2));
+                                //MessageBox.Show(String.Format("Change target to: {0},{1}", player.currentBeaconTarget.Item1, player.currentBeaconTarget.Item2));
                                 changeTarget = false;
 
                             }
