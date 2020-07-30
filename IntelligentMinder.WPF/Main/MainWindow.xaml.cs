@@ -68,11 +68,12 @@ namespace IntelligentMiner.WPF
                 game.LoadGame(options);
                 game.Show();
                 game.Owner = this;
-                //this.Hide();
+                this.Hide();
+                this.Topmost = false;
 
                 if (options.MovesRandomly)
                 {
-                    game.PlayRandom();
+                    game.PlayRandomly();
                 }
                 else if (options.MovesIntelligently)
                 {

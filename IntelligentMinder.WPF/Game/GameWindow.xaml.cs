@@ -370,7 +370,7 @@ namespace IntelligentMiner.WPF.Game
                                 //    end = true;
                                 //}
 
-                                //MessageBox.Show(String.Format("Change target to: {0},{1}", player.currentBeaconTarget.Item1, player.currentBeaconTarget.Item2));
+                                MessageBox.Show(String.Format("Changed target to: {0},{1}", player.currentBeaconTarget.Item1, player.currentBeaconTarget.Item2), "Recalculating...", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK ,MessageBoxOptions.DefaultDesktopOnly);
                                 changeTarget = false;
 
                             }
@@ -384,7 +384,7 @@ namespace IntelligentMiner.WPF.Game
             });
         }
 
-        public void PlayRandom()
+        public void PlayRandomly()
         {
             Task.Run(() =>
             {

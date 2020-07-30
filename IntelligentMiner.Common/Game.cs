@@ -159,6 +159,7 @@ namespace IntelligentMiner.Common
         public void AssignPlayerToCell(Player player)
         {
             Map[player.Position.Row, player.Position.Column] = player;
+            
         }
 
 

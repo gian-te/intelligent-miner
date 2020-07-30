@@ -88,7 +88,7 @@ namespace IntelligentMiner.WPF.Game
             _viewModel.backtrackCount = p.Metrics.backtrackCount;
             if(action == ActionType.Win)
             {
-                _viewModel.isPaused = false;
+                _viewModel.isPaused = true;
             }
             // not advisable
             //Thread.Sleep(_viewModel.gameSpeed);
@@ -105,7 +105,6 @@ namespace IntelligentMiner.WPF.Game
             Task.Run(() =>
                 {
                     Dispatcher.Invoke( () => txtActions.ScrollToEnd());
-
                 });
         }
 
