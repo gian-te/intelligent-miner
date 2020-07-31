@@ -304,6 +304,7 @@ namespace IntelligentMiner.WPF.Game
                                 }
                                 else
                                 {
+                                    player.Facing = player.currentBeaconTarget.Item3;
                                     changeTarget = player.DiscoverUsingBeacon(game, cell, priorityChildren, genTargets);
                                 }
 
