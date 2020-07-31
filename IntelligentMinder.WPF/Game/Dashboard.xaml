@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:IntelligentMiner.WPF.Game"
         mc:Ignorable="d"
         Title="Dashboard" Height="500" Width="266"
-        WindowStartupLocation="Manual">
+        WindowStartupLocation="Manual" ResizeMode="NoResize">
     <Grid>
         <GroupBox Header="Player Information" HorizontalAlignment="Left" Height="180" Margin="38,10,0,0" VerticalAlignment="Top" Width="180">
             <Grid ShowGridLines="True" VerticalAlignment="Center">

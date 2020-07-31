@@ -42,7 +42,7 @@ namespace IntelligentMiner.WPF
                 ClearInit = true
             };
             this.DataContext = _viewModel;
-            
+
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -58,7 +58,7 @@ namespace IntelligentMiner.WPF
                 List<string> _pits = options.pits.Split(stringSeparators, StringSplitOptions.None).ToList();
                 List<string> _beacons = options.beacons.Split(stringSeparators, StringSplitOptions.None).ToList();
 
-                if(_pits[_pits.Count -1] == String.Empty) { _pits.RemoveAt(_pits.Count - 1); }
+                if (_pits[_pits.Count - 1] == String.Empty) { _pits.RemoveAt(_pits.Count - 1); }
                 if (_beacons[_beacons.Count - 1] == String.Empty) { _beacons.RemoveAt(_beacons.Count - 1); }
 
                 options.Beacons = _beacons;
@@ -80,9 +80,9 @@ namespace IntelligentMiner.WPF
                     game.PlayIntelligently();
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                // swallow
             }
 
         }
@@ -148,8 +148,6 @@ namespace IntelligentMiner.WPF
 
             Task.Run(
                 () =>
-
-                
                     Parallel.Invoke(
                         () =>
                         {
@@ -173,9 +171,7 @@ namespace IntelligentMiner.WPF
                             }
                         }
                         )
-                
                 );
-
         }
 
         private void createPitCoords(int gridSize, List<Tuple<int, int>> existingCoordinates)
@@ -247,7 +243,7 @@ namespace IntelligentMiner.WPF
             }
 
         }
-        
+
     }
 
 

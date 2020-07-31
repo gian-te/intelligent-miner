@@ -40,8 +40,6 @@ namespace IntelligentMiner.WPF.Game
             _viewModel = p.Metrics;
             _viewModel.isPaused = false;
             btnContinue.IsEnabled = false;
-            //_viewModel.gameSpeed = 500;
-
             this.DataContext = _viewModel;
         }
         private void NotifyPropertyChanged(string str)
@@ -99,13 +97,12 @@ namespace IntelligentMiner.WPF.Game
             {
                 _viewModel.isPaused = true;
             }
-            // not advisable
-            //Thread.Sleep(_viewModel.gameSpeed);
+            
         }
 
         private async void txtActions_TextChanged(object sender, TextChangedEventArgs e)
         {
-            await Task.Delay(200);
+            await Task.Delay(100);
             ScrollToEnd();
         }
 

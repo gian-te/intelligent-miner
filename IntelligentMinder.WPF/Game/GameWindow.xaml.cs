@@ -21,6 +21,7 @@ using System.Threading;
 using IntelligentMiner.Common.Utilities;
 using IntelligentMiner.Common.Enums;
 using IntelligentMiner.Common.Entities;
+using System.Windows.Threading;
 
 namespace IntelligentMiner.WPF.Game
 {
@@ -33,13 +34,13 @@ namespace IntelligentMiner.WPF.Game
         IntelligentMiner.Common.Game game;
         Player player;
         Dashboard dashboard;
-        public int gameSpeed { get; set; }
+        public int stepDelay { get; set; }
 
         public GameWindow()
         {
             InitializeComponent();
             DataContext = this;
-            gameSpeed = 100;
+            stepDelay = 50; //50 millisec
         }
 
         private DataView gridData;
@@ -91,10 +92,20 @@ namespace IntelligentMiner.WPF.Game
                 }
             );
 
-            dashboard = new Dashboard(player);
-            dashboard.Show();
+            Thread newWindowThread = new Thread(new ThreadStart(ThreadStartingPoint));
+            newWindowThread.SetApartmentState(ApartmentState.STA);
+            newWindowThread.IsBackground = true;
+            newWindowThread.Start();
+
             
             RefreshGrid();
+        }
+
+        private void ThreadStartingPoint()
+        {
+            dashboard = new Dashboard(player);
+            dashboard.Show();
+            System.Windows.Threading.Dispatcher.Run();
         }
 
         public void PlayIntelligently()
@@ -142,59 +153,53 @@ namespace IntelligentMiner.WPF.Game
                                 //Rotate and Scan to East
                                 player.Facing = Direction.East;
                                 action = ActionType.Rotate;
-                                dashboard.UpdateDashboard(player, action); // update move
+                                dashboard.UpdateDashboard(player, action); // update rotate count
                                 this.Dispatcher.Invoke(() => RefreshGrid());
-
+                                Thread.Sleep(stepDelay);
                                 (cell, node, prio) = player.Discover(game);
                                 if (prio > 0) { priorityChildren.Add((node, prio)); }
                                 prio = 0;
                                 action = ActionType.Scan;
-                                dashboard.UpdateDashboard(player, action, cell.CellItemType); // update move
-                                Thread.Sleep(gameSpeed);
+                                dashboard.UpdateDashboard(player, action, cell.CellItemType); // update scan count
+                                Thread.Sleep(stepDelay);
 
                                 //Rotate and Scan to South
                                 player.Facing = Direction.South;
                                 action = ActionType.Rotate;
-                                dashboard.UpdateDashboard(player, action); // update move
+                                dashboard.UpdateDashboard(player, action); // update rotate count
                                 this.Dispatcher.Invoke(() => RefreshGrid());
-
+                                Thread.Sleep(stepDelay);
                                 (cell, node, prio) = player.Discover(game);
                                 if (prio > 0) { priorityChildren.Add((node, prio)); }
                                 prio = 0;
                                 action = ActionType.Scan;
-                                dashboard.UpdateDashboard(player, action, cell.CellItemType); // update move
-                                Thread.Sleep(gameSpeed);
+                                dashboard.UpdateDashboard(player, action, cell.CellItemType); // update scan count
+           
 
                                 //Rotate and Scan to North
                                 player.Facing = Direction.North;
                                 action = ActionType.Rotate;
-                                dashboard.UpdateDashboard(player, action); // update move
+                                dashboard.UpdateDashboard(player, action); // update rotate count
                                 this.Dispatcher.Invoke(() => RefreshGrid());
-
+                                Thread.Sleep(stepDelay);
                                 (cell, node, prio) = player.Discover(game);
                                 if (prio > 0) { priorityChildren.Add((node, prio)); }
                                 prio = 0;
                                 action = ActionType.Scan;
-                                dashboard.UpdateDashboard(player, action, cell.CellItemType); // update move
-                                Thread.Sleep(gameSpeed);
+                                dashboard.UpdateDashboard(player, action, cell.CellItemType); // update scan count
 
                                 //Rotate and Scan to West
                                 player.Facing = Direction.West;
                                 action = ActionType.Rotate;
-                                dashboard.UpdateDashboard(player, action); // update move
+                                dashboard.UpdateDashboard(player, action); // update rotate count
                                 this.Dispatcher.Invoke(() => RefreshGrid());
-
+                                Thread.Sleep(stepDelay);
                                 (cell, node, prio) = player.Discover(game);
                                 if (prio > 0) { priorityChildren.Add((node, prio)); }
                                 prio = 0;
                                 action = ActionType.Scan;
-                                dashboard.UpdateDashboard(player, action, cell.CellItemType); // update move
-                                Thread.Sleep(gameSpeed);
-
-                                player.Symbol = "M"; // lol
-                                
-                                this.Dispatcher.Invoke(() => RefreshGrid());
-                                Thread.Sleep(gameSpeed / 2);
+                                dashboard.UpdateDashboard(player, action, cell.CellItemType); // update scan count
+                 
 
                                 //Sort list based on ascending (greater value is more priority)
                                 priorityChildren.Sort((pair1, pair2) => pair1.Item2.CompareTo(pair2.Item2));
@@ -208,12 +213,15 @@ namespace IntelligentMiner.WPF.Game
                                     // rotate here
                                     var priorityCell = game.CurrentNode.Children.Peek();
                                     var cellinFront = player.ScanForward(game);
-                                    while (priorityCell != null && cellinFront.Position.Row != priorityCell.Position.Row && cellinFront.Position.Column != priorityCell.Position.Column)
+                                    while (priorityCell.CellItemType != CellItemType.Wall && priorityCell.CellItemType != CellItemType.Empty && cellinFront.Position.Row != priorityCell.Position.Row && cellinFront.Position.Column != priorityCell.Position.Column)
                                     {
                                         player.Rotate();
+                                        dashboard.UpdateDashboard(player, ActionType.Rotate); // update rotate
+                                        Thread.Sleep(stepDelay);
                                         cellinFront = player.ScanForward(game);
-                                        dashboard.UpdateDashboard(player, ActionType.Rotate); // update move
-                                        this.Dispatcher.Invoke(() => RefreshGrid());
+                                        dashboard.UpdateDashboard(player, ActionType.Rotate); // update csan
+                                        this.Dispatcher.Invoke( () => RefreshGrid());
+                                        Thread.Sleep(stepDelay);
                                     }
                                 }
                                
@@ -258,7 +266,7 @@ namespace IntelligentMiner.WPF.Game
 
                             dashboard.UpdateDashboard(player, action); // update move
                             this.Dispatcher.Invoke(() => RefreshGrid());
-                            Thread.Sleep(gameSpeed);
+                            Thread.Sleep(stepDelay);
 
                         }
                         //Beacon Stepped
@@ -290,12 +298,12 @@ namespace IntelligentMiner.WPF.Game
                                     }
                                     action = ActionType.Scan;
                                     dashboard.UpdateDashboard(player, action, cell.CellItemType);
-                                    Thread.Sleep(gameSpeed);
+                                    Thread.Sleep(stepDelay);
                                 }
 
-                                player.Symbol = "M";
+                                //player.Symbol = "M";
                                 this.Dispatcher.Invoke(() => RefreshGrid());
-                                Thread.Sleep(gameSpeed / 2);
+                                Thread.Sleep(stepDelay);
 
                                 //if (changeTarget && !priorityChildren.Any(item=>item.Item1.CellItemType == CellItemType.GoldenSquare)
                                 //&& !priorityChildren.Any(item => item.Item1.CellItemType == CellItemType.Beacon))
@@ -388,7 +396,7 @@ namespace IntelligentMiner.WPF.Game
 
                                 dashboard.UpdateDashboard(player, action); // update move
                                 this.Dispatcher.Invoke(() => RefreshGrid());
-                                Thread.Sleep(gameSpeed);
+                                Thread.Sleep(stepDelay);
 
                             }
                             //Set a beacon target for the robot to lean towards a certain direction
@@ -453,7 +461,7 @@ namespace IntelligentMiner.WPF.Game
                         dashboard.UpdateDashboard(player, ActionType.Rotate); // update move
 
                         this.Dispatcher.Invoke(() => RefreshGrid());
-                        Thread.Sleep(gameSpeed);
+                        Thread.Sleep(stepDelay);
 
                     }
                     else if (action == ActionType.MoveRandom)
@@ -502,7 +510,7 @@ namespace IntelligentMiner.WPF.Game
                         }
 
                         this.Dispatcher.Invoke(() => RefreshGrid());
-                        Thread.Sleep(gameSpeed);
+                        Thread.Sleep(stepDelay);
                     }
 
                 }
@@ -564,8 +572,9 @@ namespace IntelligentMiner.WPF.Game
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {
-            dashboard.Close();
+            dashboard.Dispatcher.Invoke(DispatcherPriority.Normal, new ThreadStart(dashboard.Close));
             Owner.Show();
+            Owner.Topmost = true;
         }
     }
 
