@@ -116,6 +116,7 @@ namespace IntelligentMiner.WPF
             _viewModel.beacons = String.Empty;
             _viewModel.Gold = String.Empty;
             _viewModel.Size = 0;
+            txtGridSize.Focus();
         }
 
         public void GenerateRandomInit()

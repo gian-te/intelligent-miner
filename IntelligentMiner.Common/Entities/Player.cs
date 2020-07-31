@@ -279,6 +279,7 @@ namespace IntelligentMiner.Common
         public bool DiscoverUsingBeacon(Game game, BaseCellItem cell,
             List<(Node, double)> priorityChildren, List<(int, int, Direction)> genTargets)
         {
+            // set this to true if the cell in front is the same as the current beacon target.
             bool isPit_Wall_Target_Limit = false;
             cell = ScanForward(game);
             if (cell.CellItemType != CellItemType.Wall && cell.CellItemType != CellItemType.Pit)
