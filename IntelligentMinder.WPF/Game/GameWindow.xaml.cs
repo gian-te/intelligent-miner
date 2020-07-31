@@ -372,14 +372,16 @@ namespace IntelligentMiner.WPF.Game
                                                         player.currentBeaconTarget = new Tuple<int, int, Direction>(genTargets[i].Item1, genTargets[i].Item2, genTargets[i].Item3);
                                                         genTargets.RemoveAt(i);
                                                         stillRotate = false;
+                                                        MessageBox.Show(String.Format("Rushing to the cell: {0},{1}", player.currentBeaconTarget.Item1, player.currentBeaconTarget.Item2), "Recalculating...", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly);
 
                                                         //MessageBox.Show(String.Concat(player.currentBeaconTarget.Item1, ",", player.currentBeaconTarget.Item2));
-                                                        MessageBox.Show(String.Format("Changed target to: {0},{1}", player.currentBeaconTarget.Item1, player.currentBeaconTarget.Item2), "Recalculating...", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly);
+                                                        //MessageBox.Show(String.Format("Changed target to: {0},{1}", player.currentBeaconTarget.Item1, player.currentBeaconTarget.Item2), "Recalculating...", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly);
                                                         break;
                                                     }
                                                     else if (player.currentBeaconTarget.Item1 == anotherBeacon.Item1 && player.currentBeaconTarget.Item2 == anotherBeacon.Item2)
                                                     {
                                                         stillRotate = false;
+                                                        MessageBox.Show(String.Format("Rushing to the cell: {0},{1}", player.currentBeaconTarget.Item1, player.currentBeaconTarget.Item2), "Recalculating...", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly);
                                                         break;
                                                     }
                                                 }
