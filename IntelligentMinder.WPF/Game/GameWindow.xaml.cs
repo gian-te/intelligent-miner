@@ -377,6 +377,11 @@ namespace IntelligentMiner.WPF.Game
                                                         MessageBox.Show(String.Format("Changed target to: {0},{1}", player.currentBeaconTarget.Item1, player.currentBeaconTarget.Item2), "Recalculating...", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly);
                                                         break;
                                                     }
+                                                    else if (player.currentBeaconTarget.Item1 == anotherBeacon.Item1 && player.currentBeaconTarget.Item2 == anotherBeacon.Item2)
+                                                    {
+                                                        stillRotate = false;
+                                                        break;
+                                                    }
                                                 }
                                             }
 
