@@ -39,6 +39,7 @@ namespace IntelligentMiner.WPF.Game
             player = p;
             _viewModel = p.Metrics;
             _viewModel.isPaused = false;
+            btnContinue.IsEnabled = false;
             //_viewModel.gameSpeed = 500;
 
             this.DataContext = _viewModel;
@@ -51,7 +52,7 @@ namespace IntelligentMiner.WPF.Game
             }
         }
 
-        public void UpdateDashboard(Player p, ActionType action, CellItemType celltype = CellItemType.Empty)
+        public void UpdateDashboard(Player p, ActionType action, CellItemType celltype = CellItemType.Empty, int count = 1)
         {
             if (action == ActionType.Rotate)
             {
@@ -82,6 +83,14 @@ namespace IntelligentMiner.WPF.Game
             {
                 _viewModel.PositionHistory += String.Concat("No more possible moves.\nGame over!");
             }
+            else if (action == ActionType.RotateRandom)
+            {
+                _viewModel.PositionHistory += String.Concat(String.Format("Will Rotate: {0} times.", count));
+            }
+            else if (action == ActionType.MoveRandom && celltype  == CellItemType.Wall)
+            {
+                _viewModel.PositionHistory += String.Concat("The robot hits a wall.");
+            }
 
             _viewModel.PositionHistory += Environment.NewLine;
 
@@ -111,12 +120,16 @@ namespace IntelligentMiner.WPF.Game
         private void btnPause_Click(object sender, RoutedEventArgs e)
         {
             _viewModel.isPaused = true;
+            btnContinue.IsEnabled = true;
+            btnPause.IsEnabled = false;
         }
 
         private void btnContinue_Click(object sender, RoutedEventArgs e)
         {
 
             _viewModel.isPaused = false;
+            btnContinue.IsEnabled = false;
+            btnPause.IsEnabled = true;
         }
 
         public bool pauseStatus()

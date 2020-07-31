@@ -33,11 +33,13 @@ namespace IntelligentMiner.WPF.Game
         IntelligentMiner.Common.Game game;
         Player player;
         Dashboard dashboard;
+        public int gameSpeed { get; set; }
 
         public GameWindow()
         {
             InitializeComponent();
             DataContext = this;
+            gameSpeed = 100;
         }
 
         private DataView gridData;
@@ -99,7 +101,6 @@ namespace IntelligentMiner.WPF.Game
         {
             Task.Run(() =>
             {
-                int gameSpeed = 100;
 
                 // create initial node
                 Node root = new Node();
@@ -211,6 +212,8 @@ namespace IntelligentMiner.WPF.Game
                                     {
                                         player.Rotate();
                                         cellinFront = player.ScanForward(game);
+                                        dashboard.UpdateDashboard(player, ActionType.Rotate); // update move
+                                        this.Dispatcher.Invoke(() => RefreshGrid());
                                     }
                                 }
                                
@@ -294,21 +297,44 @@ namespace IntelligentMiner.WPF.Game
                                 this.Dispatcher.Invoke(() => RefreshGrid());
                                 Thread.Sleep(gameSpeed / 2);
 
-                                if (changeTarget) {  continue; }
+                                if (changeTarget && !priorityChildren.Any(item=>item.Item1.CellItemType == CellItemType.GoldenSquare)
+                                && !priorityChildren.Any(item => item.Item1.CellItemType == CellItemType.Beacon))
+                                { continue; }
 
                                 //Sort list based on ascending (greater value is more priority)
                                 priorityChildren.Sort((pair1, pair2) => pair1.Item2.CompareTo(pair2.Item2));
-                                string priorities = String.Format("Current target: {0},{1}:{2}{3}",
-                                        player.currentBeaconTarget.Item1, player.currentBeaconTarget.Item2,
-                                        player.currentBeaconTarget.Item3.ToString(), Environment.NewLine);
+
+                                //Commented parts are for checking
+
+                                //=========================================
+                                //string priorities = String.Format("Current target: {0},{1}:{2}{3}",
+                                //        player.currentBeaconTarget.Item1, player.currentBeaconTarget.Item2,
+                                //        player.currentBeaconTarget.Item3.ToString(), Environment.NewLine);
+
                                 foreach (var item in priorityChildren)
                                 {
                                     game.CurrentNode.Children.Push(item.Item1);
-                                    priorities += String.Format("{0},{1}:{2}{3}",
-                                    item.Item1.Position.Row, item.Item1.Position.Column, item.Item2, Environment.NewLine);
+                                    //priorities += String.Format("{0},{1}:{2}{3}",
+                                    //item.Item1.Position.Row, item.Item1.Position.Column, item.Item2, Environment.NewLine);
                                 }
+
                                 //if (priorityChildren.Count > 0)
                                 //{ MessageBox.Show(priorities); }
+                                //=========================================
+
+                                if (game.CurrentNode.Children.Count > 0)
+                                {
+                                    // rotate here
+                                    var priorityCell = game.CurrentNode.Children.Peek();
+                                    var cellinFront = player.ScanForward(game);
+                                    while (priorityCell != null && cellinFront.Position.Row != priorityCell.Position.Row && cellinFront.Position.Column != priorityCell.Position.Column)
+                                    {
+                                        player.Rotate();
+                                        cellinFront = player.ScanForward(game);
+                                        dashboard.UpdateDashboard(player, ActionType.Rotate); // update move
+                                        this.Dispatcher.Invoke(() => RefreshGrid());
+                                    }
+                                }
 
                                 // move the player to the popped element at the top of the fringe
                                 CellItemType t = new CellItemType();
@@ -317,18 +343,12 @@ namespace IntelligentMiner.WPF.Game
                                     Beacon beacon = new Beacon();
                                     (t, beacon) = player.MoveWithStrategy(game);
                                     action = ActionType.Move;
-                                    //if (t == CellItemType.Beacon)
-                                    //{
-                                    //    player.steppedOnBeacon = true;
-                                    //    genTargets = player.GenerateTargetGrids(game);
-                                    //}
                                 }
                                 catch (Exception)
                                 {
                                     end = true;
                                     action = ActionType.NoPossible;
                                     t = CellItemType.Empty;
-                                    //throw;
                                 }
 
                                 if (t == CellItemType.GoldenSquare)
@@ -394,36 +414,67 @@ namespace IntelligentMiner.WPF.Game
                     // 1. randomize move between Rotate or Move
                     ActionType action = player.RandomizeAction();
 
-                    if (action == ActionType.Rotate)
+                    if (action == ActionType.RotateRandom)
                     {
                         // 2. if Rotate, randomize how many times it will rotate 90-degrees
-                        player.RotateRandomTimes(game.Size);
+
+                        // arbitrary range of 1 to 10
+                        player.Rotate();
+                        dashboard.UpdateDashboard(player, ActionType.Rotate); // update move
+
+                        this.Dispatcher.Invoke(() => RefreshGrid());
+                        Thread.Sleep(gameSpeed);
+
                     }
-                    else if (action == ActionType.Move)
+                    else if (action == ActionType.MoveRandom)
                     {
                         // 3. if Move, randomize how many times it will move
-                        var cell = player.MoveForward(game, true);
-                        if (cell.CellItemType == Common.Enums.CellItemType.GoldenSquare)
+                        //var cell = player.MoveForward(game, true, gameSpeed);
+
+                        var cell = player.ScanForward(game);
+                        if (cell.CellItemType == CellItemType.Wall)
                         {
-                            end = true;
-                            dashboard.UpdateDashboard(player, action); // update move
-                            action = ActionType.Win;
+                            dashboard.UpdateDashboard(player, action, CellItemType.Wall);
                         }
-                        else if (cell.CellItemType == Common.Enums.CellItemType.Pit)
+                        else
                         {
-                            end = true;
-                            dashboard.UpdateDashboard(player, action);
-                            action = ActionType.Die;
+                            // remove the player from its current cell
+                            game.ClearCell(player.Position.Row, player.Position.Column);
+
+                            // assign new coordinates to the player
+                            player.Position.Row = cell.Position.Row;
+                            player.Position.Column = cell.Position.Column;
+
+                            game.AssignPlayerToCell(player);
+
+                            var newCoordinates = new Tuple<int, int>(player.Position.Row, player.Position.Column);
+
+                            if (player.PositionHistory.Contains(newCoordinates)) { player.Metrics.backtrackCount++; }
+                            player.PositionHistory.Add(newCoordinates);
+
+                            if (cell.CellItemType == Common.Enums.CellItemType.GoldenSquare)
+                            {
+                                end = true;
+                                action = ActionType.Win;
+                                dashboard.UpdateDashboard(player, action); // update move
+                            }
+                            else if (cell.CellItemType == Common.Enums.CellItemType.Pit)
+                            {
+                                end = true;
+                                action = ActionType.Die;
+                                dashboard.UpdateDashboard(player, action);
+                            }
+                            else
+                            {
+                                action = ActionType.Move;
+                                dashboard.UpdateDashboard(player, action);
+                            }
                         }
+
                         this.Dispatcher.Invoke(() => RefreshGrid());
+                        Thread.Sleep(gameSpeed);
                     }
 
-                    dashboard.UpdateDashboard(player, action);
-                    Thread.Sleep(200);
-
-
-                    //stepCount++;
-                    Console.WriteLine();
                 }
 
             });

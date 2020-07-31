@@ -143,7 +143,6 @@ namespace IntelligentMiner.Common
             return retVal;
         }
 
-
         /// <summary>
         /// Must clear the player if the player moves away in a cell
         /// </summary>
@@ -161,7 +160,6 @@ namespace IntelligentMiner.Common
             Map[player.Position.Row, player.Position.Column] = player;
             
         }
-
 
     }
 }

@@ -11,7 +11,9 @@ namespace IntelligentMiner.Common.Enums
         Die,
         Win,
         Move,
-        NoPossible
+        NoPossible,
+        MoveRandom,
+        RotateRandom
         // add the rest
     }
 }

@@ -141,25 +141,24 @@ namespace IntelligentMiner.Common
 
             if (value >= 1 && value <= 50)
             {
-                return ActionType.Rotate;
+                return ActionType.RotateRandom;
             }
             else
             {
-                return ActionType.Move;
+                return ActionType.MoveRandom;
             }
         }
 
-        public void RotateRandomTimes(int num = 10)
+        public void RotateRandomTimes(int gameSpeed, int num = 10)
         {
             // arbitrary range of 1 to 10
             var times = Randomizer.RandomizeNumber(1, num);
             Console.WriteLine(string.Format("The player will rotate {0} times!", times));
 
-            
             for (int i = 0; i < times; i++)
             {
                 Rotate();
-                Thread.Sleep(100);
+                Thread.Sleep(gameSpeed);
             }
             
         }
@@ -175,7 +174,7 @@ namespace IntelligentMiner.Common
             return game.GetCell(Position.Row, Position.Column, Facing, "front");
         }
 
-        public BaseCellItem MoveForward(Game game, bool random)
+        public BaseCellItem MoveForward(Game game, bool random, int gameSpeed)
         {
             int times = 1;
             if (random) { times = Randomizer.RandomizeNumber(1, game.Size); }
@@ -184,7 +183,7 @@ namespace IntelligentMiner.Common
             BaseCellItem cell = null;
             for (int i = 0; i < times; i++)
             {
-                Thread.Sleep(100);
+                Thread.Sleep(gameSpeed);
                 cell = ScanForward(game);
                 //scanCount += 1;
                 if (cell.CellItemType == CellItemType.Wall)
@@ -228,7 +227,6 @@ namespace IntelligentMiner.Common
                     Console.WriteLine("The player has found a beacon.");
                     break;
                 }
-
 
             }
             return cell;
@@ -458,8 +456,5 @@ namespace IntelligentMiner.Common
             return Math.Sqrt(to_square) * -1;
         }
     }
-
-
-
 
 }
