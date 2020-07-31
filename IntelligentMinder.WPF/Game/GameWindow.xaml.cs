@@ -40,7 +40,7 @@ namespace IntelligentMiner.WPF.Game
         {
             InitializeComponent();
             DataContext = this;
-            stepDelay = 50; //50 millisec
+            stepDelay = 100; //50 millisec
         }
 
         private DataView gridData;
@@ -174,19 +174,6 @@ namespace IntelligentMiner.WPF.Game
                                 prio = 0;
                                 action = ActionType.Scan;
                                 dashboard.UpdateDashboard(player, action, cell.CellItemType); // update scan count
-           
-
-                                //Rotate and Scan to North
-                                player.Facing = Direction.North;
-                                action = ActionType.Rotate;
-                                dashboard.UpdateDashboard(player, action); // update rotate count
-                                this.Dispatcher.Invoke(() => RefreshGrid());
-                                Thread.Sleep(stepDelay);
-                                (cell, node, prio) = player.Discover(game);
-                                if (prio > 0) { priorityChildren.Add((node, prio)); }
-                                prio = 0;
-                                action = ActionType.Scan;
-                                dashboard.UpdateDashboard(player, action, cell.CellItemType); // update scan count
 
                                 //Rotate and Scan to West
                                 player.Facing = Direction.West;
@@ -199,7 +186,18 @@ namespace IntelligentMiner.WPF.Game
                                 prio = 0;
                                 action = ActionType.Scan;
                                 dashboard.UpdateDashboard(player, action, cell.CellItemType); // update scan count
-                 
+
+                                //Rotate and Scan to North
+                                player.Facing = Direction.North;
+                                action = ActionType.Rotate;
+                                dashboard.UpdateDashboard(player, action); // update rotate count
+                                this.Dispatcher.Invoke(() => RefreshGrid());
+                                Thread.Sleep(stepDelay);
+                                (cell, node, prio) = player.Discover(game);
+                                if (prio > 0) { priorityChildren.Add((node, prio)); }
+                                prio = 0;
+                                action = ActionType.Scan;
+                                dashboard.UpdateDashboard(player, action, cell.CellItemType); // update scan count
 
                                 //Sort list based on ascending (greater value is more priority)
                                 priorityChildren.Sort((pair1, pair2) => pair1.Item2.CompareTo(pair2.Item2));

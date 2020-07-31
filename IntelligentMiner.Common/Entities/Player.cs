@@ -65,7 +65,7 @@ namespace IntelligentMiner.Common
             PositionHistory = new List<Tuple<int, int>>();
             CellItemType = CellItemType.Player;
             Metrics = new PlayerMetrics();
-            RandomizeFacing();
+            //RandomizeFacing();
         }
 
         public Tuple<int, int> Rotate()
