@@ -129,6 +129,7 @@ namespace IntelligentMiner.WPF.Game
                 // player to discover the rest of the nodes
                 bool end = false;
                 bool changeTarget = true;
+                bool stillRotate = true;
                 List<(int, int, Direction)> genTargets = new List<(int, int, Direction)>();
                 while (!end)
                 {
@@ -277,26 +278,33 @@ namespace IntelligentMiner.WPF.Game
                                 Direction priorityDirection = player.currentBeaconTarget.Item3;
                                 List<(Node, double)> priorityChildren = new List<(Node, double)>();
 
+                                BaseCellItem cell = new BaseCellItem();
                                 //Scan and rotate 4 times surroudings but prioritize direction
-                                for (int i = 0; i < 4; i++)
+                                if (stillRotate)
                                 {
-                                    action = ActionType.Rotate;
-                                    player.Rotate();
-                                    dashboard.UpdateDashboard(player, action);
-                                    this.Dispatcher.Invoke(() => RefreshGrid());
+                                    for (int i = 0; i < 4; i++)
+                                    {
+                                        action = ActionType.Rotate;
+                                        player.Rotate();
+                                        dashboard.UpdateDashboard(player, action);
+                                        this.Dispatcher.Invoke(() => RefreshGrid());
 
-                                    BaseCellItem cell = new BaseCellItem();
-                                    if(changeTarget)
-                                    {
-                                        player.DiscoverUsingBeacon(game, cell, priorityChildren, genTargets);
+                                        if (changeTarget)
+                                        {
+                                            player.DiscoverUsingBeacon(game, cell, priorityChildren, genTargets);
+                                        }
+                                        else
+                                        {
+                                            changeTarget = player.DiscoverUsingBeacon(game, cell, priorityChildren, genTargets);
+                                        }
+                                        action = ActionType.Scan;
+                                        dashboard.UpdateDashboard(player, action, cell.CellItemType);
+                                        Thread.Sleep(stepDelay);
                                     }
-                                    else
-                                    {
-                                        changeTarget = player.DiscoverUsingBeacon(game, cell, priorityChildren, genTargets);
-                                    }
-                                    action = ActionType.Scan;
-                                    dashboard.UpdateDashboard(player, action, cell.CellItemType);
-                                    Thread.Sleep(stepDelay);
+                                }
+                                else
+                                {
+                                    changeTarget = player.DiscoverUsingBeacon(game, cell, priorityChildren, genTargets);
                                 }
 
                                 //player.Symbol = "M";
@@ -363,6 +371,7 @@ namespace IntelligentMiner.WPF.Game
                                                     {
                                                         player.currentBeaconTarget = new Tuple<int, int, Direction>(genTargets[i].Item1, genTargets[i].Item2, genTargets[i].Item3);
                                                         genTargets.RemoveAt(i);
+                                                        stillRotate = false;
 
                                                         //MessageBox.Show(String.Concat(player.currentBeaconTarget.Item1, ",", player.currentBeaconTarget.Item2));
                                                         MessageBox.Show(String.Format("Changed target to: {0},{1}", player.currentBeaconTarget.Item1, player.currentBeaconTarget.Item2), "Recalculating...", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly);
@@ -404,6 +413,7 @@ namespace IntelligentMiner.WPF.Game
 
                                 if (genTargets.Count > 1)
                                 {
+                                    // randomize target to choose
                                     index = Randomizer.RandomizeNumber(0, genTargets.Count);
 
                                     row = genTargets[index].Item1;
