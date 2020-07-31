@@ -237,7 +237,7 @@ namespace IntelligentMiner.WPF.Game
                                     beaconRoot.Position.Row = player.Position.Row;
                                     beaconRoot.Position.Column = player.Position.Column;
                                     beaconRoot.CellItemType = player.CellItemType;
-                                    
+
                                     game.BeaconMemo.Add((player.Position.Row, player.Position.Column), beaconRoot);
                                     genTargets = player.GenerateTargetGrids(game);
                                 }
@@ -297,9 +297,9 @@ namespace IntelligentMiner.WPF.Game
                                 this.Dispatcher.Invoke(() => RefreshGrid());
                                 Thread.Sleep(gameSpeed / 2);
 
-                                if (changeTarget && !priorityChildren.Any(item=>item.Item1.CellItemType == CellItemType.GoldenSquare)
-                                && !priorityChildren.Any(item => item.Item1.CellItemType == CellItemType.Beacon))
-                                { continue; }
+                                //if (changeTarget && !priorityChildren.Any(item=>item.Item1.CellItemType == CellItemType.GoldenSquare)
+                                //&& !priorityChildren.Any(item => item.Item1.CellItemType == CellItemType.Beacon))
+                                //{ continue; }
 
                                 //Sort list based on ascending (greater value is more priority)
                                 priorityChildren.Sort((pair1, pair2) => pair1.Item2.CompareTo(pair2.Item2));
@@ -343,6 +343,35 @@ namespace IntelligentMiner.WPF.Game
                                     Beacon beacon = new Beacon();
                                     (t, beacon) = player.MoveWithStrategy(game);
                                     action = ActionType.Move;
+
+                                    try
+                                    {
+                                        if (t == CellItemType.Beacon)
+                                        {
+                                            List<(int, int, Direction)> anotherBeaconTargets = player.RegenTargetGrids(game, beacon);
+                                            for (int i = 0; i < genTargets.Count; i++)
+                                            {
+                                                foreach (var anotherBeacon in anotherBeaconTargets)
+                                                {
+                                                    if (genTargets[i].Item1 == anotherBeacon.Item1 && genTargets[i].Item2 == anotherBeacon.Item2)
+                                                    {
+                                                        player.currentBeaconTarget = new Tuple<int, int, Direction>(genTargets[i].Item1, genTargets[i].Item2, genTargets[i].Item3);
+                                                        genTargets.RemoveAt(i);
+
+                                                        //MessageBox.Show(String.Concat(player.currentBeaconTarget.Item1, ",", player.currentBeaconTarget.Item2));
+                                                        MessageBox.Show(String.Format("Changed target to: {0},{1}", player.currentBeaconTarget.Item1, player.currentBeaconTarget.Item2), "Recalculating...", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly);
+                                                        break;
+                                                    }
+                                                }
+                                            }
+
+                                        }
+                                    }
+                                    catch (Exception)
+                                    {
+                                        continue;
+                                    }
+
                                 }
                                 catch (Exception)
                                 {
@@ -375,6 +404,7 @@ namespace IntelligentMiner.WPF.Game
                                     col = genTargets[index].Item2;
                                     player.currentBeaconTarget = new Tuple<int, int, Direction>(row, col, genTargets[index].Item3);
                                     genTargets.RemoveAt(index);
+                                    MessageBox.Show(String.Format("Changed target to: {0},{1}", player.currentBeaconTarget.Item1, player.currentBeaconTarget.Item2), "Recalculating...", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly);
                                 }
                                 else if (genTargets.Count == 1)
                                 {
@@ -382,6 +412,7 @@ namespace IntelligentMiner.WPF.Game
                                     col = genTargets[0].Item2;
                                     player.currentBeaconTarget = new Tuple<int, int, Direction>(row, col, genTargets[0].Item3);
                                     genTargets.RemoveAt(index);
+                                    MessageBox.Show(String.Format("Changed target to: {0},{1}", player.currentBeaconTarget.Item1, player.currentBeaconTarget.Item2), "Recalculating...", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly);
                                 }
                                 //else
                                 //{
@@ -390,7 +421,6 @@ namespace IntelligentMiner.WPF.Game
                                 //    end = true;
                                 //}
 
-                                MessageBox.Show(String.Format("Changed target to: {0},{1}", player.currentBeaconTarget.Item1, player.currentBeaconTarget.Item2), "Recalculating...", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK ,MessageBoxOptions.DefaultDesktopOnly);
                                 changeTarget = false;
 
                             }

@@ -416,6 +416,69 @@ namespace IntelligentMiner.Common
             return genTargets;
         }
 
+        public List<(int, int, Direction)> RegenTargetGrids(Game game, Beacon beacon)
+        {
+            int row = 0, col = 0;
+            List<(int, int, Direction)> genTargets = new List<(int, int, Direction)>();
+
+            //Get North Target
+            row = beacon.Position.Row - beacon.Value;
+            col = beacon.Position.Column;
+            if (row >= 0 && !game.PitMemo.Contains((row, col)) 
+                && !game.NodeMemo.ContainsKey((row, col))
+                && !game.BeaconMemo.ContainsKey((row, col)))
+            {
+                genTargets.Add((row, col, Direction.West));
+            }
+
+            //Get East Target
+            row = beacon.Position.Row;
+            col = beacon.Position.Column + beacon.Value;
+            if (!game.PitMemo.Contains((row, col))
+                && !game.NodeMemo.ContainsKey((row, col))
+                && !game.BeaconMemo.ContainsKey((row, col)))
+            {
+                if (maxColumn > 0)
+                {
+                    if (col <= maxColumn) { genTargets.Add((row, col, Direction.East)); }
+                }
+                else
+                {
+                    genTargets.Add((row, col, Direction.South));
+                }
+            }
+
+            //Get South Target
+            row = beacon.Position.Row + beacon.Value;
+            col = beacon.Position.Column;
+            if (!game.PitMemo.Contains((row, col))
+                && !game.NodeMemo.ContainsKey((row, col))
+                && !game.BeaconMemo.ContainsKey((row, col)))
+            {
+                if (maxRow > 0)
+                {
+                    if (row <= maxRow) { genTargets.Add((row, col, Direction.South)); }
+                }
+                else
+                {
+                    genTargets.Add((row, col, Direction.East));
+                }
+            }
+
+            //Get West Target
+            row = beacon.Position.Row;
+            col = beacon.Position.Column - beacon.Value;
+            if (col >= 0 && !game.PitMemo.Contains((row, col))
+                && !game.NodeMemo.ContainsKey((row, col))
+                && !game.BeaconMemo.ContainsKey((row, col)))
+            {
+                genTargets.Add((row, col, Direction.North));
+            }
+
+            return genTargets;
+
+        }
+
         public void RandomizeFacing()
         {
             // 25% for each direction
