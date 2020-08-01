@@ -446,70 +446,75 @@ namespace IntelligentMiner.WPF.Game
                 bool end = false;
                 while (!end)
                 {
-                    // 1. randomize move between Rotate or Move
-                    ActionType action = player.RandomizeAction();
-
-                    if (action == ActionType.RotateRandom)
+                    while (!dashboard.pauseStatus())
                     {
-                        // 2. if Rotate, randomize how many times it will rotate 90-degrees
+                        // 1. randomize move between Rotate or Move
+                        ActionType action = player.RandomizeAction();
 
-                        // arbitrary range of 1 to 10
-                        player.Rotate();
-                        dashboard.UpdateDashboard(player, ActionType.Rotate); // update move
-
-                        this.Dispatcher.Invoke(() => RefreshGrid());
-                        Thread.Sleep(stepDelay);
-
-                    }
-                    else if (action == ActionType.MoveRandom)
-                    {
-                        // 3. if Move, randomize how many times it will move
-                        //var cell = player.MoveForward(game, true, gameSpeed);
-
-                        var cell = player.ScanForward(game);
-                        if (cell.CellItemType == CellItemType.Wall)
+                        if (action == ActionType.RotateRandom)
                         {
-                            dashboard.UpdateDashboard(player, action, CellItemType.Wall);
+                            // 2. if Rotate, randomize how many times it will rotate 90-degrees
+
+                            // arbitrary range of 1 to 10
+                            player.Rotate();
+                            dashboard.UpdateDashboard(player, ActionType.Rotate); // update move
+
+                            this.Dispatcher.Invoke(() => RefreshGrid());
+                            Thread.Sleep(stepDelay);
+
                         }
-                        else
+                        else if (action == ActionType.MoveRandom)
                         {
-                            // remove the player from its current cell
-                            game.ClearCell(player.Position.Row, player.Position.Column);
+                            // 3. if Move, randomize how many times it will move
+                            //var cell = player.MoveForward(game, true, gameSpeed);
 
-                            // assign new coordinates to the player
-                            player.Position.Row = cell.Position.Row;
-                            player.Position.Column = cell.Position.Column;
-
-                            game.AssignPlayerToCell(player);
-
-                            var newCoordinates = new Tuple<int, int>(player.Position.Row, player.Position.Column);
-
-                            if (player.PositionHistory.Contains(newCoordinates)) { player.Metrics.backtrackCount++; }
-                            player.PositionHistory.Add(newCoordinates);
-
-                            if (cell.CellItemType == Common.Enums.CellItemType.GoldenSquare)
+                            var cell = player.ScanForward(game);
+                            if (cell.CellItemType == CellItemType.Wall)
                             {
-                                end = true;
-                                action = ActionType.Win;
-                                dashboard.UpdateDashboard(player, action); // update move
-                            }
-                            else if (cell.CellItemType == Common.Enums.CellItemType.Pit)
-                            {
-                                end = true;
-                                action = ActionType.Die;
-                                dashboard.UpdateDashboard(player, action);
+                                dashboard.UpdateDashboard(player, action, CellItemType.Wall);
                             }
                             else
                             {
-                                action = ActionType.Move;
-                                dashboard.UpdateDashboard(player, action);
+                                // remove the player from its current cell
+                                game.ClearCell(player.Position.Row, player.Position.Column);
+
+                                // assign new coordinates to the player
+                                player.Position.Row = cell.Position.Row;
+                                player.Position.Column = cell.Position.Column;
+
+                                game.AssignPlayerToCell(player);
+
+                                var newCoordinates = new Tuple<int, int>(player.Position.Row, player.Position.Column);
+
+                                if (player.PositionHistory.Contains(newCoordinates)) { player.Metrics.backtrackCount++; }
+                                player.PositionHistory.Add(newCoordinates);
+
+                                if (cell.CellItemType == Common.Enums.CellItemType.GoldenSquare)
+                                {
+                                    end = true;
+                                    action = ActionType.Win;
+                                    dashboard.UpdateDashboard(player, action); // update move
+                                }
+                                else if (cell.CellItemType == Common.Enums.CellItemType.Pit)
+                                {
+                                    end = true;
+                                    action = ActionType.Die;
+                                    dashboard.UpdateDashboard(player, action);
+                                }
+                                else
+                                {
+                                    action = ActionType.Move;
+                                    dashboard.UpdateDashboard(player, action);
+                                }
                             }
+
+                            this.Dispatcher.Invoke(() => RefreshGrid());
+                            Thread.Sleep(stepDelay);
                         }
 
-                        this.Dispatcher.Invoke(() => RefreshGrid());
-                        Thread.Sleep(stepDelay);
-                    }
 
+                        if (end) { break; }
+                    }
                 }
 
             });
