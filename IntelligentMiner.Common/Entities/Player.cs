@@ -129,7 +129,7 @@ namespace IntelligentMiner.Common
             {
                 BaseCellItem cell = game.Map[poppedNode.Position.Row, poppedNode.Position.Column];
                 beaconValue  = cell as Beacon;
-                if (beaconValue.Value < 1)
+                if (beaconValue != null && beaconValue.Value < 1)
                 {
                     retVal = CellItemType.Empty;
                     beaconValue = null;

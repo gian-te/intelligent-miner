@@ -377,7 +377,7 @@ namespace IntelligentMiner.WPF.Game
                                     }
 
                                 }
-                                catch (Exception)
+                                catch (Exception ex)
                                 {
                                     end = true;
                                     action = ActionType.NoPossible;
