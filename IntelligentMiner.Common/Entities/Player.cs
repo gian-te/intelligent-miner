@@ -47,6 +47,8 @@ namespace IntelligentMiner.Common
         }
 
         public bool steppedOnBeacon { get; set; }
+        
+        public bool steppedOnSecond { get; set; }
 
         public Beacon beaconValue { get; set; }
 
@@ -65,6 +67,7 @@ namespace IntelligentMiner.Common
             PositionHistory = new List<Tuple<int, int>>();
             CellItemType = CellItemType.Player;
             Metrics = new PlayerMetrics();
+            steppedOnSecond = false;
             //RandomizeFacing();
         }
 
@@ -302,8 +305,24 @@ namespace IntelligentMiner.Common
                         // add the node object to the dictionary to prevent duplicate objects per cell.
                         game.BeaconMemo.Add((cell.Position.Row, cell.Position.Column), node);
 
+                        if (!game.NodeMemo.ContainsKey((cell.Position.Row, cell.Position.Column)))
+                        {
+                            game.NodeMemo.Add((cell.Position.Row, cell.Position.Column), node);
+                        }
+
                         if (cell.CellItemType == CellItemType.GoldenSquare) { prio = game.Size * game.Size + 2; }
-                        else if (cell.CellItemType == CellItemType.Beacon) { prio = game.Size * game.Size + 1; }
+                        else if (cell.CellItemType == CellItemType.Beacon) 
+                        {
+                            if(steppedOnSecond)
+                            {
+                                prio = ComputeDistance(currentBeaconTarget.Item1, currentBeaconTarget.Item2,
+                                cell.Position.Row, cell.Position.Column);
+                        }
+                            else
+                            {
+                                prio = game.Size * game.Size + 1;
+                            }
+                        }
                         else if (cell.CellItemType == CellItemType.Empty)
                         {
                             prio = ComputeDistance(currentBeaconTarget.Item1, currentBeaconTarget.Item2,
@@ -381,14 +400,14 @@ namespace IntelligentMiner.Common
                 genTargets.Add((row, col, Direction.West));
             }
 
-            //Get East Target
+            //Get South Target
             row = beaconValue.Position.Row;
             col = beaconValue.Position.Column + beaconValue.Value;
             if (!game.PitMemo.Contains((row, col)) && !game.NodeMemo.ContainsKey((row, col)))
             {
                 if (maxColumn > 0)
                 {
-                    if (col <= maxColumn) { genTargets.Add((row, col, Direction.East)); }
+                    if (col <= maxColumn) { genTargets.Add((row, col, Direction.South)); }
                 }
                 else
                 {
@@ -396,14 +415,14 @@ namespace IntelligentMiner.Common
                 }
             }
 
-            //Get South Target
+            //Get East Target
             row = beaconValue.Position.Row + beaconValue.Value;
             col = beaconValue.Position.Column;
             if (!game.PitMemo.Contains((row, col)) && !game.NodeMemo.ContainsKey((row, col)))
             {
                 if (maxRow > 0)
                 {
-                    if (row <= maxRow) { genTargets.Add((row, col, Direction.South)); }
+                    if (row <= maxRow) { genTargets.Add((row, col, Direction.East)); }
                 }
                 else
                 {
@@ -437,7 +456,7 @@ namespace IntelligentMiner.Common
                 genTargets.Add((row, col, Direction.West));
             }
 
-            //Get East Target
+            //Get South Target
             row = beacon.Position.Row;
             col = beacon.Position.Column + beacon.Value;
             if (!game.PitMemo.Contains((row, col))
@@ -446,7 +465,7 @@ namespace IntelligentMiner.Common
             {
                 if (maxColumn > 0)
                 {
-                    if (col <= maxColumn) { genTargets.Add((row, col, Direction.East)); }
+                    if (col <= maxColumn) { genTargets.Add((row, col, Direction.South)); }
                 }
                 else
                 {
@@ -454,7 +473,7 @@ namespace IntelligentMiner.Common
                 }
             }
 
-            //Get South Target
+            //Get East Target
             row = beacon.Position.Row + beacon.Value;
             col = beacon.Position.Column;
             if (!game.PitMemo.Contains((row, col))
@@ -463,7 +482,7 @@ namespace IntelligentMiner.Common
             {
                 if (maxRow > 0)
                 {
-                    if (row <= maxRow) { genTargets.Add((row, col, Direction.South)); }
+                    if (row <= maxRow) { genTargets.Add((row, col, Direction.East)); }
                 }
                 else
                 {
