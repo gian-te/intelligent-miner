@@ -502,6 +502,7 @@ namespace IntelligentMiner.WPF.Game
                                 if (player.PositionHistory.Contains(newCoordinates)) { player.Metrics.backtrackCount++; }
                                 player.PositionHistory.Add(newCoordinates);
 
+                                player.Metrics.moveCount++;
                                 if (cell.CellItemType == Common.Enums.CellItemType.GoldenSquare)
                                 {
                                     end = true;
