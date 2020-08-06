@@ -108,7 +108,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Audio\cw.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\IntelligentMiner.Common\IntelligentMiner.Common.csproj">
       <Project>{7f8e0bd5-57ec-4620-a507-3e11f8642cba}</Project>

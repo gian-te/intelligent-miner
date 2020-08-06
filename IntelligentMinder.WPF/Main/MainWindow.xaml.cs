@@ -17,6 +17,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Threading;
+using System.Media;
 
 namespace IntelligentMiner.WPF
 {
@@ -42,7 +43,14 @@ namespace IntelligentMiner.WPF
                 ClearInit = true
             };
             this.DataContext = _viewModel;
+            PlaySound();
+        }
 
+        private void PlaySound()
+        {
+            SoundPlayer sound = new SoundPlayer();
+            sound.SoundLocation = "Audio\\cw.wav";
+            sound.PlayLooping();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
