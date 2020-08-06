@@ -18,6 +18,8 @@ using System.ComponentModel;
 using System.Data;
 using System.Threading;
 using IntelligentMiner.Common.Enums;
+using XamlAnimatedGif;
+using System.Windows.Media.Animation;
 
 namespace IntelligentMiner.WPF.Game
 {
@@ -41,7 +43,12 @@ namespace IntelligentMiner.WPF.Game
             _viewModel.isPaused = false;
             btnContinue.IsEnabled = false;
             this.DataContext = _viewModel;
+
+            // change source depending on game state, if WIN, put a gif that looks like winning, etc
+            myGif.Source = new Uri(AppDomain.CurrentDomain.BaseDirectory + "Images/flash.gif", UriKind.Absolute);
         }
+
+
         private void NotifyPropertyChanged(string str)
         {
             if (PropertyChanged != null)
@@ -132,6 +139,12 @@ namespace IntelligentMiner.WPF.Game
         public bool pauseStatus()
         {
             return _viewModel.isPaused;
+        }
+
+        private void myGif_MediaEnded(object sender, RoutedEventArgs e)
+        {
+            myGif.Position = new TimeSpan(0, 0, 1);
+            myGif.Play();
         }
     }
 }

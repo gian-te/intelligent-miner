@@ -4,8 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:IntelligentMiner.WPF.Game"
+        xmlns:gif="https://github.com/XamlAnimatedGif/XamlAnimatedGif"
         mc:Ignorable="d"
-        Title="Dashboard" Height="500" Width="266"
+        Title="Dashboard" Height="711.396" Width="266"
         WindowStartupLocation="Manual" ResizeMode="NoResize">
     <Grid>
         <GroupBox Header="Player Information" HorizontalAlignment="Left" Height="180" Margin="38,10,0,0" VerticalAlignment="Top" Width="180">
@@ -45,6 +46,9 @@
         </GroupBox>
         <GroupBox Header="Actions" HorizontalAlignment="Left" Height="200" Margin="38, 240 0 9" VerticalAlignment="Top" Width="180">
             <TextBox Name="txtActions" HorizontalAlignment="Left" Height="177" Margin="0,0,0,0" IsReadOnly="True" Text="{Binding Path=PositionHistory}" VerticalAlignment="Top" Width="167" AcceptsReturn="False" TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Auto" TextChanged="txtActions_TextChanged"/>
+        </GroupBox>
+        <GroupBox  Header="Preview" HorizontalAlignment="Left" Height="200" Margin="38,462,0,-62" VerticalAlignment="Top" Width="180">
+            <MediaElement x:Name="myGif" MediaEnded="myGif_MediaEnded" UnloadedBehavior="Manual" LoadedBehavior="Play" Stretch="Fill"/>
         </GroupBox>
     </Grid>
 </Window>
