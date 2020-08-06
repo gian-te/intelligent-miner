@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:IntelligentMiner.WPF.Game"
         xmlns:gif="https://github.com/XamlAnimatedGif/XamlAnimatedGif"
         mc:Ignorable="d"
-        Title="Dashboard" Height="711.396" Width="266"
+        Title="Dashboard" Height="720.587" Width="266"
         WindowStartupLocation="Manual" ResizeMode="NoResize">
     <Grid>
         <GroupBox Header="Player Information" HorizontalAlignment="Left" Height="180" Margin="38,10,0,0" VerticalAlignment="Top" Width="180">

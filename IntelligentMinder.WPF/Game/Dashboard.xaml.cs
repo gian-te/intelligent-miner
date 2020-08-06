@@ -18,7 +18,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Threading;
 using IntelligentMiner.Common.Enums;
-using XamlAnimatedGif;
+
 using System.Windows.Media.Animation;
 
 namespace IntelligentMiner.WPF.Game
