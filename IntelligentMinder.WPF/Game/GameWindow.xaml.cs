@@ -352,20 +352,33 @@ namespace IntelligentMiner.WPF.Game
                                     {
                                         if (t == CellItemType.Beacon)
                                         {
-                                            List<(int, int, Direction)> anotherBeaconTargets = player.RegenTargetGrids(game, beacon);
-                                            for (int i = 0; i < genTargets.Count; i++)
+                                            List<(int, int, Direction)> anotherBeaconTargets = player.RegenTargetGrids(game, beacon);                                         
+
+                                            if (!player.steppedOnSecond)
                                             {
-                                                foreach (var anotherBeacon in anotherBeaconTargets)
+                                                for (int i = 0; i < genTargets.Count; i++)
                                                 {
-                                                    if (genTargets[i].Item1 == anotherBeacon.Item1 && genTargets[i].Item2 == anotherBeacon.Item2)
+                                                    foreach (var anotherBeacon in anotherBeaconTargets)
                                                     {
-                                                        player.currentBeaconTarget = new Tuple<int, int, Direction>(genTargets[i].Item1, genTargets[i].Item2, genTargets[i].Item3);
-                                                        genTargets.RemoveAt(i);
-                                                        MessageBox.Show(String.Format("Changed target to: {0},{1}", player.currentBeaconTarget.Item1, player.currentBeaconTarget.Item2), "Recalculating...", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly);
-                                                        changeTarget = false;
-                                                        break;
+                                                        if (genTargets[i].Item1 == anotherBeacon.Item1 && genTargets[i].Item2 == anotherBeacon.Item2)
+                                                        {
+                                                            player.currentBeaconTarget = new Tuple<int, int, Direction>(genTargets[i].Item1, genTargets[i].Item2, genTargets[i].Item3);
+                                                            genTargets.RemoveAt(i);
+                                                            MessageBox.Show(String.Format("Changed target to: {0},{1}", player.currentBeaconTarget.Item1, player.currentBeaconTarget.Item2), "Recalculating...", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly);
+                                                            changeTarget = false;
+                                                            break;
+                                                        }
                                                     }
                                                 }
+
+                                                game.BeaconMemo = new Dictionary<(int, int), Node>();
+                                                Node beaconRoot = new Node();
+                                                beaconRoot.Position.Row = player.Position.Row;
+                                                beaconRoot.Position.Column = player.Position.Column;
+                                                beaconRoot.CellItemType = player.CellItemType;
+
+                                                game.BeaconMemo.Add((player.Position.Row, player.Position.Column), beaconRoot);
+                                                player.steppedOnSecond = true;
                                             }
 
                                         }
@@ -489,6 +502,7 @@ namespace IntelligentMiner.WPF.Game
                                 if (player.PositionHistory.Contains(newCoordinates)) { player.Metrics.backtrackCount++; }
                                 player.PositionHistory.Add(newCoordinates);
 
+                                player.Metrics.moveCount++;
                                 if (cell.CellItemType == Common.Enums.CellItemType.GoldenSquare)
                                 {
                                     end = true;
