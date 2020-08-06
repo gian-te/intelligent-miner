@@ -24,22 +24,22 @@ namespace IntelligentMiner.Common
                 if (value == Direction.East)
                 {
                     _facing = value;
-                    Symbol = "M(\u2192)";
+                    Symbol = "\u2133(\u2192)";
                 }
                 else if (value == Direction.South)
                 {
                     _facing = value;
-                    Symbol = "M(\u2193)";
+                    Symbol = "\u2133(\u2193)";
                 }
                 else if (value == Direction.West)
                 {
                     _facing = value;
-                    Symbol = "M(\u2191)";
+                    Symbol = "\u2133(\u2190)";
                 }
                 else if (value == Direction.North)
                 {
                     _facing = value;
-                    Symbol = "M(\u2190)";
+                    Symbol = "\u2133(\u2191)";
                 }
 
                 Metrics.rotateCount++;
@@ -108,7 +108,6 @@ namespace IntelligentMiner.Common
             CellItemType retVal;
             Beacon beaconValue = new Beacon();
             var poppedNode = new Node();
-            game.ClearCell(Position.Row, Position.Column);
             if (game.CurrentNode.Children.Count > 0)
             {
                 poppedNode = game.CurrentNode.Children.Pop();

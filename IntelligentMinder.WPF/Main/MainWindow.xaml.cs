@@ -48,9 +48,12 @@ namespace IntelligentMiner.WPF
 
         private void PlaySound()
         {
-            SoundPlayer sound = new SoundPlayer();
-            sound.SoundLocation = "Audio\\cw.wav";
-            sound.PlayLooping();
+           Task.Run(() =>
+           {
+               SoundPlayer sound = new SoundPlayer();
+               sound.SoundLocation = "Audio\\cw.wav";
+               sound.PlayLooping();
+           });
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -155,9 +158,7 @@ namespace IntelligentMiner.WPF
             _viewModel.Gold = string.Concat(_goldensquare.Item1, ',', _goldensquare.Item2);
             existingCoordinates.Add(new Tuple<int, int>(row, col));
 
-            Task.Run(
-                () =>
-                    Parallel.Invoke(
+            Parallel.Invoke(
                         () =>
                         {
                             //Create Beacons
@@ -179,8 +180,7 @@ namespace IntelligentMiner.WPF
                                 pitThread.Start();
                             }
                         }
-                        )
-                );
+                        );
         }
 
         private void createPitCoords(int gridSize, List<Tuple<int, int>> existingCoordinates)

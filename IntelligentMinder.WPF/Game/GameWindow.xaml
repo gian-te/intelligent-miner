@@ -7,19 +7,22 @@
         mc:Ignorable="d" SizeToContent="WidthAndHeight"
         Title="Super Miner Bros." Height="450" Width="800"
         WindowStartupLocation="CenterScreen"
-        Closing="Window_Closing" ShowInTaskbar="True" ResizeMode="NoResize" >
+        Closing="Window_Closing" ShowInTaskbar="True" ResizeMode="NoResize" Topmost="True">
     <Window.Resources>
 
     </Window.Resources>
     <Grid>
         <DataGrid Name="c_dataGrid"
+          ItemsSource="{Binding GridData, UpdateSourceTrigger=PropertyChanged, NotifyOnSourceUpdated=True}"
           RowHeaderWidth="0"
           ColumnHeaderHeight="0"
           AutoGenerateColumns="True"
           AutoGeneratingColumn="c_dataGrid_AutoGeneratingColumn"
           HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-          ItemsSource="{Binding Path=GridData}"
-          CanUserAddRows="False">
+          CanUserAddRows="False" VirtualizingStackPanel.IsVirtualizing="True"
+          EnableColumnVirtualization="True"  VirtualizingPanel.VirtualizationMode="Recycling"
+          EnableRowVirtualization="True" MaxWidth="2560" MaxHeight="1600"
+          >
             <DataGrid.CellStyle>
                 <Style TargetType="DataGridCell">
                     <Setter Property="Width" Value="50"/>

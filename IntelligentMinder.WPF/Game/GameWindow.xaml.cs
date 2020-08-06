@@ -40,7 +40,9 @@ namespace IntelligentMiner.WPF.Game
         {
             InitializeComponent();
             DataContext = this;
-            stepDelay = 100; //50 millisec
+            stepDelay = 5; //5 millisec
+
+
         }
 
         private DataView gridData;
@@ -154,7 +156,7 @@ namespace IntelligentMiner.WPF.Game
                                 player.Facing = Direction.East;
                                 action = ActionType.Rotate;
                                 dashboard.UpdateDashboard(player, action); // update rotate count
-                                this.Dispatcher.Invoke(() => RefreshGrid());
+                                this.Dispatcher.Invoke(() => RefreshGrid(false));
                                 Thread.Sleep(stepDelay);
                                 (cell, node, prio) = player.Discover(game);
                                 if (prio > 0) { priorityChildren.Add((node, prio)); }
@@ -167,7 +169,7 @@ namespace IntelligentMiner.WPF.Game
                                 player.Facing = Direction.South;
                                 action = ActionType.Rotate;
                                 dashboard.UpdateDashboard(player, action); // update rotate count
-                                this.Dispatcher.Invoke(() => RefreshGrid());
+                                this.Dispatcher.Invoke(() => RefreshGrid(false));
                                 Thread.Sleep(stepDelay);
                                 (cell, node, prio) = player.Discover(game);
                                 if (prio > 0) { priorityChildren.Add((node, prio)); }
@@ -179,7 +181,7 @@ namespace IntelligentMiner.WPF.Game
                                 player.Facing = Direction.West;
                                 action = ActionType.Rotate;
                                 dashboard.UpdateDashboard(player, action); // update rotate count
-                                this.Dispatcher.Invoke(() => RefreshGrid());
+                                this.Dispatcher.Invoke(() => RefreshGrid(false));
                                 Thread.Sleep(stepDelay);
                                 (cell, node, prio) = player.Discover(game);
                                 if (prio > 0) { priorityChildren.Add((node, prio)); }
@@ -191,7 +193,7 @@ namespace IntelligentMiner.WPF.Game
                                 player.Facing = Direction.North;
                                 action = ActionType.Rotate;
                                 dashboard.UpdateDashboard(player, action); // update rotate count
-                                this.Dispatcher.Invoke(() => RefreshGrid());
+                                this.Dispatcher.Invoke(() => RefreshGrid(false));
                                 Thread.Sleep(stepDelay);
                                 (cell, node, prio) = player.Discover(game);
                                 if (prio > 0) { priorityChildren.Add((node, prio)); }
@@ -218,7 +220,7 @@ namespace IntelligentMiner.WPF.Game
                                         Thread.Sleep(stepDelay);
                                         cellinFront = player.ScanForward(game);
                                         dashboard.UpdateDashboard(player, ActionType.Rotate); // update csan
-                                        this.Dispatcher.Invoke(() => RefreshGrid());
+                                        this.Dispatcher.Invoke(() => RefreshGrid(true));
                                         Thread.Sleep(stepDelay);
                                     }
                                 }
@@ -233,7 +235,10 @@ namespace IntelligentMiner.WPF.Game
                             CellItemType t = new CellItemType();
                             try
                             {
+                                game.ClearCell(player.Position.Row, player.Position.Column);
+                                this.Dispatcher.Invoke(() => RefreshGrid(true));
                                 (t, player.beaconValue) = player.MoveWithStrategy(game);
+                                this.Dispatcher.Invoke(() => RefreshGrid(false));
                                 action = ActionType.Move;
                                 if (t == CellItemType.Beacon)
                                 {
@@ -247,6 +252,8 @@ namespace IntelligentMiner.WPF.Game
                                     game.BeaconMemo.Add((player.Position.Row, player.Position.Column), beaconRoot);
                                     genTargets = player.GenerateTargetGrids(game);
                                 }
+                                //this.Dispatcher.Invoke(() => RefreshGrid(true));
+
                             }
                             catch (Exception)
                             {
@@ -263,7 +270,7 @@ namespace IntelligentMiner.WPF.Game
                             }
 
                             dashboard.UpdateDashboard(player, action); // update move
-                            this.Dispatcher.Invoke(() => RefreshGrid());
+                            //this.Dispatcher.Invoke(() => RefreshGrid(true));
                             Thread.Sleep(stepDelay);
 
                         }
@@ -285,9 +292,9 @@ namespace IntelligentMiner.WPF.Game
                                     action = ActionType.Rotate;
                                     player.Rotate();
                                     dashboard.UpdateDashboard(player, action);
-                                    this.Dispatcher.Invoke(() => RefreshGrid());
+                                    this.Dispatcher.Invoke(() => RefreshGrid(false));
 
-                                  
+
                                     if (changeTarget)
                                     {
                                         player.DiscoverUsingBeacon(game, cell, priorityChildren, genTargets);
@@ -302,10 +309,10 @@ namespace IntelligentMiner.WPF.Game
                                 }
 
 
-                                this.Dispatcher.Invoke(() => RefreshGrid());
+                                //this.Dispatcher.Invoke(() => RefreshGrid(true));
                                 Thread.Sleep(stepDelay);
 
-     
+
 
                                 //Sort list based on ascending (greater value is more priority)
                                 priorityChildren.Sort((pair1, pair2) => pair1.Item2.CompareTo(pair2.Item2));
@@ -335,7 +342,7 @@ namespace IntelligentMiner.WPF.Game
                                         Thread.Sleep(stepDelay);
                                         cellinFront = player.ScanForward(game);
                                         dashboard.UpdateDashboard(player, ActionType.Rotate); // update move
-                                        this.Dispatcher.Invoke(() => RefreshGrid());
+                                        this.Dispatcher.Invoke(() => RefreshGrid(true));
                                         Thread.Sleep(stepDelay);
                                     }
                                 }
@@ -345,14 +352,17 @@ namespace IntelligentMiner.WPF.Game
                                 try
                                 {
                                     Beacon beacon = new Beacon();
+                                    game.ClearCell(player.Position.Row, player.Position.Column);
+                                    this.Dispatcher.Invoke(() => RefreshGrid(true));
                                     (t, beacon) = player.MoveWithStrategy(game);
+                                this.Dispatcher.Invoke(() => RefreshGrid(false));
                                     action = ActionType.Move;
 
                                     try
                                     {
                                         if (t == CellItemType.Beacon)
                                         {
-                                            List<(int, int, Direction)> anotherBeaconTargets = player.RegenTargetGrids(game, beacon);                                         
+                                            List<(int, int, Direction)> anotherBeaconTargets = player.RegenTargetGrids(game, beacon);
 
                                             if (!player.steppedOnSecond)
                                             {
@@ -364,7 +374,11 @@ namespace IntelligentMiner.WPF.Game
                                                         {
                                                             player.currentBeaconTarget = new Tuple<int, int, Direction>(genTargets[i].Item1, genTargets[i].Item2, genTargets[i].Item3);
                                                             genTargets.RemoveAt(i);
+
+#if DEBUG
+
                                                             MessageBox.Show(String.Format("Changed target to: {0},{1}", player.currentBeaconTarget.Item1, player.currentBeaconTarget.Item2), "Recalculating...", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly);
+#endif
                                                             changeTarget = false;
                                                             break;
                                                         }
@@ -404,7 +418,6 @@ namespace IntelligentMiner.WPF.Game
                                 }
 
                                 dashboard.UpdateDashboard(player, action); // update move
-                                this.Dispatcher.Invoke(() => RefreshGrid());
                                 Thread.Sleep(stepDelay);
 
                             }
@@ -422,7 +435,9 @@ namespace IntelligentMiner.WPF.Game
                                     col = genTargets[index].Item2;
                                     player.currentBeaconTarget = new Tuple<int, int, Direction>(row, col, genTargets[index].Item3);
                                     genTargets.RemoveAt(index);
+#if DEBUG
                                     MessageBox.Show(String.Format("Changed target to: {0},{1}", player.currentBeaconTarget.Item1, player.currentBeaconTarget.Item2), "Recalculating...", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly);
+#endif
                                 }
                                 else if (genTargets.Count == 1)
                                 {
@@ -430,7 +445,9 @@ namespace IntelligentMiner.WPF.Game
                                     col = genTargets[0].Item2;
                                     player.currentBeaconTarget = new Tuple<int, int, Direction>(row, col, genTargets[0].Item3);
                                     genTargets.RemoveAt(index);
+#if DEBUG
                                     MessageBox.Show(String.Format("Changed target to: {0},{1}", player.currentBeaconTarget.Item1, player.currentBeaconTarget.Item2), "Recalculating...", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly);
+#endif
                                 }
                                 //else
                                 //{
@@ -445,7 +462,7 @@ namespace IntelligentMiner.WPF.Game
 
                         }
 
-                        if (end) { break; }
+                        if (end) { this.Dispatcher.Invoke(() => RefreshGrid()); break; }
                     }
 
                 }
@@ -535,11 +552,28 @@ namespace IntelligentMiner.WPF.Game
 
         }
 
-        private void RefreshGrid()
+        private void RefreshGrid(bool onlyPlayerChanged = false)
         {
-            //c_dataGrid.ItemsSource = null;
-            GridData = GetBindable2DArray<BaseCellItem>(game.Map);
-            c_dataGrid.ItemsSource = GridData;
+            try
+            {
+                //GridData = null;
+
+                if (onlyPlayerChanged)
+                {
+                    GridData = GetBindable2DArray<BaseCellItem>(game.Map, player.Position.Row, player.Position.Column);
+
+                }
+                else
+                {
+                    GridData = GetBindable2DArray<BaseCellItem>(game.Map);
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
         private void c_dataGrid_AutoGeneratingColumn(object sender, DataGridAutoGeneratingColumnEventArgs e)
@@ -549,40 +583,71 @@ namespace IntelligentMiner.WPF.Game
             binding.Path = new PropertyPath(binding.Path.Path + ".Value.Symbol");
         }
 
+
+        public DataView dataView2 { get; set; }
+
         /// <summary>
         /// 
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="array"></param>
         /// <returns></returns>
-        public DataView GetBindable2DArray<T>(T[,] array)
+        public DataView GetBindable2DArray<T>(T[,] array, int x = -1, int y = -1)
         {
-            // create table
-            DataTable dataTable = new DataTable();
-            // add empty columns
-            for (int i = 0; i < array.GetLength(1); i++)
+            DataView dataView;
+            if (dataView2 != null)
             {
-                dataTable.Columns.Add(i.ToString(), typeof(Ref<T>));
+                dataView = dataView2;
             }
-            // add empty rows
-            for (int i = 0; i < array.GetLength(0); i++)
+            else
             {
-                DataRow dataRow = dataTable.NewRow();
-                dataTable.Rows.Add(dataRow);
-            }
-            // parse to dataview
-            DataView dataView = new DataView(dataTable);
-            for (int i = 0; i < array.GetLength(0); i++)
-            {
-                for (int j = 0; j < array.GetLength(1); j++)
+
+                // create table
+                DataTable dataTable = new DataTable();
+                // add empty columns
+                for (int i = 0; i < array.GetLength(1); i++)
                 {
-                    int a = i;
-                    int b = j;
-                    Ref<T> refT = new Ref<T>(() => array[b, a], z => { array[b, a] = z; });
-                    // assign cell
-                    dataView[i][j] = refT;
+                    dataTable.Columns.Add(i.ToString(), typeof(Ref<T>));
+                }
+                // add empty rows
+                for (int i = 0; i < array.GetLength(0); i++)
+                {
+                    DataRow dataRow = dataTable.NewRow();
+                    dataTable.Rows.Add(dataRow);
+                }
+                dataView = new DataView(dataTable);
+
+            }
+
+
+            if (x != -1 && y != -1)
+            {
+
+                int a = x;
+                int b = y;
+                Ref<T> refT = new Ref<T>(() => array[b, a], z => { array[b, a] = z; });
+                // assign cell
+                dataView[x][y] = refT;
+
+            }
+            else
+            {
+                // parse to dataview
+                //DataView dataView = new DataView(dataTable);
+                for (x = 0; x < array.GetLength(0); x++)
+                {
+                    for (y = 0; y < array.GetLength(1); y++)
+                    {
+                        int a = x;
+                        int b = y;
+                        Ref<T> refT = new Ref<T>(() => array[b, a], z => { array[b, a] = z; });
+                        // assign cell
+                        dataView[x][y] = refT;
+                    }
                 }
             }
+
+            dataView2 = dataView;
             return dataView;
         }
 
