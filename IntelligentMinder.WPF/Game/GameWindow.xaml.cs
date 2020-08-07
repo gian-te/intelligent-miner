@@ -75,24 +75,33 @@ namespace IntelligentMiner.WPF.Game
             var goldCoordinates = gameOptions.Gold.Split(',');
             game.AddGold(int.Parse(goldCoordinates[0]), int.Parse(goldCoordinates[1]));
 
-            Parallel.Invoke(
-                () =>
-                {
-                    foreach (var item in gameOptions.Pits)
-                    {
-                        var pitCoordinates = item.Split(',');
-                        game.AddPit(int.Parse(pitCoordinates[0]), int.Parse(pitCoordinates[1]));
-                    }
-                },
-                () =>
-                {
-                    foreach (var item in gameOptions.Beacons)
-                    {
-                        var beaconCoordinates = item.Split(',', '=');
-                        game.AddBeacon(int.Parse(beaconCoordinates[0]), int.Parse(beaconCoordinates[1]), int.Parse(beaconCoordinates[2]));
-                    }
-                }
-            );
+            try
+            {
+                Parallel.Invoke(
+                      () =>
+                      {
+                          foreach (var item in gameOptions.Pits)
+                          {
+                              var pitCoordinates = item.Split(',');
+                              game.AddPit(int.Parse(pitCoordinates[0]), int.Parse(pitCoordinates[1]));
+                          }
+                      },
+                      () =>
+                      {
+                          foreach (var item in gameOptions.Beacons)
+                          {
+                              var beaconCoordinates = item.Split(',', '=');
+                              game.AddBeacon(int.Parse(beaconCoordinates[0]), int.Parse(beaconCoordinates[1]), int.Parse(beaconCoordinates[2]));
+                          }
+                      }
+                );
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
 
             Thread newWindowThread = new Thread(new ThreadStart(ThreadStartingPoint));
             newWindowThread.SetApartmentState(ApartmentState.STA);
@@ -355,7 +364,7 @@ namespace IntelligentMiner.WPF.Game
                                     game.ClearCell(player.Position.Row, player.Position.Column);
                                     this.Dispatcher.Invoke(() => RefreshGrid(true));
                                     (t, beacon) = player.MoveWithStrategy(game);
-                                this.Dispatcher.Invoke(() => RefreshGrid(false));
+                                    this.Dispatcher.Invoke(() => RefreshGrid(false));
                                     action = ActionType.Move;
 
                                     try

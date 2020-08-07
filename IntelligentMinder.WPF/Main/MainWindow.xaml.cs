@@ -94,6 +94,8 @@ namespace IntelligentMiner.WPF
             catch (Exception ex)
             {
                 // swallow
+                MessageBox.Show("There were some errors in parsing the coordinates", "Error", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly);
+
             }
 
         }
