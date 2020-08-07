@@ -8,6 +8,7 @@
     <None Remove="Images\flash.gif" />
     <None Remove="Images\gold.gif" />
     <None Remove="Images\idk.gif" />
+    <None Remove="Images\mario.ico" />
     <None Remove="Images\wasted.gif" />
   </ItemGroup>
 
@@ -22,6 +23,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\idk.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\mario.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\wasted.gif">

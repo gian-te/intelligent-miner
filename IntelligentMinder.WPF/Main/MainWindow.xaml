@@ -4,14 +4,23 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:IntelligentMiner.WPF"
+        ResizeMode="NoResize"
         mc:Ignorable="d"
-        Title="Super Miner Bros." Height="300" Width="600"
+        Title="Super Miner Bros." Height="245" Width="507"
         WindowStartupLocation="CenterScreen"
         Background="WhiteSmoke"
         >
-    <Grid Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center">
-        <Button Content="Start the game!" HorizontalAlignment="Left" VerticalAlignment="Top" Width="110" Margin="360,125,0,0" Height="40" Click="Button_Click"/>
-        <GroupBox HorizontalAlignment="Left" Height="61" Margin="0,0,0,0" VerticalAlignment="Top" Width="110" BorderBrush="Gray">
+    <Grid Margin="10,10,4,-19" HorizontalAlignment="Center" VerticalAlignment="Center" Height="225" Width="487">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="93*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="162*"/>
+            <RowDefinition Height="23*"/>
+        </Grid.RowDefinitions>
+        <Button Content="Start the game!" HorizontalAlignment="Left" VerticalAlignment="Top" Width="110" Margin="355,125,0,0" Height="60" Click="Button_Click" Grid.RowSpan="2" Grid.Column="1"/>
+        <GroupBox HorizontalAlignment="Left" Height="61" Margin="5,0,0,0" VerticalAlignment="Top" Width="110" BorderBrush="Gray" Grid.ColumnSpan="2">
             <GroupBox.Header>
                 <StackPanel Orientation="Horizontal">
                     <!--<Image Source="/WpfTutorialSamples;component/Images/group.png" Margin="3,0" />-->
@@ -19,23 +28,23 @@
                 </StackPanel>
             </GroupBox.Header>
             <StackPanel Margin="0,5,0,0">
-                <RadioButton Name="rdoRandom" IsChecked="{Binding Path=MovesRandomly, Mode=TwoWay}"  Content="Random"/>
-                <RadioButton Name="rdoIntelligent" IsChecked="{Binding Path=MovesIntelligently, Mode=TwoWay}" Content="Intelligent"/>
+                <RadioButton x:Name="rdoRandom" IsChecked="{Binding MovesRandomly, Mode=TwoWay}"  Content="Random"/>
+                <RadioButton x:Name="rdoIntelligent" IsChecked="{Binding MovesIntelligently, Mode=TwoWay}" Content="Intelligent"/>
             </StackPanel>
         </GroupBox>
-        <GroupBox Header="Initialize Objects" HorizontalAlignment="Left" Height="75" Margin="0,60,0,0" VerticalAlignment="Top" Width="110"  BorderBrush="Gray">
+        <GroupBox Header="Initialize Objects" HorizontalAlignment="Left" Height="75" Margin="5,60,0,0" VerticalAlignment="Top" Width="110"  BorderBrush="Gray" Grid.ColumnSpan="2">
             <StackPanel Margin="0,5,0,0">
                 <RadioButton Name="rdoRandomInit" IsChecked="{Binding Path=RandomInit, Mode=TwoWay}"  Content="Random" Checked="rdoRandomInit_Checked"/>
                 <RadioButton Name="rdoManualInit" IsChecked="{Binding Path=ManualInit, Mode=TwoWay}" Content="Manual" Checked="rdoManualInit_Checked"/>
                 <RadioButton Name="rdoClearInit" IsChecked="{Binding Path=ClearInit, Mode=TwoWay}" Content="Clear" Checked="rdoClearInit_Checked"/>
             </StackPanel>
         </GroupBox>
-        <GroupBox Header="Grid Size" HorizontalAlignment="Left" Height="50" Margin="0,135,0,0" VerticalAlignment="Top" Width="110"  BorderBrush="Gray">
+        <GroupBox Header="Grid Size" HorizontalAlignment="Left" Height="50" Margin="5,135,0,0" VerticalAlignment="Top" Width="110"  BorderBrush="Gray" Grid.RowSpan="2" Grid.ColumnSpan="2">
             <StackPanel Margin="0 0 0 0" Height="110" VerticalAlignment="Center" HorizontalAlignment="Center">
                 <TextBox Name="txtGridSize" VerticalAlignment="Center" Margin="0,48,0,0" Text="{Binding Path= Size}" Width="90" AcceptsReturn="False" TextWrapping="Wrap"  ScrollViewer.VerticalScrollBarVisibility="Auto"/>
             </StackPanel>
         </GroupBox>
-        <GroupBox HorizontalAlignment="Left" Height="185" Margin="120,0,0,0" VerticalAlignment="Top" Width="110"  BorderBrush="Gray">
+        <GroupBox Height="185" Margin="0,0,257,0" VerticalAlignment="Top"  BorderBrush="Gray" Grid.Column="1" HorizontalAlignment="Right" Width="110">
             <GroupBox.Header>
                 <StackPanel Orientation="Horizontal">
                     <!--<Image Source="\IntelligentMiner.Common\Images\Pit.png" Margin="3,0" />-->
@@ -46,15 +55,15 @@
                 <TextBox Name="txtPits" Height="150" Margin="0,5,0,0" Text="{Binding Path= pits}" Width="90" AcceptsReturn="True" TextWrapping="Wrap"  ScrollViewer.VerticalScrollBarVisibility="Auto"/>
             </StackPanel>
         </GroupBox>
-        <GroupBox Header="Beacons" HorizontalAlignment="Left" Height="185" Margin="240,0,0,0" VerticalAlignment="Top" Width="110"  BorderBrush="Gray">
+        <GroupBox Header="Beacons" HorizontalAlignment="Left" Height="185" Margin="235,0,0,0" VerticalAlignment="Top" Width="110"  BorderBrush="Gray" Grid.RowSpan="2" Grid.Column="1">
             <StackPanel Margin="0 0 0 0" VerticalAlignment="Center" HorizontalAlignment="Center">
                 <TextBox Name="txtBeacons" Height="150" Margin="0,5,0,0" Text="{Binding Path= beacons}" Width="90" AcceptsReturn="True" TextWrapping="Wrap"  ScrollViewer.VerticalScrollBarVisibility="Auto"/>
             </StackPanel>
         </GroupBox>
 
-        <GroupBox Header="Golden Square" HorizontalAlignment="Left" Height="100" Margin="360,0,0,0" VerticalAlignment="Top" Width="110" BorderBrush="Gray">
+        <GroupBox Header="Golden Square" HorizontalAlignment="Left" Height="100" Margin="355,0,0,0" VerticalAlignment="Top" Width="110" BorderBrush="Gray" Grid.Column="1">
             <StackPanel Margin="0 0 0 0" Height="110" VerticalAlignment="Center" HorizontalAlignment="Center">
-                <TextBox Name="txtGoldeSquare" VerticalAlignment="Center" Margin="0,48,0,0" Text="{Binding Path= Gold}" Width="90" AcceptsReturn="True" TextWrapping="Wrap"  ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+                <TextBox Name="txtGoldeSquare" VerticalAlignment="Center" Margin="0,48,0,0" Text="{Binding Path= Gold}" Width="90" AcceptsReturn="True" TextWrapping="Wrap"  ScrollViewer.VerticalScrollBarVisibility="Auto" Height="21"/>
             </StackPanel>
         </GroupBox>
 

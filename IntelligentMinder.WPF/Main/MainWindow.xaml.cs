@@ -44,6 +44,13 @@ namespace IntelligentMiner.WPF
             };
             this.DataContext = _viewModel;
             PlaySound();
+            LoadIcon();
+        }
+
+        private void LoadIcon()
+        {
+            
+
         }
 
         private void PlaySound()
@@ -51,7 +58,7 @@ namespace IntelligentMiner.WPF
            Task.Run(() =>
            {
                SoundPlayer sound = new SoundPlayer();
-               sound.SoundLocation = "Audio\\cw.wav";
+               sound.SoundLocation = "Audio\\psycho.wav";
                sound.PlayLooping();
            });
         }
