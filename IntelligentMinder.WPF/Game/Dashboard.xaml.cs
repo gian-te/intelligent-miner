@@ -133,9 +133,6 @@ namespace IntelligentMiner.WPF.Game
                 {
                     
                 }
-               
-                
-
             }
 
         }

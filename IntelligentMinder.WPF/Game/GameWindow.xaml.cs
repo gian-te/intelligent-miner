@@ -665,6 +665,11 @@ namespace IntelligentMiner.WPF.Game
             dashboard.Dispatcher.Invoke(DispatcherPriority.Normal, new ThreadStart(dashboard.Close));
             Owner.Show();
             Owner.Topmost = true;
+            game = null;
+            player = null;
+            dashboard = null;
+        
+
         }
     }
 
