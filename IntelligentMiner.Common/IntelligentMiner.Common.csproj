@@ -6,10 +6,25 @@
 
   <ItemGroup>
     <None Remove="Images\flash.gif" />
+    <None Remove="Images\gold.gif" />
+    <None Remove="Images\idk.gif" />
+    <None Remove="Images\wasted.gif" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="Images\flash.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Images\gold.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\idk.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\wasted.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

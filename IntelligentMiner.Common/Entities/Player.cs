@@ -137,6 +137,11 @@ namespace IntelligentMiner.Common
                     beaconValue = null;
                 }
             }
+            if (retVal == CellItemType.GoldenSquare)
+            {
+                // fix facing
+                Symbol = "\u2133";
+            }
 
             game.AssignPlayerToCell(this);
             return (retVal, beaconValue);

@@ -46,6 +46,7 @@ namespace IntelligentMiner.WPF.Game
 
             // change source depending on game state, if WIN, put a gif that looks like winning, etc
             myGif.Source = new Uri(AppDomain.CurrentDomain.BaseDirectory + "Images/flash.gif", UriKind.Absolute);
+           
         }
 
 
@@ -79,6 +80,13 @@ namespace IntelligentMiner.WPF.Game
             else if (action == ActionType.Die)
             {
                 _viewModel.PositionHistory += String.Concat("The player died a horrible death.");
+                Dispatcher.Invoke(() =>
+                {
+                    myGif.Stop();
+                    myGif.Source = new Uri(AppDomain.CurrentDomain.BaseDirectory + "Images/wasted.gif", UriKind.Absolute);
+                    myGif.Play();
+                });
+
             }
             else if (action == ActionType.Win)
             {
@@ -87,6 +95,13 @@ namespace IntelligentMiner.WPF.Game
             else if  (action == ActionType.NoPossible)
             {
                 _viewModel.PositionHistory += String.Concat("No more possible moves.\nGame over!");
+                Dispatcher.Invoke(() =>
+                {
+                    myGif.Stop();
+                    myGif.Source = new Uri(AppDomain.CurrentDomain.BaseDirectory + "Images/idk.gif", UriKind.Absolute);
+                    myGif.Play();
+                });
+
             }
             else if (action == ActionType.RotateRandom)
             {
@@ -103,8 +118,26 @@ namespace IntelligentMiner.WPF.Game
             if(action == ActionType.Win)
             {
                 _viewModel.isPaused = true;
+                //myGif.Stop();
+                try
+                {
+                    Dispatcher.Invoke(() => 
+                    {
+                        myGif.Stop();
+                        myGif.Source = new Uri(AppDomain.CurrentDomain.BaseDirectory + "Images/gold.gif", UriKind.Absolute);
+                        myGif.Play();
+                    });
+                    
+                }
+                catch (Exception ex)
+                {
+                    
+                }
+               
+                
+
             }
-            
+
         }
 
         private async void txtActions_TextChanged(object sender, TextChangedEventArgs e)
@@ -143,7 +176,7 @@ namespace IntelligentMiner.WPF.Game
 
         private void myGif_MediaEnded(object sender, RoutedEventArgs e)
         {
-            myGif.Position = new TimeSpan(0, 0, 1);
+            myGif.Position = new TimeSpan(0, 0, 0, 0 , 500);
             myGif.Play();
         }
     }
