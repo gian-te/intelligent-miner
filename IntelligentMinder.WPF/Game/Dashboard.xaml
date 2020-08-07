@@ -6,10 +6,10 @@
         xmlns:local="clr-namespace:IntelligentMiner.WPF.Game"
         xmlns:gif="https://github.com/XamlAnimatedGif/XamlAnimatedGif"
         mc:Ignorable="d"
-        Title="Dashboard" Height="720.587" Width="266"
+        Title="Dashboard" Height="460" Width="440"
         WindowStartupLocation="Manual" ResizeMode="NoResize">
     <Grid>
-        <GroupBox Header="Player Information" HorizontalAlignment="Left" Height="180" Margin="38,10,0,0" VerticalAlignment="Top" Width="180">
+        <GroupBox Header="Player Information" HorizontalAlignment="Left" Height="180" Margin="24,10,0,0" VerticalAlignment="Top" Width="180">
             <Grid ShowGridLines="True" VerticalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="60"></ColumnDefinition>
@@ -34,20 +34,24 @@
                 <TextBox Height="22" Margin="10,0,0,0" IsReadOnly="True" HorizontalAlignment="Left" Text="{Binding backtrackCount, Mode=TwoWay}" Width="89" AcceptsReturn="False" TextWrapping="Wrap" Name ="txtBacktrack" Grid.Row="4" Grid.Column="1"/>
             </Grid>
         </GroupBox>
-        <GroupBox Header="Pause/Continue" Height="50" Width="180" Margin="38,190,0,0" VerticalAlignment="Top" HorizontalAlignment="Left">
-            <!--<StackPanel Orientation="Horizontal">
-                <Slider Name="sldrGameSpeed" Value="{Binding Path = gameSpeed}" Maximum="1000" Minimum="0" TickFrequency="100" Width="145" IsSnapToTickEnabled="True" TickPlacement="BottomRight" HorizontalAlignment="Left"/>
+        <GroupBox Header="Game Settings" Height="180" Width="180" Margin="230,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left">
+            <StackPanel Orientation="Vertical">
+                <StackPanel Orientation="Horizontal" Margin="0 30 0 0" Height="25">
+                    <Button Name="btnPause" Width="70" Content="Pause" Click="btnPause_Click"/>
+                    <Button Name="btnContinue" Width="80" Content="Continue" Margin="18, 0 0 0" Click="btnContinue_Click"/>
+                </StackPanel>
+
+                <TextBlock Margin="0 10 0 0">Game Speed</TextBlock>
+                <StackPanel Orientation="Horizontal" Margin="0 20 0 0">
+                <Slider Name="sldrGameSpeed" Value="{Binding Path = gameSpeed}" Maximum="300" Minimum="20" TickFrequency="20" Width="145" IsSnapToTickEnabled="True" TickPlacement="BottomRight" HorizontalAlignment="Left"/>
                 <TextBlock Text="{Binding ElementName=sldrGameSpeed, Path=Value, UpdateSourceTrigger=PropertyChanged}" Width="30" FontSize="10"/>
-            </StackPanel>-->
-            <StackPanel Orientation="Horizontal">
-                <Button Name="btnPause" Width="70" Content="Pause" Click="btnPause_Click"/>
-                <Button Name="btnContinue" Width="80" Content="Continue" Margin="18, 0 0 0" Click="btnContinue_Click"/>
+                 </StackPanel>
             </StackPanel>
         </GroupBox>
-        <GroupBox Header="Actions" HorizontalAlignment="Left" Height="200" Margin="38, 240 0 9" VerticalAlignment="Top" Width="180">
+        <GroupBox Header="Actions" HorizontalAlignment="Left" Height="200" Margin="24, 200 0 9" VerticalAlignment="Top" Width="180">
             <TextBox Name="txtActions" HorizontalAlignment="Left" Height="177" Margin="0,0,0,0" IsReadOnly="True" Text="{Binding Path=PositionHistory}" VerticalAlignment="Top" Width="167" AcceptsReturn="False" TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Auto" TextChanged="txtActions_TextChanged"/>
         </GroupBox>
-        <GroupBox  Header="Miner POV" HorizontalAlignment="Left" Height="200" Margin="38,462,0,-62" VerticalAlignment="Top" Width="180">
+        <GroupBox  Header="Miner POV" HorizontalAlignment="Left" Height="200" Margin="230,200,0,0" VerticalAlignment="Top" Width="180">
             <MediaElement x:Name="myGif" MediaEnded="myGif_MediaEnded" UnloadedBehavior="Manual" LoadedBehavior="Play" Stretch="Fill"/>
         </GroupBox>
     </Grid>
