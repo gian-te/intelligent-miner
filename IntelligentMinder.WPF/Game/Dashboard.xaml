@@ -51,7 +51,7 @@
         <GroupBox Header="Actions" HorizontalAlignment="Left" Height="200" Margin="24, 200 0 9" VerticalAlignment="Top" Width="180">
             <TextBox Name="txtActions" HorizontalAlignment="Left" Height="177" Margin="0,0,0,0" IsReadOnly="True" Text="{Binding Path=PositionHistory}" VerticalAlignment="Top" Width="167" AcceptsReturn="False" TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Auto" TextChanged="txtActions_TextChanged"/>
         </GroupBox>
-        <GroupBox  Header="Miner POV" HorizontalAlignment="Left" Height="200" Margin="230,200,0,0" VerticalAlignment="Top" Width="180">
+        <GroupBox  Header="Miner's Point of View" HorizontalAlignment="Left" Height="200" Margin="38,462,0,-62" VerticalAlignment="Top" Width="180">
             <MediaElement x:Name="myGif" MediaEnded="myGif_MediaEnded" UnloadedBehavior="Manual" LoadedBehavior="Play" Stretch="Fill"/>
         </GroupBox>
     </Grid>
