@@ -43,25 +43,23 @@ namespace IntelligentMiner.WPF
                 ClearInit = true
             };
             this.DataContext = _viewModel;
-            PlaySound();
-            LoadIcon();
+            StopAudio();
+            PlayAudio();
+
         }
 
-        private void LoadIcon()
+
+        public void PlayAudio()
         {
-            
-
+            IntelligentMinder.WPF.Audio.AudioHelper.Player.SoundLocation = "Audio\\psycho.wav";
+            IntelligentMinder.WPF.Audio.AudioHelper.Player.PlayLooping();
         }
 
-        private void PlaySound()
+        public void StopAudio()
         {
-           Task.Run(() =>
-           {
-               SoundPlayer sound = new SoundPlayer();
-               sound.SoundLocation = "Audio\\psycho.wav";
-               sound.PlayLooping();
-           });
+            IntelligentMinder.WPF.Audio.AudioHelper.Player.Stop();
         }
+
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -262,7 +260,7 @@ namespace IntelligentMiner.WPF
 
         }
 
-      
+
     }
 
 

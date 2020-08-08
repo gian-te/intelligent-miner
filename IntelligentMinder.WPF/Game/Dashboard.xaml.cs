@@ -46,7 +46,7 @@ namespace IntelligentMiner.WPF.Game
 
             // change source depending on game state, if WIN, put a gif that looks like winning, etc
             myGif.Source = new Uri(AppDomain.CurrentDomain.BaseDirectory + "Images/flash.gif", UriKind.Absolute);
-           
+
         }
 
 
@@ -92,7 +92,7 @@ namespace IntelligentMiner.WPF.Game
             {
                 _viewModel.PositionHistory += String.Concat("The player has struck gold!");
             }
-            else if  (action == ActionType.NoPossible)
+            else if (action == ActionType.NoPossible)
             {
                 _viewModel.PositionHistory += String.Concat("No more possible moves.\nGame over!");
                 Dispatcher.Invoke(() =>
@@ -107,7 +107,7 @@ namespace IntelligentMiner.WPF.Game
             {
                 _viewModel.PositionHistory += String.Concat(String.Format("Will Rotate: {0} times.", count));
             }
-            else if (action == ActionType.MoveRandom && celltype  == CellItemType.Wall)
+            else if (action == ActionType.MoveRandom && celltype == CellItemType.Wall)
             {
                 _viewModel.PositionHistory += String.Concat("The robot hits a wall.");
             }
@@ -115,23 +115,41 @@ namespace IntelligentMiner.WPF.Game
             _viewModel.PositionHistory += Environment.NewLine;
 
             _viewModel.backtrackCount = p.Metrics.backtrackCount;
-            if(action == ActionType.Win)
+            if (action == ActionType.Win)
             {
                 _viewModel.isPaused = true;
                 //myGif.Stop();
                 try
                 {
-                    Dispatcher.Invoke(() => 
+                    Dispatcher.Invoke(() =>
                     {
                         myGif.Stop();
-                        myGif.Source = new Uri(AppDomain.CurrentDomain.BaseDirectory + "Images/gold.gif", UriKind.Absolute);
+                        myGif.Source = new Uri(AppDomain.CurrentDomain.BaseDirectory + "Images/clap.gif", UriKind.Absolute);
                         myGif.Play();
+
+                        Task.Run(() =>
+                        {
+                            Dispatcher.Invoke(() =>
+                           {
+                               IntelligentMinder.WPF.Audio.AudioHelper.Player.Stop();
+                               IntelligentMinder.WPF.Audio.AudioHelper.Player.SoundLocation = "Audio\\ddu.wav";
+                               IntelligentMinder.WPF.Audio.AudioHelper.Player.Play();
+                               Thread.Sleep(3000);
+                               myGif.Stop();
+                               myGif.Source = new Uri(AppDomain.CurrentDomain.BaseDirectory + "Images/gold.gif", UriKind.Absolute);
+                               myGif.Play();
+
+                           });
+
+                        });
+
+
                     });
-                    
+
                 }
                 catch (Exception ex)
                 {
-                    
+
                 }
             }
 
@@ -147,7 +165,7 @@ namespace IntelligentMiner.WPF.Game
         {
             Task.Run(() =>
                 {
-                    Dispatcher.Invoke( () => txtActions.ScrollToEnd());
+                    Dispatcher.Invoke(() => txtActions.ScrollToEnd());
                 });
         }
 
@@ -173,8 +191,17 @@ namespace IntelligentMiner.WPF.Game
 
         private void myGif_MediaEnded(object sender, RoutedEventArgs e)
         {
-            myGif.Position = new TimeSpan(0, 0, 0, 0 , 500);
+            myGif.Position = new TimeSpan(0, 0, 0, 0, 500);
             myGif.Play();
+        }
+
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            IntelligentMinder.WPF.Audio.AudioHelper.Player.Stop();
+            IntelligentMinder.WPF.Audio.AudioHelper.Player.SoundLocation = "Audio\\psycho.wav";
+            IntelligentMinder.WPF.Audio.AudioHelper.Player.PlayLooping();
+
+
         }
     }
 }
