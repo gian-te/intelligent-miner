@@ -68,7 +68,7 @@ namespace IntelligentMiner.Common
             CellItemType = CellItemType.Player;
             Metrics = new PlayerMetrics();
             steppedOnSecond = false;
-            Metrics.gameSpeed = 5;
+            Metrics.gameSpeed = 50;
             //RandomizeFacing();
         }
 
