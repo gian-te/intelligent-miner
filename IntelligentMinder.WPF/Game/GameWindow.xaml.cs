@@ -74,7 +74,7 @@ namespace IntelligentMiner.WPF.Game
 
             //Add objects to map
             var goldCoordinates = gameOptions.Gold.Split(',');
-            game.AddGold(int.Parse(goldCoordinates[0]), int.Parse(goldCoordinates[1]));
+            game.AddGold(int.Parse(goldCoordinates[1]), int.Parse(goldCoordinates[0]));
 
             try
             {
@@ -84,7 +84,7 @@ namespace IntelligentMiner.WPF.Game
                           foreach (var item in gameOptions.Pits)
                           {
                               var pitCoordinates = item.Split(',');
-                              game.AddPit(int.Parse(pitCoordinates[0]), int.Parse(pitCoordinates[1]));
+                              game.AddPit(int.Parse(pitCoordinates[1]), int.Parse(pitCoordinates[0]));
                           }
                       },
                       () =>
@@ -92,7 +92,7 @@ namespace IntelligentMiner.WPF.Game
                           foreach (var item in gameOptions.Beacons)
                           {
                               var beaconCoordinates = item.Split(',', '=');
-                              game.AddBeacon(int.Parse(beaconCoordinates[0]), int.Parse(beaconCoordinates[1]), int.Parse(beaconCoordinates[2]));
+                              game.AddBeacon(int.Parse(beaconCoordinates[1]), int.Parse(beaconCoordinates[0]), int.Parse(beaconCoordinates[2]));
                           }
                       }
                 );
